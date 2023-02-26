@@ -1,0 +1,32 @@
+\usepackage{transparent}
+\usepackage{color}
+\usepackage{fancyhdr}
+
+\definecolor{headerBg}{RGB}{11, 67, 158}
+\definecolor{headerGrayColor}{RGB}{210, 210, 210}
+
+\pagestyle{fancy}
+\fancyhead[C]{
+  \fcolorbox{headerBg}{headerBg}{
+    \hspace{0.6cm}\begin{minipage}[c][50pt][c]{\paperwidth}
+      \begin{minipage}[c]{.45\textwidth}
+        \huge{\textcolor{white}{Vorlesung}}\normalsize\\
+        \textcolor{headerGrayColor}{\small{Wintersemester 2022/23}}
+      \end{minipage}%
+      \begin{minipage}[c]{.45\textwidth}
+        \raggedleft
+        \textcolor{white}{
+          \small{\href{https://nilslambertz.de/}{nilslambertz.de}}\\
+          \href{https://github.com/nilslambertz/}{\textcolor{white}{\faicon{github}} \small{nilslambertz}}}
+      \end{minipage}
+    \end{minipage}}
+}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{40pt}
+
+\newlength{\oddmarginwidth}
+\setlength{\oddmarginwidth}{1in+\hoffset+\oddsidemargin}
+\newlength{\evenmarginwidth}
+\setlength{\evenmarginwidth}{\evensidemargin+1in}
+\fancyhfoffset[LO,RE]{\oddmarginwidth}
+\fancyhfoffset[LE,RO]{\evenmarginwidth}
