@@ -6,6 +6,8 @@
 \input{shared/summary-boilerplate.tex}
 \cfoot{\thepage\ $/$ \pageref*{LastPage}}
 
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
 \definecolor{markenGesetzLink}{RGB}{194, 74, 14}
 \newcommand{\markenG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }MarkenG}}}}
 
@@ -28,5 +30,36 @@
   \item{durch Marken können \textbf{Produkte} unterschiedlicher Hersteller \textbf{unterschieden werden}}
   \item{\textbf{Immatrieller Wert} eines Unternehmens besteht zu großem Teil aus Marken}
 \end{itemize}
+
+\subsection{Grundlegende Funktionen von Marken}
+\begin{itemize}
+  \item{\highlight{Herkunftsfunktion}: Marken kennzeichnen Hersteller}
+  \item{\highlight{Unterscheidungsfunktion}: Marken unterscheiden Hersteller voneinander}
+  \item{Garantie-/Qualitätsfunktion: Verbraucher verlassen sich auf gleichbleibende Qualität}
+  \item{Werbefunktion: Wiedererkennungseffekt der Marke}
+\end{itemize}
+
+\subsection{Grundsätze}
+\subsubsection{Grundsatz der \highlight{Priorität}}
+\begin{itemize}
+  \item{Rechte verschiedener Rechteinhaber erzeugen einen \textbf{Interessenkonflikt} bzw. eine \textbf{Kollision}}
+  \item{\textbf{Prioritätsjüngeres} Kennzeichen \textbf{muss} dem prioritätsälterem \textbf{weichen}}
+  \item{``Wer zuerst den Schutz erlangt hat, der gewinnt''}
+\end{itemize}
+
+\subsubsection{Grundsatz des \highlight{Produktbezugs} der Marke}
+\begin{itemize}
+  \item{Marke wird für bestimmte Produkte/Produktklassen eingetragen}
+  \item{Schutz gilt \textbf{nur für diese Produkte}}
+\end{itemize}
+
+\section{Markenschutz}
+\subsection{Wie entsteht Markenschutz?}
+Die drei Möglichkeiten zur Entstehung des Markenschutzes sind in \markenG{4} geregelt:
+\begin{enumerate}
+  \item{\highlight{Eintragung} der Marke durch das \textbf{DPMA}}
+  \item{\highlight{Benutzungsmarken}, wenn sie Verkehrsgeltung erlangt haben (dazu wird die Bekanntheit in den zuständigen Verkehrskreisen und die Eigenschaften der Marke wie Prägnanz, Originalität und Unterscheidungskraft betrachtet)}
+  \item{\textbf{Ausländische Marken}, die im Heimatland geschützt sind, aber in Deutschland noch nicht verwendet werden}
+\end{enumerate}
 
 \end{document}
