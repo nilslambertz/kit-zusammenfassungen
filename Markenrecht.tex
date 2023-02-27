@@ -6,10 +6,9 @@
 \input{shared/summary-boilerplate.tex}
 \cfoot{\thepage\ $/$ \pageref*{LastPage}}
 
-\usepackage{color}
-\definecolor{headerBg}{RGB}{11, 67, 158}
+\definecolor{markenGesetzLink}{RGB}{194, 74, 14}
+\newcommand{\markenG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }MarkenG}}}}
 
 \begin{document}
-\sloppy\lipsum[1-50]
 
 \end{document}
