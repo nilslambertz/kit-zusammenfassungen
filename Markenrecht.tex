@@ -6,6 +6,11 @@
 \input{shared/summary-boilerplate.tex}
 \cfoot{\thepage\ $/$ \pageref*{LastPage}}
 
+\definecolor{greenColor}{RGB}{15, 122, 25}
+\newcommand{\green}[1]{\textcolor{greenColor}{#1}}
+\definecolor{redColor}{RGB}{209, 8, 15}
+\newcommand{\red}[1]{\textcolor{redColor}{#1}}
+
 \definecolor{highlightColor}{RGB}{66, 135, 245}
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
 \definecolor{markenGesetzLink}{RGB}{194, 74, 14}
@@ -20,6 +25,18 @@
   \item{\textbf{Gewerblicher Rechtsschutz} besteht u.a. aus Patentrecht, Lauterkeitsrecht und \textbf{Markenrecht}}
   \item{es existieren viele Berührungspunkte mit anderen Rechten z.B. im \textbf{Grundgesetz} oder im \textbf{Verwaltungsrecht}}
   \item{für Markenrechte existieren nationale, EU-weite und internationale Gesetze und Abkommen}
+\end{itemize}
+
+\subsection{Materielles vs. formelles Recht}
+\textbf{Materielles Recht} (``Recht haben''):
+\begin{itemize}
+  \item{beschäftigt sich mit den vorliegenden Tatsachen}
+  \item{beschreibt, \textbf{wie eine Marke aussehen muss}, um geschützt werden zu können}
+\end{itemize}
+\textbf{Formelles Recht}
+\begin{itemize}
+  \item{Rechtsnormen, die zur \textbf{Durchsetzung} des materiellen Rechts dienen}
+  \item{beschreibt die \textbf{erforderlichen Schritte}, um eine Marke schützen zu lassen}
 \end{itemize}
 
 \section{Einführung: Markenrecht}
@@ -58,8 +75,55 @@
 Die drei Möglichkeiten zur Entstehung des Markenschutzes sind in \markenG{4} geregelt:
 \begin{enumerate}
   \item{\highlight{Eintragung} der Marke durch das \textbf{DPMA}}
-  \item{\highlight{Benutzungsmarken}, wenn sie Verkehrsgeltung erlangt haben (dazu wird die Bekanntheit in den zuständigen Verkehrskreisen und die Eigenschaften der Marke wie Prägnanz, Originalität und Unterscheidungskraft betrachtet)}
+  \item{\highlight{Benutzungsmarken} (auch Gewohnheitsmarken genannt), wenn sie Verkehrsgeltung erlangt haben (dazu wird die Bekanntheit in den zuständigen Verkehrskreisen und die Eigenschaften der Marke wie Prägnanz, Originalität und Unterscheidungskraft betrachtet)}
   \item{\textbf{Ausländische Marken}, die im Heimatland geschützt sind, aber in Deutschland noch nicht verwendet werden}
 \end{enumerate}
+
+\subsubsection{Was geschieht bei Markenkollisionen?}
+Bei Kollisionen zweier Marken wird nach der \highlight{Priorität} entschieden. Derjenige, der den Markenschutz früher erlangt hat, hat Anspruch darauf.
+Bei eingetragenen Marken ist das Datum eindeutig festgelegt (siehe später).
+Bei Benutzungsmarken muss letztendlich ein Gericht ein \textbf{Priorirätsdatum} nennen, woraufhin ein Gutachten zur Bekanntheit der Marke an diesem Datum erstellt wird.
+
+\subsection{Eingetragene Marke vs. Benutzungsmarke}
+\bgroup
+\def\arraystretch{1.5}
+\begin{table}[h]
+  \begin{tabular}{|l|p{0.4\linewidth}|p{0.4\linewidth}|}
+    \hline
+                     & Eingetragene Marke                                                                                                                                    & Benutzungsmarke                       \\ \hline
+    Eintragung       & Antrag beim DPMA                                                                                                                                      & \textit{nicht nötig}                  \\ \hline
+    Rechtssicherheit & Gewisse \textbf{Rechtssicherheit}: Richter ist an Entscheidung des DPMA gebunden und kann den Schutz nicht aufheben, auch wenn er anderer Meinung ist & Richter entscheidet über Markenschutz \\ \hline
+    Priorität        & Ab Tag der Anmeldung (siehe später)                                                                                                                   & Erst nach Verwendung und Etablierung  \\ \hline
+    Schutzbereich    & Bundesweit                                                                                                                                            & In bestimmten Fällen nur lokal        \\ \hline
+  \end{tabular}
+\end{table}
+\egroup
+
+\subsubsection{Vorteile eingetragener Marken gegenüber Benutzungsmarken}
+Grundsätzliche sind eingetragene Marken \textbf{NICHT} mehr wert als Benutzungsmarken und werden (falls Markenschutz für die Benutzungsmarke besteht) genau gleich behandelt.
+Dennoch ergeben sich folgende Vorteile für eingetragene Marken:
+\begin{itemize}
+  \item{sie sind \green{ab Tag der Anmeldung geschützt}, auch wenn sie nicht verwendet werden}
+  \item{sie sorgen für \green{Rechtssicherheit} (und seltenere Rechtsstreits)}
+  \item{Schutz gilt \green{bundesweit}}
+  \item{zur \textbf{IR-Marke} wird eine eingetragene Basismarke benötigt}
+\end{itemize}
+
+\subsection{Materielle Voraussetzungen zur Eintragung einer Marke}
+Für die Eintragung einer Marke sind \markenG{3} und \markenG{8} relevant.
+
+\subsubsection{§ 3 MarkenG}
+\markenG{3} definiert die Markenfähigkeit von Zeichen (gilt auch für Benutzungsmarken!):
+\begin{itemize}
+  \item{Marke muss \highlight{abstrakte Unterscheidungskraft} besitzen (d.h. sie muss Waren unterscheiden können, ohne ein spezielles Produkt zu betrachten)}
+  \item{Marke muss \textbf{zeichenfähig} sein, also auf die Sinnesorgane einwirken (z.B. visuell wahrgenommen werden können)}
+  \item{Marke darf \textbf{kein funktionell notwendiger Bestandteil} des Produkts sein}
+\end{itemize}
+Diese Voraussetzungen sind von fast jedem Zeichen erfüllt.
+
+\subsubsection{§ 8 MarkenG}
+\markenG{8} definiert \highlight{absolute Schutzhindernisse}, die das Eintragen einer Marke unmöglich machen.
+Sie werden \textbf{von Amts wegen} (v. A. w.) geprüft, d.h. sie werden vom DPMA vor jeder Eintragung überprüft.\par
+\textbf{§ 8 MarkenG gilt nicht für Benutzungsmarken!}
 
 \end{document}
