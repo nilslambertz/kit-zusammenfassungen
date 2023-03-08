@@ -16,6 +16,7 @@
 \definecolor{markenGesetzLink}{RGB}{194, 74, 14}
 \newcommand{\markenG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }MarkenG}}}}
 \newcommand{\markenGG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§§ #1 MarkenG}}}}
+\newcommand{\bgb}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
 
 \def\contentsname{\empty}
 
@@ -325,8 +326,34 @@ Marken können ebenfalls durch \textbf{Verfalls- oder Nichtigkeitsverfahren} gem
   \item{\textbf{Positives Benutzungsrecht}: Inhaber kann die Marke verwenden, wie er will}
   \item{\textbf{Negatives Verbietungsrecht}: Inhaber kann andere ausschließen, wie er will}
 \end{itemize}
-Der Inhaber hat Anspruch auf Löschung gegen andere Marken, wenn diese in Kollision mit der eigenen stehen. Zudem hat er Anspruch auf Unterlassung gemäß \markenG[Abs. 2]{14} und auf Schadensersatz gemäß \markenG[Abs. 6]{14}.\par
-5 Jahre nach Kenntnis verliert man gemäß \markenG{25} den Anspruch auf eine Klage.
+Der Inhaber hat Anspruch auf Löschung gegen andere Marken, wenn diese in Kollision mit der eigenen stehen. Zudem dürfen Dritte gemäß \markenG[Abs. 2]{14} die Marke ohne Erlaubnis nicht im geschäftlichen Verkehr verwenden.
+
+\subsubsection{Unterlassung}
+Bei Wiederholungsgefahr (i.d.R. immer gegeben) besteht gemäß \markenG[Abs. 5]{15} Anspruch auf \highlight{Unterlassung}. Dieser wird über Drohung eines Ordnungsgeldes (bis 250.000 €) oder Ordnungshaft (bis 6 Monate) durchgesetzt.
+
+\subsubsection{Schadensersatz}
+Bei \textbf{Vorsatz} oder \textbf{Fahrlässigkeit} besteht gemäß \markenG[Abs. 6]{15} Anspruch auf \highlight{Schadensersatz}. Die Dauer und Intensität der Verletzung ist hier jedoch schwierig zu beweisen und die Durchsetzung läuft nach einem mühsamen dreistufigen Verfahren ab:
+
+\begin{enumerate}
+  \item{Feststellung der Schadensersatzpflicht}
+  \item{Erteilung der Auskünfte über Gewinn etc.}
+  \item{Schadensersatz einklagen, dafür zwei Möglichkeiten zur Berechnung:
+              \begin{enumerate}
+                \item{\textbf{Konkrete Schadensberechnung}: Wie viel Gewinn ist entgangen? Problem: Kausalität, der Schaden muss aus der Verletzung entstanden sein}
+                \item{\textbf{Verletzergewinn einfordern}}
+              \end{enumerate}
+        }
+\end{enumerate}
+In der Realität wird eine großzügige Lizenzgebühr als Berechnungsgrundlage genommen.
+
+\subsubsection{Auskunftsanspruch}
+Gemäß \markenG{19} besteht ein \textbf{Auskunftsanspruch} gegen den Verletzer, damit die Quellen und Vertriebswege veranschaulicht und die Größe der Verletzung berechnet werden kann. \textbf{Das Verschulden ist hierfür nicht erforderlich}.
+
+\subsubsection{Weitere Ansprüche}
+\begin{itemize}
+  \item{Vernichtungsanspruch gemäß \markenG{18}}
+  \item{Beschlagnahmeanspruch gemäß \markenG{146}}
+\end{itemize}
 
 \subsection{Vorteile einer Klage}
 \begin{itemize}
@@ -343,10 +370,67 @@ Der Inhaber hat Anspruch auf Löschung gegen andere Marken, wenn diese in Kollis
 
 \subsection{Sonstiges}
 \begin{itemize}
+  \item{Ansprüche verjähren gemäß \markenG{20} (und \bgb{195}) nach drei Jahren}
   \item{Wahl des Gerichtsstandes ist wichtig, da sich unterschiedliche Gerichte unterschiedlich gut mit den verschiedenen Teilbereichen auskennen}
   \item{gemäß \markenG{140} sind Landgerichte zuständig}
   \item{es kann vor dem Landgericht im Wohnsitz des Beklagten oder vor einem beliebigen Kennzeichengericht (bundesweit) geklagt werden}
   \item{der Streitwert wird vom Gericht festgelegt, liegt im Regelfall zwischen 50.000 € und 200.000 €}
 \end{itemize}
+
+\section{Gerichtsverfahren}
+\subsection{Vorgerichtliche Verfahren/Abmahnverfahren}
+Vor einem Gerichtsverfahren sollte der Gegenüber \textbf{über die Verletzung aufgeklärt} und die Unterlassung gefordert werden, andernfalls \textbf{mit dem Rechtsweg gedroht} werden.\par
+Dies ist sinnvoll, da der Verletzer sich der Verletzung häufig nicht bewusst ist und die Prozesskosten von dem getragen werden, \textbf{der Anlass zur Klage gegeben hat}. Wenn der Beklagte den Fehler vor Gericht sofort einräumt und unterlässt, muss evtl. der Kläger die Kosten bezahlen.
+
+\subsection{Einstweiliges Verfügungsverfahren}
+\textbf{Einstweilige Verfügungen} werden i.d.R. am gleichen oder nächsten Tag ausgestellt. Dazu muss der Anspruch und die Dringlichkeit (nicht länger als 4 Wochen seit Kenntnis) glaubhaft gemacht (nicht bewiesen) werden.\par
+Der Antragsgegner kann diese akzeptieren oder widersprechen. Er kann entweder einen Antrag auf Aufhebung der Einstweiligen Verfügung oder einen Antrag auf Verpflichtung zur Klageerhebung stellen. Wenn der Kläger dann bis zum festgelegten Datum keine Klage stellt, wird die Einstweilige Verfügung aufgehoben.
+
+\subsection{Prüfungsschema des Gerichts}
+\textbf{I. Zulässigkeit}
+\begin{enumerate}
+  \item{Zuständigkeit
+              \begin{enumerate}
+                \item{sachlich, gemäß \markenG{140} Landgerichte}
+                \item{örtlich, gemäß ZPO mehrere Gerichtsstände}
+              \end{enumerate}
+        }
+  \item{\textbf{Prozessführungsbefugnis} (Befugnis, Prozess in eigenem Namen zu führen)
+              \begin{itemize}
+                \item{Markeninhaber gemäß \markenG{28}}
+                \item{Lizenznehmer mit Zustimmung des Inhabers gemäß \markenG[Abs. 3]{30}}
+              \end{itemize}
+        }
+  \item{Allgemeine Prozessvoraussetzungen
+              \begin{itemize}
+                \item{nicht gleichzeitig bei zwei Gerichten}
+                \item{nicht nach rechtskräftiger Entscheidung im gleichen Fall}
+              \end{itemize}
+        }
+\end{enumerate}
+
+\newpage
+\textbf{II. Begründetheit} (besteht der Anspruch wirklich)
+\begin{enumerate}
+  \item{Bestehens der Marke (\markenG{4})}
+  \item{Verletzung (\markenG[Abs. 2]{14})
+              \begin{enumerate}
+                \item{inländische Verletzung}
+                \item{im geschäftlichen Verkehr}
+                \item{ohne Zustimmung des Inhabers}
+                \item{kennzeichenmäßige Nutzung}
+              \end{enumerate}
+        }
+  \item{\highlight{Einreden} des Beklagten
+              \begin{enumerate}
+                \item{Verjährung (\markenG{20})}
+                \item{Schranken (\markenGG[23, 24]{23})}
+                \item{Mangelnde Benutzung (\markenG{25})}
+                \item{Bestehen eines eigenen \textbf{prioritätsälteren} Rechts}
+              \end{enumerate}
+        }
+  \item{Wiederholungsgefahr (bei Unterlassung) bzw. Verschulden (bei Schadensersatz)}
+\end{enumerate}
+Wenn alle Voraussetzungen vorliegen, ist der \textbf{Anspruch gegeben}.
 
 \end{document}
