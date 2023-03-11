@@ -16,6 +16,8 @@
 \newcommand{\markenGG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§§ #1 MarkenG}}}}
 \newcommand{\bgb}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
 \newcommand{\uwg}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/uwg_2004/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }UWG}}}}
+\newcommand{\umv}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://lxgesetze.de/umv/#2}{Art. #2 \ifthenelse{\equal{#1}{}}{}{#1 }UMV}}}}
+
 
 \def\contentsname{\empty}
 
@@ -629,20 +631,20 @@ Die Unionsmarkenverordnung ist in vielen Punkten fast identisch zum Markengesetz
 \bgroup
 \def\arraystretch{1.5}
 \begin{table}[h]
-  \begin{tabular}{|p{0.5\linewidth}|p{0.5\linewidth}|}
+  \begin{tabular}{|l|p{0.3\linewidth}|p{0.3\linewidth}|}
     \hline \rowcolor{gray!30}
-    Unionsmarkenverordnung & Äquivalent im MarkenG \\ \hline
-    Art. 4                 & § 3                   \\ \hline
-    Art. 6                 & § 4                   \\ \hline
-    Art. 7                 & § 8                   \\ \hline
-    Art. 8                 & § 9                   \\ \hline
-    Art. 9                 & § 14                  \\ \hline
-    Art. 14                & § 23                  \\ \hline
-    Art. 15                & § 24                  \\ \hline
-    Art. 18                & § 26                  \\ \hline
-    Art. 21                & § 27                  \\ \hline
+    Inhalt                        & Unionsmarkenverordnung & Äquivalent im MarkenG \\ \hline
+    Schutzfähige Zeichen          & \umv{4}                & \markenG{3}           \\ \hline
+    Entstehung des Markenschutzes & \umv{6}                & \markenG{4}           \\ \hline
+    Absolute Schutzhindernisse    & \umv{7}                & \markenG{8}           \\ \hline
+    Relative Schutzhindernisse    & \umv{8}                & \markenG{9}           \\ \hline
+    Rechte des Inhabers           & \umv{9}                & \markenG{14}          \\ \hline
+    Zulässiger Drittgebrauch      & \umv{14}               & \markenG{23}          \\ \hline
+    Erschöpfung                   & \umv{15}               & \markenG{24}          \\ \hline
+    Benutzungspflicht             & \umv{18}               & \markenG{26}          \\ \hline
+    Rechtsübergang                & \umv{21}               & \markenG{27}          \\ \hline
   \end{tabular}
 \end{table}
-Beachte \textbf{Art. 7 Abs. 1d und Abs. 2 UMV}. Für \textbf{Art. 18 UMV} genügt die ernsthafte Benutzung in einem Mitgliedsstaat.
+Beachte \umv[Abs. 1d und Abs. 2]{7}. Für \umv{18} genügt die ernsthafte Benutzung in einem Mitgliedsstaat.
 
 \end{document}
