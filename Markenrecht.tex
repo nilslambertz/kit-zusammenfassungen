@@ -8,8 +8,6 @@
 
 \definecolor{greenColor}{RGB}{15, 122, 25}
 \newcommand{\green}[1]{\textcolor{greenColor}{#1}}
-\definecolor{redColor}{RGB}{209, 8, 15}
-\newcommand{\red}[1]{\textcolor{redColor}{#1}}
 
 \definecolor{highlightColor}{RGB}{66, 135, 245}
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
@@ -17,6 +15,7 @@
 \newcommand{\markenG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }MarkenG}}}}
 \newcommand{\markenGG}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/markeng/__#2.html}{§§ #1 MarkenG}}}}
 \newcommand{\bgb}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
+\newcommand{\uwg}[2][]{\textbf{\textcolor{markenGesetzLink}{\href{https://www.gesetze-im-internet.de/uwg_2004/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }UWG}}}}
 
 \def\contentsname{\empty}
 
@@ -97,9 +96,9 @@ Bei Benutzungsmarken muss letztendlich ein Gericht ein \textbf{Priorirätsdatum}
 \def\arraystretch{1.5}
 \begin{table}[h]
   \begin{tabular}{|l|p{0.4\linewidth}|p{0.4\linewidth}|}
-    \hline
+    \hline \rowcolor{gray!30}
                      & Eingetragene Marke                                                                                                                                    & Benutzungsmarke                       \\ \hline
-    Eintragung       & Antrag beim DPMA                                                                                                                                      & \textit{nicht nötig}                  \\ \hline
+    Entstehung       & Antrag beim DPMA                                                                                                                                      & nach Erlangung von Verkehrsgeltung    \\ \hline
     Rechtssicherheit & Gewisse \textbf{Rechtssicherheit}: Richter ist an Entscheidung des DPMA gebunden und kann den Schutz nicht aufheben, auch wenn er anderer Meinung ist & Richter entscheidet über Markenschutz \\ \hline
     Priorität        & Ab Tag der Anmeldung (siehe später)                                                                                                                   & Erst nach Verwendung und Etablierung  \\ \hline
     Schutzbereich    & Bundesweit                                                                                                                                            & In bestimmten Fällen nur lokal        \\ \hline
@@ -320,7 +319,7 @@ Eine Marke wird gemäß \markenG{50} unter bestimmten Voraussetzungen für nicht
 Marken können ebenfalls durch \textbf{Verfalls- oder Nichtigkeitsverfahren} gemäß \markenG{55} gelöscht werden. Bei Verfallsklagen handelt es sich um \highlight{Popularklagen}, d.h. jeder kann Klage erheben.
 
 \section{Ansprüche und Vor-/Nachteile von Klagen}
-\subsection{Ansprüche}
+\subsection{Ansprüche}\label{sec:MarkenAnsprueche}
 \textit{Wiederholung}: Markenrechte sind \textit{subjektive Rechte}:
 \begin{itemize}
   \item{\textbf{Positives Benutzungsrecht}: Inhaber kann die Marke verwenden, wie er will}
@@ -457,7 +456,7 @@ Gemäß \markenG{30} können Lizenzen für Marken vergeben werden:
 \def\arraystretch{1.5}
 \begin{table}[h]
   \begin{tabular}{|l|p{0.2\linewidth}|p{0.4\linewidth}|}
-    \hline
+    \hline \rowcolor{gray!30}
     Art der Lizenz                  & Anzahl der Lizenzen & Inhaber darf Marke selbst weiter benutzen \\ \hline
     \textbf{Personale Geltung}      & beliebig viele      & Ja                                        \\ \hline
     \textbf{Alleinige Lizenz}       & eine                & Ja                                        \\ \hline
@@ -476,7 +475,7 @@ Gemäß \markenG{1} werden neben Marken auch \highlight{geschäftliche Bezeichnu
   \item{Priorität gilt wie bei Marken}
 \end{itemize}
 
-\subsection{Ansprüche}
+\subsection{Ansprüche}\label{sec:GeschaeftlicheBezeichnungenAnsprueche}
 Ansprüche für geschäftliche Bezeichnungen sind in \markenGG[15, 18 und 19]{15} zu finden, wobei \markenG{15} den wichtigsten Anspruch darstellt und ähnlich zu \markenG{14} formuliert ist.
 \begin{itemize}
   \item{\textbf{Unterlassung} (\markenG[Abs. 4]{15}, ohne Verschulden)}
@@ -491,5 +490,76 @@ Unternehmenskennzeichen (\markenG[Abs. 2]{5}) sind beispielsweise Uniformen oder
 Werktitel (\markenG[Abs. 3]{5}) sind beispielsweise Namen von Büchern, Fernsehsendungen und auch Titelblätter von Zeitschriften. Je nach Medium unterscheiden sich die Ansprüche an die Unterscheidungskraft, die für einen Schutz nötig sind.\par
 Als Prioritätsdatum wird das Datum der erstmaligen Benutzung, z.B. der Erstaufführung oder Veröffentlichung angenommen.
 
+\section{Geographische Herkunftsangaben}
+Die dritte in \markenG{1} geschützten Kennzeichen sind \highlight{geographische Herkunftsangaben}.
+\begin{itemize}
+  \item{oft als Adjektive verwendet}
+  \item{erhöht \textbf{Markttransparenz} für Verbraucher}
+  \item{Herkunft deutet auf \textbf{Qualität/besondere Merkmale} hin}
+  \item{Kennzeichnungsfunktion (aber keine individuellen Schutzrechte, jeder an dem Ort kann sie verwenden)}
+  \item{kann als Kollektivmarke eingetragen werden, ist aber auch ohne Eintragung geschützt}
+\end{itemize}
+
+\subsection{Schutzebene: National}
+National sind geographische Herkunftsangaben gemäß \markenG{126} geschützt. Darunter fallen \textbf{mittelbare} aber auch \textbf{unmittelbare} Herkunftsangaben, sodass kein ausdrücklicher Hinweis notwendig ist (z.B. Bocksbeutel-Wein aus Franken).\par
+Allerdings werden nur Kennzeichen geschützt, die vom Verkehr \textbf{als wirkliche Herkunftsangabe verstanden} werden, so würde ``Lampe Passau'' keinen Schutz genießen.\par
+Unter \markenG[Abs. 2]{126} (Gattungsbezeichnungen) fallen Zeichen, die diese Eigenschaften verloren haben, z.B. ``Wiener Schnitzel''.
+
+\subsubsection{Schutzbereich}
+Gemäß \markenG{127} umfasst der Schutzbereich von geographischen Herkunftsangaben
+\begin{enumerate}
+  \item{Schutz gegen Waren anderer Herkunft}
+  \item{Schutz gegen qualitätsmindere Waren gleicher Herkunft}
+  \item{Schutz von geographischen Herkunftsangaben mit besonderem Ruf gegen unlautere/nicht gerechtfertigte Benutzung oder Verwässerung der Herkunftsangabe}
+  \item{Schutz gegen Irreführung}
+\end{enumerate}
+
+\subsubsection{Ansprüche}
+Ähnliche wie bei \hyperref[sec:MarkenAnsprueche]{Marken} und \hyperref[sec:GeschaeftlicheBezeichnungenAnsprueche]{geschäftlichen Bezeichnungen} bestehen gemäß \markenG{128} Ansprüche:
+\begin{itemize}
+  \item{Unterlassung}
+  \item{Schadensersatz (bei Verschulden)}
+\end{itemize}
+Gemäß \uwg[Abs. 3]{8} kann jeder klagen (\textbf{Popularklage}), nicht nur Betroffene. Ebenfalls drohen gemäß \markenG{144} strafrechtliche Konsequenzen.
+
+\subsubsection{Prüfungsreihenfolge}
+\begin{enumerate}
+  \item{\markenG{126}:
+              \begin{itemize}
+                \item{Abs. 1: mittelbare oder unmittelbare Herkunftsangabe}
+                \item{Abs. 2: keine Gattungsbezeichnung}
+              \end{itemize}
+        }
+  \item{\markenG{127}:
+              \begin{itemize}
+                \item{Gefahr der Irreführung}
+                \item{Gefahr Ruf zu verletzen oder auszunutzen}
+                \item{mindere Qualität aus gleicher Herkunft}
+              \end{itemize}
+        }
+\end{enumerate}
+
+\subsection{Schutzebene: EU}
+Auf \textbf{EU-Ebene} existieren drei Gütezeichen \textbf{für Agrarprodukte und Lebensmittel}, der Schutz entsteht durch Eintragung ins europäische Register.
+
+\subsubsection{Geschützte Ursprungsbezeichnung}
+\begin{itemize}
+  \item{\textbf{alle} Produktionsschritte und Rohstoffe kommen aus dem Gebiet}
+  \item{z.B. Käse, Wein, Champagner}
+\end{itemize}
+
+\subsubsection{Geschützte geografische Angabe}
+\begin{itemize}
+  \item{\textbf{mindestens ein} Produktionsschritt in dem Gebiet}
+  \item{kann beim Verbraucher falsche Erwartungen wecken, da Rohstoffe aus anderem Gebiet kommen können}
+\end{itemize}
+
+\subsubsection{Garantiert traditionelle Spezialität}
+\begin{itemize}
+  \item{beliebige Herkunft}
+  \item{\textbf{traditionelles Rezept/Herstellungsweise}}
+\end{itemize}
+
+\subsection{Schutzebene: International}
 
 \end{document}
