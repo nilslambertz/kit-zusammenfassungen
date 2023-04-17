@@ -1,16 +1,22 @@
 \definecolor{headerBg}{RGB}{11, 67, 158}
 \definecolor{headerGrayColor}{RGB}{210, 210, 210}
 
+\newcommand{\printTitle}{\textcolor{white}{\lectureTitle}\normalsize}
+
 \fancyhf{}
 \pagestyle{fancy}
 \fancyhead[C]{
   \fcolorbox{headerBg}{headerBg}{
     \hspace{0.6cm}\begin{minipage}[c][50pt][c]{\paperwidth}
-      \begin{minipage}[c]{.45\textwidth}
-        \huge{\textcolor{white}{\lectureTitle}}\normalsize\\
+      \begin{minipage}[c]{.65\textwidth}
+        \ifdefined\titleSize
+          \titleSize \printTitle\\
+        \else
+          \huge\printTitle\\
+        \fi
         \textcolor{headerGrayColor}{\small{\semester}}
       \end{minipage}%
-      \begin{minipage}[c]{.45\textwidth}
+      \begin{minipage}[c]{.25\textwidth}
         \raggedleft
         \textcolor{white}{
           \small{\href{mailto:mail@nilslambertz.de}{\textcolor{white}{\faicon{envelope}} mail@nilslambertz.de}}\\
