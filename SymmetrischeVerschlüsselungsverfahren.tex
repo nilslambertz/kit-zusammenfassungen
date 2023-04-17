@@ -1,0 +1,48 @@
+\documentclass[12pt,A4]{extarticle}	
+
+\newcommand{\lectureTitle}{Symmetrische Verschlüsselungsverfahren}
+\newcommand{\semester}{Sommersemester 2023}
+
+\newcommand{\titleSize}{\LARGE}
+
+\input{shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+
+\def\contentsname{\empty}
+
+\begin{document}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Einführung}
+\subsection{Ausgangspunkte für Angriffe}
+Angriffe können nach den zur Verfügung stehenden Informationen unterteilt werden:
+\begin{itemize}
+  \item{\highlight{Ciphertext-Only-Attack}: Nur das \textit{Chiffre}, also die verschlüsselte Nachricht, ist bekannt}
+  \item{\highlight{Known-Plaintext-Attack}: Es gibt bekannte Klartext-Chiffre-Paare. Hilfreich sind bekannte Anfangs- und Endphrasen, die in mehreren Nachrichten vorkommen.}
+  \item{\highlight{Chosen-Plaintext-Attack}: Es besteht die Möglichkeit, beliebige Texte zu verschlüsseln und somit Klartext-Chiffre-Paare zu erzeugen.}
+\end{itemize}
+
+\subsection{Angriffsarten}
+\begin{itemize}
+  \item{Brute-Force (z.B. alle Schlüssel ausprobieren)}
+  \item{Statistische Methoden (z.B. Häufigkeitsanalysen von Buchstaben)}
+  \item{Strukturelle Angriffe (z.B. Lineare Kryptoanalyse)}
+\end{itemize}
+
+\subsection{Historische Verschlüsselungsverfahren}
+Historisch wurden zur Verschlüsselung zwei grundlegende Operationen verwendet:
+\begin{itemize}
+  \item{\highlight{Substitution}}
+  \item{\highlight{Permutation}}
+\end{itemize}
+Alleine sind beide Verfahren meistens nicht sicher, jedoch verwenden moderne Verschlüsselungsverfahren eine Kombination beider Operationen.
+
+\end{document}
