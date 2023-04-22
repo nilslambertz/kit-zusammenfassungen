@@ -2,6 +2,11 @@
 \definecolor{headerGrayColor}{RGB}{210, 210, 210}
 
 \newcommand{\printTitle}{\textcolor{white}{\lectureTitle}\normalsize}
+\newcommand{\printSubtitle}{
+  \ifdefined\lectureSubtitle
+    \textcolor{white}{\small{\lectureSubtitle}}\\
+  \fi
+}
 
 \fancyhf{}
 \pagestyle{fancy}
@@ -14,6 +19,7 @@
         \else
           \huge\printTitle\\
         \fi
+        \printSubtitle
         \textcolor{headerGrayColor}{\small{\semester}}
       \end{minipage}%
       \begin{minipage}[c]{.25\textwidth}
