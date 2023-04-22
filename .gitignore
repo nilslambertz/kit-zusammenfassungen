@@ -1,3 +1,5 @@
+*.bib
+
 ## Hide PDFs in root
 /*.pdf
 
