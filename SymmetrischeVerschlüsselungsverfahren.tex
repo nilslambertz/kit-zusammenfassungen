@@ -71,16 +71,14 @@ Eine \highlight{Ideal Cipher} (IC) ist eine (Über-)Idealisierung einer Blockchi
   \item{Orakel muss jede Ausgabe speichern, damit für gleiche Nachrichten immer das gleiche Chiffre zurückgegeben wird (nicht parallelisierbar)}
 \end{itemize}
 
-\subsection{DES (Data Encryption Standard)}
-Der \textbf{Data Encryption Standard} ist eine Blockchiffre mit Schlüssellänge $k = 56$ und Blocklänge $n = 64$, die Verschlüsselungsfunktion ist also $\{0, 1\}^k \times \{0, 1\}^n \rightarrow \{0, 1\}^n$. Er besteht aus einer \textbf{Feistel-Struktur} mit 16 Runden und wurden aufgrund der kurzen Schlüssellänge \textbf{gebrochen}.
-
-
 \begin{wrapfigure}{r}{9cm}
-  \begin{centering}
-    \includegraphics[width=9cm]{images/des_struktur.png}
-  \end{centering}
+  \vspace*{-1cm}
+  \centering
+  \includegraphics[width=9cm]{images/des_struktur.png}
   \caption{DES-Verschlüsselungsalgorithmus}
 \end{wrapfigure}
+\subsection{DES (Data Encryption Standard)}
+Der \textbf{Data Encryption Standard} ist eine Blockchiffre mit Schlüssellänge $k = 56$ und Blocklänge $n = 64$, die Verschlüsselungsfunktion ist also $\{0, 1\}^k \times \{0, 1\}^n \rightarrow \{0, 1\}^n$. Er besteht aus einer \textbf{Feistel-Struktur} mit 16 Runden und wurden aufgrund der kurzen Schlüssellänge \textbf{gebrochen}.
 \subsubsection{Beispiel für Encryption-Schritt}
 $L_1 = R_0$\\
 $R_1 = L_0 \oplus F_{k_1}(R_0)$\par
