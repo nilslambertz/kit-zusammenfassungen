@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx,wrapfig,lipsum}
+\usepackage[german]{babel}
 
 \newcommand{\lectureTitle}{Symmetrische Verschlüsselungsverfahren [WIP]}
 \newcommand{\semester}{Sommersemester 2023}
@@ -17,6 +18,9 @@
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
 
 \def\contentsname{\empty}
+\addto\captionsgerman{
+  \renewcommand{\contentsname}{\empty}
+}
 
 \begin{document}
 
@@ -72,10 +76,14 @@ Eine \highlight{Ideal Cipher} (IC) ist eine (Über-)Idealisierung einer Blockchi
 \end{itemize}
 
 \begin{wrapfigure}{r}{9cm}
-  \vspace*{-1cm}
+  \vspace*{-2cm}
   \centering
-  \includegraphics[width=9cm]{images/des_struktur.png}
+  \includegraphics[width=8cm]{images/des_struktur.png}
   \caption{DES-Verschlüsselungsalgorithmus}
+  \vspace*{0.5cm}
+  \includegraphics[width=6cm]{images/des_f_funktion.png}
+  \caption{F-Funktion}
+  \vspace*{-10cm}
 \end{wrapfigure}
 \subsection{DES (Data Encryption Standard)}
 Der \textbf{Data Encryption Standard} ist eine Blockchiffre mit Schlüssellänge $k = 56$ und Blocklänge $n = 64$, die Verschlüsselungsfunktion ist also $\{0, 1\}^k \times \{0, 1\}^n \rightarrow \{0, 1\}^n$. Er besteht aus einer \textbf{Feistel-Struktur} mit 16 Runden und wurden aufgrund der kurzen Schlüssellänge \textbf{gebrochen}.
@@ -91,5 +99,37 @@ $R_{15} = L_{16}$
   L_{15} & = R_{16} \oplus F_{k_{16}}(R_{15}) & \\
          & = R_{16} \oplus F_{k_{16}}(L_{16})
 \end{flalign*}
+
+\subsubsection{F-Funktion}
+Die \highlight{F-Funktion} ist eine nicht-reversible Funktion, die in jeder Runde der Feistel-Struktur ausgeführt wird. Der Ablauf ist folgender:
+\begin{enumerate}
+  \item{\textbf{Expansion}: Die 32 Eingabebits werden auf 48 Bits erweitert}
+  \item{Das bitweise XOR zwischen Expansion und dem Schlüssel wird berechnet}
+  \item{Das Ergebnis wird in 6-Bit-Blöcken auf 8 \textbf{Substitutionsboxen} verteilt}
+  \item{Die Substitution wird permutiert und ausgeben}
+\end{enumerate}
+
+\newpage
+\subsubsection{2DES}
+DES wurde aufgrund der kurzen Schlüssellänge (56 Bit) gebrochen und sollte daher nicht mehr in seiner einfachen Form verwendet werden. Es gibt jedoch modifizierte Varianten, die die Sicherheit von DES verbessern, z.B. \textbf{2DES}:\par
+Bei 2DES wird die Nachricht zuerst mit $k_1$ verschlüsselt und das Chiffrat dann erneut mit $k_2$ verschlüsselt: $c = DES_{k_2}(DES_{k_1}(m))$
+
+\subsubsection{Angriff auf 2DES}
+Gegen 2DES sind \textbf{Meet-in-the-Middle}-Angriffe möglich, dabei wird versucht, die Verschlüsselung von beiden Seiten zu brechen.\par
+Gegeben sind zwei Paare $(m_1, c_1)$ und $(m_2, c_2)$, dann funktioniert der Angriff wie folgt:
+\begin{enumerate}
+  \item{\textbf{Vorwärtsschritt}: Berechne $DES_{k}(m_1)$ und $DES_{k}(m_2)$ für alle $k = 0, \dots, 2^{56} - 1$ und speichere alle Werte in einer Tabelle $T$}
+  \item{\textbf{Sortierschritt}: Sortiere Tabelle $T$}
+  \item{\textbf{Rückwärtsschritt}: Berechne $DES^{-1}_{k}(c_1)$ und $DES^{-1}_{k}(c_2)$ für alle $k = 0, \dots, 2^{56} - 1$ und suche nach Treffern in $T$}
+\end{enumerate}
+\underline{\textbf{Zeitaufwand des Angriffs:}}
+\begin{enumerate}
+  \item{\textbf{Vorwärtsschritt}: $2 * 2^{56}$ DES-Operationen}
+  \item{\textbf{Sortierschritt}: $56 * 2^{56}$ Vergleiche}
+  \item{\textbf{Rückwärtsschritt}: $2 * 2^{55}$ DES-Operationen (da man nach ungefähr nach der Hälfte fertig ist)}
+\end{enumerate}
+\underline{\textbf{Speicheraufwand des Angriffs:}}\par
+In der Tabelle müssen ungefähr $2^{60}$ Byte gespeichert werden, was ungefähr $1.150.000$ TB entspricht. Damit ist der Angriff praktisch nicht praktikabel.
+
 
 \end{document}
