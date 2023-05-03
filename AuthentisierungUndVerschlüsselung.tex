@@ -1,0 +1,185 @@
+\documentclass[12pt,A4]{extarticle}	
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx,wrapfig,lipsum}
+\usepackage[german]{babel}
+
+\newcommand{\lectureTitle}{Authentisierung und Verschlüsselung [WIP]}
+\newcommand{\semester}{Sommersemester 2023}
+
+\newcommand{\titleSize}{\LARGE}
+
+\input{shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+
+\def\contentsname{\empty}
+\addto\captionsgerman{
+  \renewcommand{\contentsname}{\empty}
+}
+
+\begin{document}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Einführung}
+\subsection{Ziel von Kryptographischen Verfahren}
+Kryptographische Verfahren sollen \highlight{Authentizität} (Dokument wurde von einer bestimmten Person signiert) und \highlight{Integrität} (Dokument wurde nicht verändert) sicherstellen.
+
+\subsection{Informelle Definition von Signaturen}
+\begin{itemize}
+  \item{\textbf{asymmetrische} Verfahren}
+  \item{Schlüsselpaar $(pk, sk)$}
+  \item{Nachricht $m$ wird mit $sk$ signiert und erzeugt Signatur $\sigma$}
+  \item{Mit $pk$ kann überprüft werden, ob eine Signatur $\sigma$ gültig für eine Nachricht $m$ ist}
+\end{itemize}
+
+\subsection{Digitale Signaturen}
+\subsubsection{Definition}
+Ein digitales Signaturverfahren für einen Nachrichtenraum $\mathcal{M}$ ist ein Tupel $\Sigma = (Gen, Sign, Vfy)$ von probabilistischen Polyzeit (PPT) Algorithmen:
+\begin{itemize}
+  \item{$Gen(1^k) \rightarrow (pk, sk)$}
+  \item{$Sign(sk, m) \rightarrow \sigma$, $m \in \mathcal{M}$}
+  \item{$Vfy(pk, m, \sigma) \in \{0, 1\}$}
+\end{itemize}
+
+\subsubsection{Correctness}
+\highlight{Correctness} (``Das Verfahren funktioniert''): $\forall (pk, sk) \leftarrow Gen(1^k) \forall m \in \mathcal{M}: Vfy(pk, m, Sign(sk, m)) = 1$
+
+\subsection{Sicherheitsdefinitionen}
+Sicherheit besteht aus einem \highlight{Angreifermodell} (was kann der Angreifer tun, welche Angriffsmöglichkeiten stehen zur Verfügung) und einem \highlight{Angreiferziel} (was muss der Angreifer tun, um das Verfahren zu brechen).
+
+\subsubsection{Angreifermodelle}
+\begin{enumerate}
+  \item{no-message attack (NMA)
+              \begin{itemize}
+                \item{Angreifer erhält nur $pk$}
+              \end{itemize}
+        }
+  \item{\highlight{non-adaptive chosen-message attack (naCMA)}
+              \begin{itemize}
+                \item{Angreifer wählt $m_1, \dots, m_q$}
+                \item{Angreifer erhält \textbf{danach} $pk$ und Signaturen $\sigma_1, \dots, \sigma_q$}
+              \end{itemize}
+        }
+  \item{\highlight{(adaptive) chosen-message attack (CMA)}
+              \begin{itemize}
+                \item{Angreifer erhält $pk$}
+                \item{Angreifer wählt dann (adaptiv) $m_1, \dots, m_q$ und erhält Signaturen $\sigma_1, \dots, \sigma_q$}
+                \item{Adaptiv: Angreifer darf Wahl von $m_i$ abhängig von vorherigen $\sigma_j$ ($j < i$) und $pk$ machen}
+              \end{itemize}
+        }
+\end{enumerate}
+
+\subsubsection{Angreiferziele}
+\begin{enumerate}
+  \item{Universal Unforgeability (UUF)
+              \begin{itemize}
+                \item{Nachricht $m$ wird zufällig gewählt}
+                \item{Angreifer muss $m$ signieren}
+              \end{itemize}
+        }
+  \item{\highlight{Existential Unforgeablility (EUF)}
+              \begin{itemize}
+                \item{Angreifer kann Nachricht $m$ beliebig wählen und diese signieren}
+              \end{itemize}
+        }
+\end{enumerate}
+
+In den \textbf{Sicherheitsdefinitionen} werden \textbf{Angreiferziel} und \textbf{Angreifermodell} kombiniert, z.B.
+\begin{itemize}
+  \item{EUF-CMA}
+  \item{EUF-naCMA}
+\end{itemize}
+
+\subsection{EUF-CMA-Sicherheitsexperiment}
+Bei Sicherheitsexperimenten spielt ein Angreifer $\mathcal{A}$ gegen einen Challenger $\mathcal{C}$. $\mathcal{A}$ gewinnt, falls er die Sicherheit des Verfahrens bricht.\par
+$\mathcal{A}$ muss dabei mit einer nicht vernachlässigbaren Wahrscheinlichkeit eine gültige Signatur erzeugen können, ohne den Schlüssel $sk$ zu kennen.
+
+\subsubsection{Visualisierung: EUF-CMA-Sicherheitsexperiment}
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}_\text{EUF-CMA}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node[label={[align=center]below:$Vfy(pk, m^*, \sigma^*) = 1$?\\ $\land$ \\ $m^* \notin \{m_1, \dots, m_q\}$?}] (C) at (0,0) {};
+  \node (D) at (5,0) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (D);
+
+  \node[label={left:$(pk, sk) \leftarrow Gen(1^k)$}] at (0,5) {};
+  \node[label={left:$\sigma_i \leftarrow Sign(sk, m_i)$}]  at (0,3) {};
+
+  \draw[decoration={calligraphic brace,amplitude=10pt}, decorate, line width=1.25pt] (5.2,4) -- (5.2,2)
+  node[midway, right=0pt, font=\footnotesize] {\begin{minipage}{5cm}\begin{itemize}
+        \item{Anfragen nacheinander}
+        \item{$q = q(k)$ Anfragen}
+        \item{$q$ Polynom}
+      \end{itemize}\end{minipage}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,5) -- (5,4.5) node[midway, above, sloped] {$pk$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_i$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$\sigma_i$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$m^*, \sigma^*$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $Vfy(pk, m^*, \sigma^*) = 1$ \textbf{und} $m^* \notin \{m_1, \dots, m_q\}$
+
+\subsubsection{Definition: Vernachlässigbarkeit}
+Eine Funktion $negl: \mathbb{N} \rightarrow [0, 1]$ ist \textit{vernachlässigbar}, wenn
+\begin{flalign*}
+  \forall c \in \mathbb{N} \exists k_0 \in \mathbb{N} \forall k \geq k_0: negl(k) < \frac{1}{k^c}
+\end{flalign*}
+
+\subsubsection{Definition: EUF-CMA}
+Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{EUF-CMA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt EUF-CMA-Experiment}]                                                                                    \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}_\text{EUF-CMA}}(pk) = (m^*, \sigma^*): Vfy(pk, m^*, \sigma^*) = 1 \land m^* \notin \{m_1, \dots, m_q\}] \\
+   & \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsection{EUF-naCMA-Sicherheitsexperiment}
+\subsubsection{Visualisierung: EUF-naCMA-Sicherheitsexperiment}
+\begin{tikzpicture}
+  \node (A) at (0,5) {$\mathcal{C}_\text{EUF-naCMA}$};
+  \node (B) at (5,5) {$\mathcal{A}$};
+  \node[label={[align=center]below:$Vfy(pk, m^*, \sigma^*) = 1$?\\ $\land$ \\ $m^* \notin \{m_1, \dots, m_q\}$?}] (C) at (0,0) {};
+  \node (D) at (5,0) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (D);
+
+  \node[label={right:\begin{minipage}{5cm}\footnotesize\begin{itemize}
+            \item{$q = q(k)$ Nachrichten}
+            \item{$q$ Polynom}
+          \end{itemize}\end{minipage}}] at (5,4) {};
+  \node[label={[align=left]left:$(pk, sk) \leftarrow Gen(1^k)$\\$\forall i: \sigma_i \leftarrow Sign(sk, m_i)$}] at (0,3) {};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_1, \dots, m_q$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$pk, \sigma_1, \dots, \sigma_q$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$m^*, \sigma^*$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $Vfy(pk, m^*, \sigma^*) = 1$ \textbf{und} $m^* \notin \{m_1, \dots, m_q\}$
+
+
+\subsubsection{Definition: EUF-naCMA}
+Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{EUF-naCMA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt EUF-naCMA-Experiment}]                                                                                \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}_\text{EUF-naCMA}} = (m^*, \sigma^*): Vfy(pk, m^*, \sigma^*) = 1 \land m^* \notin \{m_1, \dots, m_q\}] \\
+   & \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\end{document}
