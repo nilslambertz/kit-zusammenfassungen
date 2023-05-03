@@ -11,7 +11,7 @@
 
 \newcommand{\titleSize}{\LARGE}
 
-\input{shared/summary-boilerplate.tex}
+\input{../shared/summary-boilerplate.tex}
 \cfoot{\thepage\ $/$ \pageref*{LastPage}}
 
 \definecolor{highlightColor}{RGB}{66, 135, 245}
@@ -181,5 +181,17 @@ Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{EUF-naCM
    & \leq negl(k)
 \end{flalign*}
 für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsection{Einmalsignaturen}
+\begin{itemize}
+  \item{Signaturen, die viele Nachrichten signieren können}
+  \item{Vorstufe: Signaturen, die nur \textbf{eine} Nachricht \textbf{sicher} signieren können (\highlight{Einmalsignaturen})}
+  \item{für jeden \textit{public key} sollte nur eine einzige Signatur ausgestellt werden, sonst evtl. unsicher}
+\end{itemize}
+
+\subsubsection{Sicherheitsbegriffe für Einmalsignaturen}
+Analog zum vorherigen Kapitel definieren wir \textbf{EUF-1-CMA} und \textbf{EUF-1-naCMA} für Einmalsignaturen.
+
+\subsubsection{Beziehungen zwischen Sicherheitsdefinitionen}
 
 \end{document}

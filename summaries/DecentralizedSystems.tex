@@ -25,7 +25,7 @@
 
 \newcommand{\titleSize}{\LARGE}
 
-\input{shared/summary-boilerplate.tex}
+\input{../shared/summary-boilerplate.tex}
 \cfoot{\thepage\ $/$ \pageref*{LastPage}}
 
 
@@ -112,6 +112,9 @@ Decentralized systems come with risks/challenges to avoid harm to the system or 
   \item{\textbf{Collusion}}
   \item{Denial-of-Service-attacks}
 \end{itemize}
+
+\subsection{Two Generals' Problem}
+Cryptography can be used to ensure authenticity, integrity and confidentiality of a message sent over an (unreliable) channel. But it's not possible to ensure \textbf{availability} (that a message has been delivered), we can only reduce the probability of these events by using heuristics like \textit{sequence numbers} or \textit{retransmissions}.
 
 \newpage
 \bibliographystyle{apalike}
