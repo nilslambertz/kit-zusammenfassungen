@@ -138,7 +138,7 @@ Eine Funktion $negl: \mathbb{N} \rightarrow [0, 1]$ ist \textit{vernachlässigba
   \forall c \in \mathbb{N} \exists k_0 \in \mathbb{N} \forall k \geq k_0: negl(k) < \frac{1}{k^c}
 \end{flalign*}
 
-\subsubsection{Definition: EUF-CMA}
+\subsubsection{Definition: EUF-CMA}\label{sec:DefinitionEUFCMA}
 Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{EUF-CMA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
 \begin{flalign*}
    & \Pr[\mathcal{A} \text{ gewinnt EUF-CMA-Experiment}]                                                                                    \\
@@ -184,7 +184,7 @@ für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 
 \subsection{Einmalsignaturen}
 \begin{itemize}
-  \item{Signaturen, die viele Nachrichten signieren können}
+  \item{Ziel: Signaturen, die viele Nachrichten signieren können}
   \item{Vorstufe: Signaturen, die nur \textbf{eine} Nachricht \textbf{sicher} signieren können (\highlight{Einmalsignaturen})}
   \item{für jeden \textit{public key} sollte nur eine einzige Signatur ausgestellt werden, sonst evtl. unsicher}
 \end{itemize}
@@ -193,5 +193,130 @@ für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 Analog zum vorherigen Kapitel definieren wir \textbf{EUF-1-CMA} und \textbf{EUF-1-naCMA} für Einmalsignaturen.
 
 \subsubsection{Beziehungen zwischen Sicherheitsdefinitionen}
+\begin{tikzpicture}
+  \node at (0,0) {EUF-1-naCMA};
+  \node at (2,0) {$\Leftarrow$};
+  \node at (4,0) {EUF-1-CMA};
+
+  \node at (0,1) {$\Downarrow$};
+  \node at (4,1) {$\Downarrow$};
+
+  \node at (0,2) {EUF-naCMA};
+  \node at (2,2) {$\Leftarrow$};
+  \node at (4,2) {EUF-CMA};
+\end{tikzpicture}
+
+Beweis im Skript.
+
+\subsection{Perfekte Sicherheit}
+In den Definitionen, z.B. bei \hyperref[sec:DefinitionEUFCMA]{EUF-CMA} finden sich zwei Einschränkungen, die im folgenden erläutert werden:
+
+\subsubsection{Warum müssen wir uns auf PPT-Angreifer beschränken?}
+Durch Brute-Force könnte ein unbeschränkter Angreifer alle Signaturen durchprobieren und so valide Signaturen für beliebige Nachrichten finden, wodurch er beim Sicherheitsexperiment immer gewinnen würde.
+
+\subsubsection{Warum muss die Erfolgswahrscheinlichkeit des Angreifers nur vernachlässigbar sein?}
+Die Erfolgswahrscheinlichkeit kann nicht 0 sein, da der Angreifer durch zufälliges Raten eine gültige Signatur für eine beliebige Nachricht finden könnte, wodurch er das Sicherheitsexperiment gewinnt.
+
+\subsection{Erweiterung des Nachrichtenraumes}
+Wir konstruieren fast immer Signaturen mit ``kleinem'' Nachrichtenraum, z.B.
+\begin{itemize}
+  \item{$\mathbb{Z}_p = \{0, \dots, p-1\}$, $p$ prim}
+  \item{$\{0, 1\}^{q(k)}$, $q$ Polynom, $k$ Sicherheitsparameter}
+\end{itemize}
+Unser Ziel ist es jedoch, beliebige Nachrichten, z.B. $\{0, 1\}^*$, zu signieren.
+
+\subsubsection{Hashfunktionen}
+Eine kryptographische Hashfunktion $H = (Gen_H, Eval_H)$ ist ein Tupel aus zwei PPT-Algorithmen:
+\begin{itemize}
+  \item{$Gen_H(1^k)$ berechnet $t$, sodass $t$ eine Funktion
+              \begin{flalign*}
+                H_t: \{0, 1\}^* \rightarrow \mathcal{M}_t
+              \end{flalign*}
+              spezifiziert}
+  \item{$Eval_H(1^k, t,x)$ berechnet $H_t(x)$}
+\end{itemize}
+
+\subsubsection{Kollisionsresistenz}
+Eine Hashfunktion $H = (Gen_H, Eval_H)$ ist \highlight{kollisionsresistent}, falls für alle $t \leftarrow Gen_H(1^k)$ und für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+  \Pr[\mathcal{A}(1^k, t) = (x, x'): H_t(x) = H_t(x') \land x \neq x'] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Signatur mit unbeschränktem Nachrichtenraum (\highlight{Hash-then-Sign})}
+Wir wollen nun Signaturen mit unbeschränktem Nachrichtenraum konstruieren. Gegeben:
+\begin{itemize}
+  \item{$\Sigma' = (Gen', Sign', Vfy')$ mit Nachrichtenraum $\mathcal{M}$}
+  \item{kollisionsresistente Hashfunktion $H: \{0,1\}^* \rightarrow \mathcal{M}$}
+\end{itemize}
+Konstruiere $\Sigma = (Gen, Sign, Vfy)$ mit Nachrichtenraum $\{0,1\}^*$:
+\begin{itemize}
+  \item{$Gen(1^k)$ berechnet $(pk, sk) \leftarrow Gen'(1^k)$}
+  \item{$Sign(sk, m)$ berechnet $\sigma \leftarrow Sign'(sk, H(m))$}
+  \item{$Vfy(pk, m, \sigma)$ gibt $Vfy'(pk, H(m), \sigma)$ aus}
+\end{itemize}
+
+\section{q-mal Signaturen}
+\subsection{Von EUF-naCMA-Sicherheit zu EUF-CMA-Sicherheit}
+Gegeben
+\begin{itemize}
+  \item{ein EUF-naCMA-sicheres Signaturverfahren $\Sigma'$ und}
+  \item{ein EUF-1-naCMA-sicheres Einmalsignaturverfahren $\Sigma^{(1)}$}
+\end{itemize}
+können wir mittels \textbf{Transformation} ein \textbf{EUF-CMA}-sicheres Signaturverfahren $\Sigma$ konstruieren.
+
+\subsubsection{Transformation}
+Gegeben:
+\begin{itemize}
+  \item{EUF-naCMA-sicheres Signaturverfahren $\Sigma' = (Gen', Sign', Vfy')$}
+  \item{EUF-1-naCMA-sicheres Signaturverfahren $\Sigma^{(1)} = (Gen^{(1)}, Sign^{(1)}, Vfy^{(1)})$}
+\end{itemize}
+Konstruiere nun $\Sigma = (Gen, Sign, Vfy)$ wie folgt:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                (pk, sk) \coloneqq (pk', sk') \leftarrow Gen'(1^k)
+              \end{flalign*} }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                (pk^{(1)}, sk^{(1)}) & \leftarrow Gen^{(1)}(1^k)                   \\
+                \sigma'              & \leftarrow Sign'(sk, pk^{(1)})              \\
+                \sigma^{(1)}         & \leftarrow Sign^{(1)} (sk^{(1)} , m)        \\
+                \sigma               & \coloneqq (pk^{(1)}, \sigma^{(1)}, \sigma') \\
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$ gibt 1 aus, wenn\begin{flalign*}
+                Vfy'(pk, pk^{(1)}, \sigma') = 1 \land Vfy^{(1)}(pk^{(1)}, m, \sigma^{(1)}) = 1
+              \end{flalign*}
+              sonst 0 }
+\end{itemize}
+Es wird also für jede Signatur ein neues Einmalschlüsselpaar erzeugt.
+
+\subsection{Mehrmal-Signaturverfahren aus Einmalsignaturverfahren}
+Einmalsignaturverfahren sind effizient und einfach zu konstruieren, daher würden wir gerne eine Variation dieser verwenden, um mehrfach signieren zu können (q-mal-Signaturverfahren).
+
+\subsubsection{Naiver Ansatz: q Schlüsselpaare}
+Der naive Ansatz ist, $q$ Schlüsselpaare zu verwenden und einen Zähler $st \in \{1, \dots, q\}$ als Zustand zu verwenden, der auch im Secret Key und in der Signatur vorkommt:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & (pk_i, sk_i) \leftarrow Gen^{(1)}(1^k) \text{ für alle } i \in \{1, \dots, q\} \\
+                 & pk \coloneqq (pk_1, \dots, pk_q)                                               \\
+                 & sk \coloneqq (sk_1, \dots, sk_q, st = 1)
+              \end{flalign*} }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                i        & \coloneqq st                   \\
+                \sigma_i & \leftarrow Sign^{(1)}(sk_i, m) \\
+                \sigma   & \leftarrow (\sigma_i, i)       \\
+                st       & \coloneqq st + 1               \\
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma = (\sigma_i, i))$: \begin{flalign*}
+                Vfy^{(1)}(pk_i, m, \sigma_i) \stackrel{?}{=} 1
+              \end{flalign*}
+        }
+\end{itemize}
+
+\underline{\textbf{Eigenschaften bezogen auf Signaturanzahl (q):}}
+\begin{itemize}
+  \item{$|pk| \in \Theta(q)$}
+  \item{$|sk| \in \Theta(q)$}
+  \item{$|\sigma| \in \Theta(1)$}
+\end{itemize}
 
 \end{document}
