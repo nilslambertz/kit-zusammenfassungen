@@ -17,6 +17,8 @@
 \definecolor{highlightColor}{RGB}{66, 135, 245}
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
 
+\newcommand{\redBold}[1]{\textcolor{red}{\textbf{#1}}}
+
 \def\contentsname{\empty}
 \addto\captionsgerman{
   \renewcommand{\contentsname}{\empty}
@@ -110,7 +112,7 @@ Die \highlight{F-Funktion} ist eine nicht-reversible Funktion, die in jeder Rund
 \end{enumerate}
 
 \newpage
-\subsubsection{2DES}
+\subsection{2DES}\label{sec:2des}
 DES wurde aufgrund der kurzen Schlüssellänge (56 Bit) gebrochen und sollte daher nicht mehr in seiner einfachen Form verwendet werden. Es gibt jedoch modifizierte Varianten, die die Sicherheit von DES verbessern, z.B. \textbf{2DES}:\par
 Bei 2DES wird die Nachricht zuerst mit $k_1$ verschlüsselt und das Chiffrat dann erneut mit $k_2$ verschlüsselt: $c = DES_{k_2}(DES_{k_1}(m))$
 
@@ -129,7 +131,70 @@ Gegeben sind zwei Paare $(m_1, c_1)$ und $(m_2, c_2)$, dann funktioniert der Ang
   \item{\textbf{Rückwärtsschritt}: $2 * 2^{55}$ DES-Operationen (da man nach ungefähr nach der Hälfte fertig ist)}
 \end{enumerate}
 \underline{\textbf{Speicheraufwand des Angriffs:}}\par
-In der Tabelle müssen ungefähr $2^{60}$ Byte gespeichert werden, was ungefähr $1.150.000$ TB entspricht. Damit ist der Angriff praktisch nicht praktikabel.
+In der Tabelle müssen ungefähr $2^{60}$ Byte gespeichert werden, was ungefähr $1.150.000$ TB entspricht. Damit ist der Angriff so nicht praktikabel.\par
+Der Angriff lässt sich ``verbessern'', indem ein Teil des Platzbedarfs mit erhöhtem Rechenaufwand ausgeglichen wird, somit ist das Speicherproblem nicht mehr unüberwindbar, der Angriff dauert aber proportional länger.
+
+\subsection{3DES}
+\textbf{3DES} ist analog zu \hyperref[sec:2des]{2DES} definiert. Hierbei werden drei verschiedene Schlüssel $k_1, k_2, k_3$ verwendet. In der mittleren Box wird statt dem normalen $DES$ die inverse Funktion $DES^{-1}$ verwendet. Dadurch kann bei Bedarf $k_1 = k_2 = k_3$ gesetzt werden, wodurch effektiv nur eine $DES$-Verschlüsselung mit $k_1$ ausgeführt wird.\par
+
+\begin{tikzpicture}
+  \node (START) at (-2,0) {$m$};
+  \node[draw=black, line width=1pt] (A) at (0,0) {$DES$};
+  \node[draw=black, line width=1pt] (B) at (3,0) {$DES^{-1}$};
+  \node[draw=black, line width=1pt] (C) at (6,0) {$DES$};
+  \node (END) at (8,0) {$c$};
+
+  \draw[->] (START) -- (A);
+  \draw[->] (A) -- (B);
+  \draw[->] (B) -- (C);
+  \draw[->] (C) -- (END);
+  
+  \draw[->] (0,1) -- (A) node at (0.25, 0.75) {$k_1$};
+  \draw[->] (3,1) -- (B) node at (3.25, 0.75) {$k_2$};
+  \draw[->] (6,1) -- (C) node at (6.25, 0.75) {$k_3$};
+\end{tikzpicture}
+
+\subsubsection{Aufwand für Meet-in-the-Middle-Angriffe gegen 3DES}
+\begin{itemize}
+  \item{\textbf{Zeit} $\approx 2^{112}$}
+  \item{\textbf{Platz} $\approx 2^{56}$}
+\end{itemize}
+
+\subsubsection{2Key-3DES}
+\textbf{2Key-3DES} ist eine Variation von 3DES, das einen Schlüssel wiederverwendet:\par
+
+\begin{tikzpicture}
+  \node (START) at (-2,0) {$m$};
+  \node[draw=black, line width=1pt] (A) at (0,0) {$DES$};
+  \node[draw=black, line width=1pt] (B) at (3,0) {$DES^{-1}$};
+  \node[draw=black, line width=1pt] (C) at (6,0) {$DES$};
+  \node (END) at (8,0) {$c$};
+
+  \draw[->] (START) -- (A);
+  \draw[->] (A) -- (B);
+  \draw[->] (B) -- (C) node at (4.5, 0.25) {$P_j$};
+  \draw[->] (C) -- (END);
+  
+  \draw[->] (0,1) -- (A) node at (0.25, 0.75) {\redBold{$k_1$}};
+  \draw[->] (3,1) -- (B) node at (3.25, 0.75) {$k_2$};
+  \draw[->] (6,1) -- (C) node at (6.25, 0.75) {\redBold{$k_1$}};
+\end{tikzpicture}
+
+\subsubsection{Advanced Meet-in-the-Middle-Angriff gegen 2Key-3DES}
+\begin{enumerate}
+  \item{Wähle $0 \dots 0$ als Ergebnis nach erster DES-Box, entschlüssele für alle möglichen Schlüssel: $DES^{-1}_k(0 \dots 0)$\\
+  und schreibe Ergebnis in eine Tabelle (die Berechnung liefert sowohl $m$ als auch $P_j$)}
+  \item{Lasse alle $2^{56}$ Klartexte $m$ verschlüsseln (chosen-plaintext-attack)}
+  \item{Entschlüssele jedes Chiffrat mit \textbf{dem einen} bekannten $k_1$}
+  \item{Suche den Wert in der Tabelle, bei Treffern \textit{Kandidat} für $(k_1, k_2)$}
+  \item{Überprüfe an weiteren $(m, c)$-Paaren}
+\end{enumerate}
+
+\subsubsection{Aufwand für Advanced Meet-in-the-Middle-Angriffe gegen 2Key-3DES}
+\begin{itemize}
+  \item{\textbf{Zeit} $\approx 3 * 2^{56}$}
+  \item{\textbf{Platz} $\approx 2^{56}$}
+\end{itemize}
 
 
 \end{document}
