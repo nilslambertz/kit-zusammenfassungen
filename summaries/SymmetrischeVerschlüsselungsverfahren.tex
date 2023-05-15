@@ -196,5 +196,58 @@ Der Angriff l채sst sich ``verbessern'', indem ein Teil des Platzbedarfs mit erh�
   \item{\textbf{Platz} $\approx 2^{56}$}
 \end{itemize}
 
+\subsection{Slide-Attacks}
+\highlight{Slide-Attacks} sind eine besondere Art von Angriffen, die nur bei Verschl체sselungsverfahren mit besonderer Struktur funktionieren. Die Verschl체sselung muss in mehreren Runden geschehen, wobei in jeder Runde die \textbf{gleiche Funktion} mit \textbf{gleichem Schl체ssel} zum verwendet wird.\par
+Findet man nun zwei Paare $(m, c)$ und $(m', c')$ wie in der folgenden Grafik, muss nur noch eine Runde gebrochen werden, um den Schl체ssel zu erhalten:\par
+\begin{tikzpicture}
+  \node (START) at (-2,0) {$m$};
+  \node[draw=black, line width=1pt] (A) at (0,0) {$f$};
+  \node[draw=black, line width=1pt] (B) at (2,0) {$f$};
+  \node[draw=black, line width=1pt] (C) at (4,0) {$f$};
+  \node (D) at (6,0) {$\dots$};
+  \node[draw=black, line width=1pt] (E) at (8,0) {$f$};
+  \node[draw=black, line width=1pt] (F) at (10,0) {$f$};
+  \node (END) at (12,0) {$c$};
+
+  \draw[->] (START) -- (A);
+  \draw[->] (A) -- (B);
+  \draw[->] (B) -- (C);
+  \draw[->] (C) -- (D);
+  \draw[->] (D) -- (E);
+  \draw[->] (E) -- (F);
+  \draw[->] (F) -- (END);
+  
+  \draw[->] (0,1) -- (A) node at (0.25, 0.75) {$k$};
+  \draw[->] (2,1) -- (B) node at (2.25, 0.75) {$k$};
+  \draw[->] (4,1) -- (C) node at (4.25, 0.75) {$k$};
+  \draw[->] (8,1) -- (E) node at (8.25, 0.75) {$k$};
+  \draw[->] (10,1) -- (F) node at (10.25, 0.75) {$k$};
+\end{tikzpicture}\par
+\begin{tikzpicture}
+  \hspace{2cm}
+  \node (START) at (0,0) {$m'$};
+  \node[draw=black, line width=1pt] (A) at (2,0) {$f$};
+  \node[draw=black, line width=1pt] (B) at (4,0) {$f$};
+  \node[draw=black, line width=1pt] (C) at (6,0) {$f$};
+  \node (D) at (8,0) {$\dots$};
+  \node[draw=black, line width=1pt] (E) at (10,0) {$f$};
+  \node[draw=black, line width=1pt] (F) at (12,0) {$f$};
+  \node (END) at (14,0) {$c'$};
+
+  \draw[->] (START) -- (A);
+  \draw[->] (A) -- (B);
+  \draw[->] (B) -- (C);
+  \draw[->] (C) -- (D);
+  \draw[->] (D) -- (E);
+  \draw[->] (E) -- (F);
+  \draw[->] (F) -- (END);
+  
+  \draw[->] (2,1) -- (A) node at (2.25, 0.75) {$k$};
+  \draw[->] (4,1) -- (B) node at (4.25, 0.75) {$k$};
+  \draw[->] (6,1) -- (C) node at (6.25, 0.75) {$k$};
+  \draw[->] (10,1) -- (E) node at (10.25, 0.75) {$k$};
+  \draw[->] (12,1) -- (F) node at (12.25, 0.75) {$k$};
+\end{tikzpicture}
+
 
 \end{document}
