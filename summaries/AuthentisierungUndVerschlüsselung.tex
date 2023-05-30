@@ -439,6 +439,11 @@ Der \notice{Co-Pfad} wird nun in die Signatur hinzugefügt, wodurch der $pk$ von
   \item{$|sk| \in \Theta(q)$}
   \item{\notice{$|\sigma| \in \Theta(\log q)$}}
 \end{itemize}
+\textbf{\underline{Lemma:}}\par
+Wenn $\Sigma^{(1)}$ EUF-1-naCMA-sicher ist und $H$ kollisionsresistent, dann ist das obige Verfahren EUF-q-naCMA-sicher.\par
+Wenn $\Sigma^{(1)}$ EUF-1-CMA-sicher ist und $H$ kollisionsresistent, dann ist das obige Verfahren EUF-q-CMA-sicher.
+
+
 
 \subsection{Komprimieren des geheimen Schlüssels}
 Um den geheimen Schlüssel zu komprimieren, verwenden wir statt echtem Zufall \textit{Pseudozufall} zur Generierung.
@@ -481,5 +486,88 @@ Dadurch müssen nur noch der Seed $s$ und der Zähler $st$ im Secret Key gespeic
   \item{\notice{$|sk| \in \Theta(1)$}}
   \item{$|\sigma| \in \Theta(\log q)$}
 \end{itemize}
+
+\section{Chamäleon-Signaturen}
+\textbf{Motivation}: Wir wollen Signaturen der Form, dass $A$ die Signatur von $B$ verifizieren kann, jedoch einen anderen $C$ nicht davon überzeugen kann, dass die Signatur von $B$ kam.
+
+\subsection{Chamäleon-Hashfunktionen}
+\subsubsection{Definition}
+Eine \highlight{Chamäleon-Hashfunktion} $CH$ besteht aus zwei PPT-Algorithmen $(Gen_{ch}, TrapColl_{ch})$:
+\begin{itemize}
+  \item{$Gen_{ch}(1^k)$ gibt $(ch, \tau)$ aus:
+              \begin{itemize}
+                \item{$ch$ ist eine Funktion $ch: \mathcal{M} \times \mathcal{R} \rightarrow \mathcal{N}$
+                            \begin{itemize}
+                              \item{$\mathcal{M}$ Nachrichtenraum}
+                              \item{$\mathcal{R}$ Zufallsraum}
+                              \item{$\mathcal{N}$ Zielraum}
+                            \end{itemize}
+                      }
+                \item{$\tau$ ist eine \highlight{Trapdoor} (Falltür)}
+              \end{itemize}
+        }
+  \item{$TrapColl_{ch}(\tau, m, r, m')$ für $(m, r, m') \in \mathcal{M} \times \mathcal{R} \rightarrow \mathcal{M}$ berechnet $r' \in \mathcal{R}$, sodass \begin{flalign*}
+                ch(m,r) = ch(m', r')
+              \end{flalign*}
+        }
+\end{itemize}
+Wer $\tau$ kennt, kann also Kollisionen berechnen.
+
+\subsubsection{Kollisionsresistenz}
+Eine Chamäleon-Hashfunktion $CH = (Gen_{ch}, TrapColl_{ch})$ ist \textbf{kollisionsresistent}, falls für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+  \let\scriptstyle\textstyle
+  \Pr\Biggl[\substack{(ch, \tau) \leftarrow Gen_{ch}(1^k) \\ \mathcal{A}(1^k, ch) = (m, r, m', r')}: \substack{ch(m, r) = ch(m', r') \\ \land (m, r) \neq (m', r')}\Biggr] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{DLog-Annahme}
+Setting:
+\begin{itemize}
+  \item{Zyklische Gruppe $\mathbb{G} = \langle g \rangle$}
+  \item{Endliche Ordnung $|\mathbb{G}| = p$, $p$ prim}
+  \item{($\mathbb{G}$ kommutativ)}
+  \item{$\mathbb{G}$ abhängig vom Sicherheitsparameter $k$}
+\end{itemize}
+Das \textbf{DLog-Problem} ist wie folgt definiert:
+\begin{itemize}
+  \item{Gegeben: Erzeuger $g$ und $y \stackrel{\$}{\leftarrow} \mathbb{G}$}
+  \item{Finde $x \in \mathbb{Z}_p: g^x = y$}
+\end{itemize}
+Die \highlight{DLog-Annahme} ist folgende:\par
+$\forall \text{ PPT } \mathcal{A} \text{ gilt:}$
+\begin{flalign*}
+  \Pr[\mathcal{A}(1^k, g, g^x) = x: \langle g \rangle = \mathbb{G} \text{ zufällig}, x \stackrel{\$}{\leftarrow} \mathbb{Z}_p] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Chamäleon-Hashfunktion basierend auf DLog}
+Wir konstruieren nun eine Chamäleon-Hashfunktion basierend auf DLog mit einer Gruppe $\mathbb{G}$, $|\mathbb{G}| = p$ prim und $g$ Erzeuger von $\mathbb{G}$:
+\begin{itemize}
+  \item{$ch$ beschreibt Funktion:
+              \begin{itemize}
+                \item{$ch: \mathbb{Z}_p \times \mathbb{Z}_p \rightarrow \mathbb{G}$}
+                \item{$ch(m, r) \coloneqq g^m \cdot h^r$}
+              \end{itemize}
+        }
+  \item{$Gen(1^k)$:
+              \begin{itemize}
+                \item{$x \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}
+                \item{$h \coloneqq g^x$}
+                \item{$ch \coloneqq (g,h)$}
+                \item{$\tau \coloneqq x$}
+              \end{itemize}}
+  \item{$TrapColl_{ch}(\tau, m, r, m')$: Berechnet $r^*$, sodass
+              \begin{alignat*}{4}
+                 &                 & m + x \cdot r & \equiv m^* + x \cdot r^* & \mod p \\
+                 & \Leftrightarrow & r^*           & = \frac{m - m^*}{x} + r  & \mod p
+              \end{alignat*} }
+\end{itemize}
+Damit folgt
+\begin{flalign*}
+  ch(m, r) = g^m \cdot h^r = g^{m + xr} = g^{m^* + xr^*} = g^{m^*} \cdot h^{r^*} = ch(m^*, r^*)
+\end{flalign*}
+
+\textit{Chamäleon-Hashfunktion basierend auf dem RSA-Problem und Shamir’s Trick weggelassen.}
 
 \end{document}
