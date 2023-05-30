@@ -440,4 +440,46 @@ Der \notice{Co-Pfad} wird nun in die Signatur hinzugefügt, wodurch der $pk$ von
   \item{\notice{$|\sigma| \in \Theta(\log q)$}}
 \end{itemize}
 
+\subsection{Komprimieren des geheimen Schlüssels}
+Um den geheimen Schlüssel zu komprimieren, verwenden wir statt echtem Zufall \textit{Pseudozufall} zur Generierung.
+\subsubsection{Pseudozufallsfunktion}
+Eine Pseudozufallsfunktion oder Pseudorandom function (\textbf{PRF}) ist eine Funktion, die ununterscheidbar von einer zufälligen Funktion ist. Sie erhält dafür zusätzlich einen \textit{Seed} $s$ mit Länge $k$ als Eingabe:
+\begin{alignat*}{5}
+  \text{PRF: } & \{0,1\}^k \times        &  & \{0,1\}^n \rightarrow  &  & \{0,1\}^l               \\
+               & \hspace{0.3cm} \uparrow &  & \hspace{0.3cm}\uparrow &  & \hspace{0.3cm} \uparrow \\
+               & \text{Seed } s          &  & \hspace{0.4cm}\alpha   &  & PRF(s, \alpha)
+\end{alignat*}
+
+\subsubsection{Schlüsselgenerierung}
+Bisher wird unser Schlüssel durch einen \textit{probabilistischen} Algorithmus erzeugt:
+\begin{flalign*}
+  (pk_i, sk_i) \leftarrow Gen^{(1)}(1^k) \hspace{1cm} \forall i \in \{1, \dots, q\}
+\end{flalign*}
+Probabilistische Algorithmen können auch als \textbf{deterministische Algorithmen mit Zufall} $r$ \textbf{als Eingabe} gesehen werden:
+\begin{flalign*}
+  Gen^{(1)}(1^k) \hspace{1cm} \hat{=} \hspace{1cm} Gen^{(1)}_{\text{det}}(1^k, r)
+\end{flalign*}
+Damit ist die bishere Schlüsselberechnung äquivalent zu folgender:
+\begin{flalign*}
+  (pk_i, sk_i) \coloneqq Gen^{(1)}_{\text{det}}(1^k, r_i) \hspace{1cm} \forall i \in \{1, \dots, q\} \hspace{1cm} \text{für echt zufällige } r_i
+\end{flalign*}
+Mit \textbf{echt zufälliger} Funktion $F$ also:
+\begin{flalign*}
+  (pk_i, sk_i) \coloneqq Gen^{(1)}_{\text{det}}(1^k, F(i)) \hspace{1cm} \forall i \in \{1, \dots, q\}
+\end{flalign*}
+Mit einem zufälligen Seed $s$ können wir den echten Zufall durch Pseudozufall ersetzen:
+\begin{flalign*}
+  (pk_i, sk_i) \coloneqq Gen^{(1)}_{\text{det}}(1^k, PRF(s, i)) \hspace{1cm} \forall i \in \{1, \dots, q\} \hspace{1cm} \text{für } s \stackrel{\$}{\leftarrow} \{0, 1\}^k
+\end{flalign*}
+Dadurch müssen nur noch der Seed $s$ und der Zähler $st$ im Secret Key gespeichert werden, bei Bedarf können die Schlüsselpaare neu berechnet werden:
+\begin{flalign*}
+  sk = (\notice{s}, st)
+\end{flalign*}
+\underline{\textbf{Eigenschaften bezogen auf Signaturanzahl (q):}}
+\begin{itemize}
+  \item{$|pk| \in \Theta(1)$}
+  \item{\notice{$|sk| \in \Theta(1)$}}
+  \item{$|\sigma| \in \Theta(\log q)$}
+\end{itemize}
+
 \end{document}
