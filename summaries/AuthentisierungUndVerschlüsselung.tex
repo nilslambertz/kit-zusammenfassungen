@@ -5,6 +5,13 @@
 \usepackage{amssymb}
 \usepackage{graphicx,wrapfig,lipsum}
 \usepackage[german]{babel}
+\usepackage{tikz}
+\usetikzlibrary{calc, decorations.text}
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+
+% For binary trees
+\usepackage{forest}
+\usepackage{adjustbox}
 
 \newcommand{\lectureTitle}{Authentisierung und Verschlüsselung [WIP]}
 \newcommand{\semester}{Sommersemester 2023}
@@ -17,13 +24,15 @@
 \definecolor{highlightColor}{RGB}{66, 135, 245}
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
 
+\definecolor{noticeColor}{RGB}{235, 110, 38}
+\newcommand{\notice}[1]{\textcolor{noticeColor}{#1}}
+
 \def\contentsname{\empty}
 \addto\captionsgerman{
   \renewcommand{\contentsname}{\empty}
 }
 
 \begin{document}
-
 \disclaimer
 
 \tableofcontents
@@ -225,7 +234,7 @@ Wir konstruieren fast immer Signaturen mit ``kleinem'' Nachrichtenraum, z.B.
 \end{itemize}
 Unser Ziel ist es jedoch, beliebige Nachrichten, z.B. $\{0, 1\}^*$, zu signieren.
 
-\subsubsection{Hashfunktionen}
+\subsubsection{Hashfunktionen}\label{sec:hashfunktionen}
 Eine kryptographische Hashfunktion $H = (Gen_H, Eval_H)$ ist ein Tupel aus zwei PPT-Algorithmen:
 \begin{itemize}
   \item{$Gen_H(1^k)$ berechnet $t$, sodass $t$ eine Funktion
@@ -301,10 +310,10 @@ Der naive Ansatz ist, $q$ Schlüsselpaare zu verwenden und einen Zähler $st \in
                  & sk \coloneqq (sk_1, \dots, sk_q, st = 1)
               \end{flalign*} }
   \item{$Sign(sk,m)$: \begin{flalign*}
-                i        & \coloneqq st                   \\
-                \sigma_i & \leftarrow Sign^{(1)}(sk_i, m) \\
-                \sigma   & \leftarrow (\sigma_i, i)       \\
-                st       & \coloneqq st + 1               \\
+                 & i         \coloneqq st                   \\
+                 & \sigma_i  \leftarrow Sign^{(1)}(sk_i, m) \\
+                 & \sigma    \leftarrow (\sigma_i, i)       \\
+                 & st        \coloneqq st + 1               \\
               \end{flalign*} }
   \item{$Vfy(pk, m, \sigma = (\sigma_i, i))$: \begin{flalign*}
                 Vfy^{(1)}(pk_i, m, \sigma_i) \stackrel{?}{=} 1
@@ -317,6 +326,118 @@ Der naive Ansatz ist, $q$ Schlüsselpaare zu verwenden und einen Zähler $st \in
   \item{$|pk| \in \Theta(q)$}
   \item{$|sk| \in \Theta(q)$}
   \item{$|\sigma| \in \Theta(1)$}
+\end{itemize}
+
+\subsubsection{Zwischenschritt: Hashfunktion verwenden}
+Ein weiterer möglicher Ansatz ist die verwendung einer \hyperref[sec:hashfunktionen]{Hashfunktion}
+\begin{itemize}
+  \item{\notice{$H$ Hashfunktion}}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & (pk_i, sk_i) \leftarrow Gen^{(1)}(1^k) \text{ für alle } i \in \{1, \dots, q\} \\
+                 & pk \coloneqq \notice{H}(pk_1, \dots, pk_q)                                     \\
+                 & sk \coloneqq (sk_1, \dots, sk_q, \notice{pk_1, \dots, pk_q}, st = 1)
+              \end{flalign*} }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                 & i         \coloneqq st                                         \\
+                 & \sigma_i  \leftarrow Sign^{(1)}(sk_i, m)                       \\
+                 & \sigma    \leftarrow (\sigma_i, i, \notice{pk_1, \dots, pk_q}) \\
+                 & st        \coloneqq st + 1                                     \\
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma = (\sigma_i, i))$: \begin{flalign*}
+                Vfy^{(1)}(pk_i, m, \sigma_i) \stackrel{?}{=} 1 \notice{\text{ und } H(pk_1, \dots, pk_q) \stackrel{?}{=} pk}
+              \end{flalign*}
+        }
+\end{itemize}
+
+\underline{\textbf{Eigenschaften bezogen auf Signaturanzahl (q):}}
+\begin{itemize}
+  \item{\notice{$|pk| \in \Theta(1)$}}
+  \item{$|sk| \in \Theta(q)$}
+  \item{\notice{$|\sigma| \in \Theta(q)$}}
+\end{itemize}
+
+\newpage
+\subsubsection{Merkle-Bäume}
+\highlight{Merkle-Bäume} (auch \textbf{Hash-Bäume} genannt) sind (meist binäre) Bäume, bei denen die Blätter Hashwerte der Daten sind und jeder Knoten darüber aus Hashwerten seiner Kinder besteht:\par
+\begin{forest}
+  for tree={circle, draw, outer sep=2pt, s sep=1cm, edge={<-, shorten <=-2pt, shorten >=-2pt}, minimum size=1.2cm}
+  [{$h_{0,1}$}, label=left:{$pk \coloneqq$}
+  [
+  {$h_{1,1}$}
+    [{$h_{2,1}$}
+        [{$h_{3,1}$} [{$pk_1$}, {draw=none}]]
+        [{$h_{3,2}$} [{$pk_2$}, {draw=none}]]
+    ]
+    [{$h_{2,2}$}
+        [{$h_{3,3}$} [{$pk_3$}, {draw=none}]]
+        [{$h_{3,4}$} [{$pk_4$}, {draw=none}]]
+    ]
+  ]
+  [
+  {$h_{1,2}$}
+    [{$h_{2,3}$}
+        [{$h_{3,5}$} [{$pk_5$}, {draw=none}]]
+        [{$h_{3,6}$} [{$pk_6$}, {draw=none}]]
+    ]
+    [{$h_{2,4}$}
+        [{$h_{3,7}$} [{$pk_7$}, {draw=none}]]
+        [{$h_{3,8}$} [{$pk_8$}, {draw=none}]]
+    ]
+  ]
+  ]
+\end{forest}\par
+Der \notice{Co-Pfad} eines Knotens $v$ in einem Binärbaum mit Wurzel $r$ ist die Folge aller Knoten $u_1, \dots, u_n$ wobei $u_i$ der Geschwisterknoten des $i$-ten Knotens auf dem Pfad von $v$ zu $r$ ist:\par
+\begin{forest}
+  for tree={circle, draw, outer sep=2pt, s sep=1cm, edge={<-, dotted, shorten <=-2pt, shorten >=-2pt}, minimum size=1.2cm}
+  [{$h_{0,1}$}, label=left:{$pk \coloneqq$}
+  [
+  {$h_{1,1}$}, edge=solid
+  [{\notice{$h_{2,1}$}}, draw=noticeColor
+  [{$h_{3,1}$} [{$pk_1$}, {draw=none}]]
+  [{$h_{3,2}$} [{$pk_2$}, {draw=none}]]
+  ]
+  [{$h_{2,2}$}, edge=solid
+  [{$h_{3,3}$}, edge=solid [{\notice{$pk_3$}}, {draw=none}, edge=solid]]
+  [{\notice{$h_{3,4}$}}, draw=noticeColor  [{$pk_4$}, {draw=none}]]
+  ]
+  ]
+  [
+  {\notice{$h_{1,2}$}}, draw=noticeColor
+  [{$h_{2,3}$}
+    [{$h_{3,5}$} [{$pk_5$}, {draw=none}]]
+    [{$h_{3,6}$} [{$pk_6$}, {draw=none}]]
+  ]
+  [{$h_{2,4}$}
+    [{$h_{3,7}$} [{$pk_7$}, {draw=none}]]
+    [{$h_{3,8}$} [{$pk_8$}, {draw=none}]]
+  ]
+  ]
+  ]
+\end{forest}\par
+Der \notice{Co-Pfad} wird nun in die Signatur hinzugefügt, wodurch der $pk$ von $pk_3$ ausgehend (in diesem Beispiel) in $Vfy$ berechnet werden kann.\par
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & (pk_i, sk_i) \leftarrow Gen^{(1)}(1^k) \text{ für alle } i \in \{1, \dots, q\} \\
+                 & pk \coloneqq \notice{\text{Baum-Hash}}(pk_1, \dots, pk_q)                      \\
+                 & sk \coloneqq (sk_1, \dots, sk_q, \notice{pk_1, \dots, pk_q}, st = 1)
+              \end{flalign*} }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                 & i         \coloneqq st                                            \\
+                 & \sigma_i  \leftarrow Sign^{(1)}(sk_i, m)                          \\
+                 & \sigma    \leftarrow (\sigma_i, i, \notice{pk_i, \text{Co-Pfad}}) \\
+                 & st        \coloneqq st + 1                                        \\
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                 & \notice{\text{Berechne Wurzel } h'}                                                        \\
+                 & Vfy^{(1)}(pk_i, m, \sigma_i) \stackrel{?}{=} 1 \notice{\text{ und } h' \stackrel{?}{=} pk}
+              \end{flalign*}
+        }
+\end{itemize}
+\underline{\textbf{Eigenschaften bezogen auf Signaturanzahl (q):}}
+\begin{itemize}
+  \item{$|pk| \in \Theta(1)$}
+  \item{$|sk| \in \Theta(q)$}
+  \item{\notice{$|\sigma| \in \Theta(\log q)$}}
 \end{itemize}
 
 \end{document}
