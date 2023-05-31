@@ -215,7 +215,7 @@ Analog zum vorherigen Kapitel definieren wir \textbf{EUF-1-CMA} und \textbf{EUF-
   \node at (4,2) {EUF-CMA};
 \end{tikzpicture}
 
-Beweis im Skript.
+\textit{Beweis im Skript.}
 
 \subsection{Perfekte Sicherheit}
 In den Definitionen, z.B. bei \hyperref[sec:DefinitionEUFCMA]{EUF-CMA} finden sich zwei Einschränkungen, die im folgenden erläutert werden:
@@ -488,7 +488,7 @@ Dadurch müssen nur noch der Seed $s$ und der Zähler $st$ im Secret Key gespeic
 \end{itemize}
 
 \section{Chamäleon-Signaturen}
-\textbf{Motivation}: Wir wollen Signaturen der Form, dass $A$ die Signatur von $B$ verifizieren kann, jedoch einen anderen $C$ nicht davon überzeugen kann, dass die Signatur von $B$ kam.
+\textbf{Motivation}: Wir wollen Signaturen der Form, dass $A$ die Signatur von $B$ verifizieren kann, jedoch einen anderen $C$ nicht davon überzeugen kann, dass die Signatur von $B$ kam (\highlight{Abstreitbarkeit} genannt).
 
 \subsection{Chamäleon-Hashfunktionen}
 \subsubsection{Definition}
@@ -506,7 +506,7 @@ Eine \highlight{Chamäleon-Hashfunktion} $CH$ besteht aus zwei PPT-Algorithmen $
                 \item{$\tau$ ist eine \highlight{Trapdoor} (Falltür)}
               \end{itemize}
         }
-  \item{$TrapColl_{ch}(\tau, m, r, m')$ für $(m, r, m') \in \mathcal{M} \times \mathcal{R} \rightarrow \mathcal{M}$ berechnet $r' \in \mathcal{R}$, sodass \begin{flalign*}
+  \item{$TrapColl_{ch}(\tau, m, r, m')$ für $(m, r, m') \in \mathcal{M} \times \mathcal{R} \times \mathcal{M}$ berechnet $r' \in \mathcal{R}$, sodass \begin{flalign*}
                 ch(m,r) = ch(m', r')
               \end{flalign*}
         }
@@ -569,5 +569,62 @@ Damit folgt
 \end{flalign*}
 
 \textit{Chamäleon-Hashfunktion basierend auf dem RSA-Problem und Shamir’s Trick weggelassen.}
+
+\newpage
+\subsection{Chamäleon-Signaturen}
+\subsubsection{Konstruktion}
+Gegeben sind
+\begin{itemize}
+  \item{$CH = (Gen_{ch}, TrapColl_{ch})$, $ch: \mathcal{M} \times \mathcal{R} \rightarrow \mathcal{N}$}
+  \item{Signatur $\Sigma' = (Gen', Sign', Vfy')$}
+\end{itemize}
+Konstruiere nun ein Chamäleon-Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & (pk', sk') \leftarrow Gen'(1^k) \\
+                 & pk \coloneqq pk'                \\
+                 & sk \coloneqq sk'
+              \end{flalign*} }
+  \item{$Sign(sk,m, ch)$ ($ch$ ist die CH-Fkt. des \textbf{Empfängers}): \begin{flalign*}
+                 & r \stackrel{\$}{\leftarrow} \mathcal{R} \\
+                 & y \coloneqq ch(m,r)                     \\
+                 & \sigma' \coloneqq Sign'(sk, y)          \\
+                 & \sigma \coloneqq (\sigma', r)           \\
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma, ch)$: \begin{flalign*}
+                Vfy'(pk, ch(m, r), \sigma') \stackrel{?}{=} 1
+              \end{flalign*}
+        }
+\end{itemize}
+
+\subsubsection{Visualisierung: EUF-CMA-Sicherheitsexperiment}
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}_\text{EUF-CMA}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node[label={[align=center]below:$Vfy(pk, m^*, \sigma^*, ch) = 1$?\\ $\land$ \\ $m^* \notin \{m_1, \dots, m_q\}$?}] (C) at (0,0) {};
+  \node (D) at (5,0) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (D);
+
+  \node[label={[align=left]left:$(pk, sk) \leftarrow Gen(1^k)$\\$(ch, \tau) \leftarrow Gen_{ch}(1^k)$}] at (0,5) {};
+  \node[label={left:$\sigma_i \leftarrow Sign(sk, m_i, ch)$}]  at (0,3) {};
+
+  \draw[decoration={calligraphic brace,amplitude=10pt}, decorate, line width=1.25pt] (5.2,4) -- (5.2,2)
+  node[midway, right=0pt, font=\footnotesize] {\begin{minipage}{5cm}\begin{itemize}
+        \item{Anfragen nacheinander}
+        \item{$q = q(k)$ Anfragen}
+        \item{$q$ Polynom}
+      \end{itemize}\end{minipage}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,5) -- (5,4.5) node[midway, above, sloped] {$pk, ch$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_i$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$\sigma_i$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$m^*, \sigma^*$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $Vfy(pk, m^*, \sigma^*, ch) = 1$ \textbf{und} $m^* \notin \{m_1, \dots, m_q\}$\par
+In dieser Variante wird $ch$ vorgegeben, stärkere Sicherheit wird erreicht, wenn $\mathcal{A}$ die Chamäleon-Hashfunktion selbst wählen darf (wie es ein echter Angreifer könnte). \textit{Beweis zur Sicherheit im Skript.}
 
 \end{document}
