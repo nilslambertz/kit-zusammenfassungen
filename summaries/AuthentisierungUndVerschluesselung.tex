@@ -6,12 +6,29 @@
 \usepackage{graphicx,wrapfig,lipsum}
 \usepackage[german]{babel}
 \usepackage{tikz}
+\usetikzlibrary{arrows}
 \usetikzlibrary{calc, decorations.text}
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
 
 % For binary trees
 \usepackage{forest}
 \usepackage{adjustbox}
+
+\usepackage{filecontents}
+
+\begin{filecontents}{\jobname.bib}
+  @inproceedings{jouxKeyExchange,
+    author = {Joux, Antoine},
+    year = {2006},
+    month = {12},
+    pages = {385-393},
+    title = {A One Round Protocol for Tripartite Diffie–Hellman},
+    volume = {17},
+    isbn = {978-3-540-67695-9},
+    journal = {Journal of Cryptology},
+    doi = {10.1007/10722028_23}
+    }
+\end{filecontents}
 
 \newcommand{\lectureTitle}{Authentisierung und Verschlüsselung [WIP]}
 \newcommand{\semester}{Sommersemester 2023}
@@ -108,7 +125,7 @@ In den \textbf{Sicherheitsdefinitionen} werden \textbf{Angreiferziel} und \textb
   \item{EUF-naCMA}
 \end{itemize}
 
-\subsection{EUF-CMA-Sicherheitsexperiment}
+\subsection{EUF-CMA-Sicherheitsexperiment}\label{sec:euf-cma}
 Bei Sicherheitsexperimenten spielt ein Angreifer $\mathcal{A}$ gegen einen Challenger $\mathcal{C}$. $\mathcal{A}$ gewinnt, falls er die Sicherheit des Verfahrens bricht.\par
 $\mathcal{A}$ muss dabei mit einer nicht vernachlässigbaren Wahrscheinlichkeit eine gültige Signatur erzeugen können, ohne den Schlüssel $sk$ zu kennen.
 
@@ -191,7 +208,7 @@ Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{EUF-naCM
 \end{flalign*}
 für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 
-\subsection{Einmalsignaturen}
+\subsection{Einmalsignaturen}\label{sec:einmalsignaturen}
 \begin{itemize}
   \item{Ziel: Signaturen, die viele Nachrichten signieren können}
   \item{Vorstufe: Signaturen, die nur \textbf{eine} Nachricht \textbf{sicher} signieren können (\highlight{Einmalsignaturen})}
@@ -627,4 +644,112 @@ Konstruiere nun ein Chamäleon-Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$:
 $\mathcal{A}$ gewinnt, falls $Vfy(pk, m^*, \sigma^*, ch) = 1$ \textbf{und} $m^* \notin \{m_1, \dots, m_q\}$\par
 In dieser Variante wird $ch$ vorgegeben, stärkere Sicherheit wird erreicht, wenn $\mathcal{A}$ die Chamäleon-Hashfunktion selbst wählen darf (wie es ein echter Angreifer könnte). \textit{Beweis zur Sicherheit im Skript.}
 
+\subsection{Transformation von Chamäleon-Hashfunktion zu Einmalsignatur}
+Jede CH kann zu einem \hyperref[sec:einmalsignaturen]{Einmalsignaturverfahren} transformiert werden.\par
+Gegeben $CH = (Gen_{ch}, TrapColl_{ch})$, konstruiere $\Sigma = (Gen, Sign, Vfy)$:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & (ch, \tau) \leftarrow Gen_{ch}(1^k)                                             \\
+                 & (\tilde{m}, \tilde{r}) \stackrel{\$}{\leftarrow} \mathcal{M} \times \mathcal{R} \\
+                 & c \coloneqq ch(\tilde{m}, \tilde{r})                                            \\
+                 & pk \coloneqq (ch, c)                                                            \\
+                 & sk \coloneqq (\tau, \tilde{m}, \tilde{r})
+              \end{flalign*} }
+  \item{$Sign(sk, m)$: \begin{flalign*}
+                 & r \coloneqq TrapColl_{ch}(\tau, \tilde{m}, \tilde{r}, m) \\
+                 & \sigma \coloneqq r                                       \\
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                c \stackrel{?}{=} ch(m, \sigma)
+              \end{flalign*}
+        }
+\end{itemize}
+$\Sigma$ ist EUF-1-naCMA-sicher, wenn $CH$ kollisionsresistent ist.\par
+\textit{Dlog-Einmalsignatur aus DLog-CH-Funktion weggelassen.}
+
+\subsection{EUF-CMA verstärken}
+Statt wie bisher in \hyperref[sec:euf-cma]{EUF-CMA} $m^* \notin \{m_1, \dots, m_q\}$ zu fordern, könnten wir auch fordern, dann nur das Paar $(m^*, \sigma^*)$ frisch sein muss, die Nachricht aber nicht unbedingt.
+
+\subsubsection{Definition: sEUF-CMA}
+Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{sEUF-CMA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+  \let\scriptstyle\textstyle
+  \Pr\Biggl[\mathcal{A}^{\mathcal{C}_\text{sEUF-CMA}}(pk) = (m^*, \sigma^*): \substack{Vfy(pk, m^*, \sigma^*) = 1 \hspace{0.5cm} \land \\ (m^*, \sigma^*) \notin \{(m_1, \sigma_1), \dots, (m_q, \sigma_q)\}}\Biggr] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.\par
+Mit einem EUF-CMA-sicheren Signaturverfahren und einer CH-Funktion kann ein sEUF-CMA-sicheres Signaturverfahren konstruiert werden. \textit{Details im Skript.}
+
+\newpage
+\section{Pairings und BLS-Signaturen}
+\subsection{Pairings}
+\subsubsection{Definition}
+Seien $\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ zyklische Gruppen mit Ordnung $p$ prim. Ein \highlight{Pairing} ist eine \textbf{bilineare} Abbildung
+\begin{flalign*}
+  \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T
+\end{flalign*}
+mit den Eigenschaften
+\begin{itemize}
+  \item{\textbf{Bilinearität}: $\forall g_1, g_1' \in \mathbb{G}_1, g_2, g_2' \in \mathbb{G}_2:$
+              \begin{flalign*}
+                e(g_1 \cdot g_1', g_2) & = e(g_1, g_2) \cdot e(g_1', g_2) \\
+                e(g_1, g_2 \cdot g_2') & = e(g_1, g_2) \cdot e(g_1, g_2')
+              \end{flalign*}
+              $\Rightarrow e(g_1^a, g_2) = e(g_1, g_2)^a = e(g_1, g_2^a)$
+        }
+  \item{\textbf{Nicht-Ausgeartetheit} (\textit{non-degenerate}): Für Erzeuger $g_1 \in \mathbb{G}_1, g_2 \in \mathbb{G}_2$ gilt:
+              \begin{flalign*}
+                e(g_1, g_2) \text{ ist Erzeuger von } \mathbb{G}_T \hspace{2cm} (\stackrel{|\mathbb{G}_T| \text{ prim}}{\Longleftrightarrow} e(g_1, g_2) \neq 1)
+              \end{flalign*}
+        }
+  \item{Effiziente Berechenbarkeit}
+\end{itemize}
+$\mathbb{G}_1, \mathbb{G}_2$ sind in der Regel \textbf{elliptische Kurven}.
+
+\subsubsection{Typen von Pairing}
+\begin{enumerate}
+  \item{$\mathbb{G}_1 = \mathbb{G}_2$, \textbf{symmetrisches Pairing}
+              \begin{flalign*}
+                e: \mathbb{G} \times \mathbb{G} \rightarrow \mathbb{G}_T
+              \end{flalign*}
+        }
+  \item{$\mathbb{G}_1 \neq \mathbb{G}_2$, \textbf{asymmetrisches Pairing} und es existiert ein effizienter, nicht-trivialer Homomorphismus
+              \begin{flalign*}
+                \psi: \mathbb{G}_1 \rightarrow \mathbb{G}_2
+              \end{flalign*}
+        }
+  \item{$\mathbb{G}_1 \neq \mathbb{G}_2$, \textbf{asymmetrisches Pairing} und es existiert \textit{kein} effizienter, nicht-trivialer Homomorphismus
+              \begin{flalign*}
+                \psi: \mathbb{G}_1 \rightarrow \mathbb{G}_2
+              \end{flalign*}
+        }
+\end{enumerate}
+
+\subsubsection{Diffie-Hellman-Schlüsselaustausch}
+\highlight{Diffie-Hellman} ist ein Protokoll, mit dem \textbf{zwei} Parteien einen gemeinsamen geheimen Schlüssel aushandeln können. Setting: Zyklische Gruppe $\mathbb{G} = \langle g \rangle$ mit Ordnung $p$
+
+\begin{tikzpicture}
+  \node[circle,draw=black,label={left:$a \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}] (A) at (0,0) {$A$};
+  \node[circle,draw=black,label={right:$b \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}] (B) at (10,0) {$B$};
+
+  \draw [->] (A) to [out=15,in=165] node[midway,above,inner sep=2pt] {$g^a$} (B);
+  \draw [->] (B) to [out=195,in=-15] node[midway,below,inner sep=2pt] {$g^b$} (A);
+
+  \node (keyA) at (0,-2) {$k = (g^b)^a = g^{ab}$};
+  \node (keyB) at (10,-2) {$k = (g^a)^b = g^{ab}$};
+\end{tikzpicture}
+
+\textbf{\underline{Ablauf:}}
+\begin{enumerate}
+  \item{$A$ und $B$ wählen ein zufälliges Element aus $\mathbb{Z}_p$}
+  \item{$A$ und $B$ senden dem Gegenüber $g^a$ bzw. $g^b$}
+  \item{Beide können sich nun den gemeinsamen Schlüssel $k = g^{ab}$ berechnen}
+\end{enumerate}
+
+\subsubsection{Joux 3-Parteien-Schlüsselaustausch}
+Joux Verfahren \cite{jouxKeyExchange} ist ähnlich zu Diffie-Hellman, erlaubt aber einen Schlüsselaustausch zwischen 3 Parteien.
+
+
+\newpage
+\bibliographystyle{apalike}
+\bibliography{\jobname}
 \end{document}

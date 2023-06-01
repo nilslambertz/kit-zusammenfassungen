@@ -2,7 +2,7 @@
 
 ## Sommersemester 2023
 
-- [Authentisierung und Verschlüsselung [WIP]](./pdfs/AuthentisierungUndVerschl%C3%BCsselung.pdf)
+- [Authentisierung und Verschlüsselung [WIP]](./pdfs/AuthentisierungUndVerschluesselung.pdf)
 - [Decentralized Systems: Fundamentals, Modeling, and Applications [WIP]](./pdfs/DecentralizedSystems.pdf)
 - [Symmetrische Verschlüsselungsverfahren [WIP]](./pdfs/SymmetrischeVerschl%C3%BCsselungsverfahren.pdf)
 
