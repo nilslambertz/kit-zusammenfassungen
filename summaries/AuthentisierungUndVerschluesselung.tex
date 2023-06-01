@@ -746,8 +746,86 @@ $\mathbb{G}_1, \mathbb{G}_2$ sind in der Regel \textbf{elliptische Kurven}.
 \end{enumerate}
 
 \subsubsection{Joux 3-Parteien-Schlüsselaustausch}
-Joux Verfahren \cite{jouxKeyExchange} ist ähnlich zu Diffie-Hellman, erlaubt aber einen Schlüsselaustausch zwischen 3 Parteien.
+Joux' Verfahren \cite{jouxKeyExchange} ist ähnlich zu Diffie-Hellman, erlaubt aber einen Schlüsselaustausch zwischen 3 Parteien.\par
+\begin{tikzpicture}
+  \node[circle,draw=black,label={above:$a \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}] (A) at (5,0) {$A$};
+  \node[circle,draw=black,label={left:$b \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}] (B) at (0,-5) {$B$};
+  \node[circle,draw=black,label={right:$c \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}] (C) at (10,-5) {$C$};
 
+  \draw [->] (A) to [out=210,in=60] node[midway,above,inner sep=2pt] {$g^a$} (B);
+  \draw [->] (B) to [out=30,in=240] node[midway,below,inner sep=2pt] {$g^b$} (A);
+
+  \draw [->] (A) to [out=300,in=150] node[midway,left,inner sep=8pt] {$g^a$} (C);
+  \draw [->] (C) to [out=120,in=330] node[midway,right,inner sep=8pt] {$g^c$} (A);
+
+  \draw [->] (B) to [out=345,in=195] node[midway,below,inner sep=8pt] {$g^b$} (C);
+  \draw [->] (C) to [out=165,in=15] node[midway,above,inner sep=8pt] {$g^c$} (B);
+
+  \node (keyA) at (5,2) {$k = e(g^b, g^c)^a = e(g,g)^{abc} $};
+  \node (keyB) at (0,-7) {$k = e(g^a, g^c)^b = e(g,g)^{abc}$};
+  \node (keyB) at (10,-7) {$k = e(g^a, g^b)^c = e(g,g)^{abc}$};
+\end{tikzpicture}
+
+\textbf{\underline{Ablauf:}}
+\begin{enumerate}
+  \item{$A$, $B$ und $C$ wählen ein zufälliges Element aus $\mathbb{Z}_p$}
+  \item{Alle Teilnehmer senden sich gegenseitig ihre Werte $g^a$, $g^b$ bzw. $g^c$}
+  \item{Alle Teilnehmer können sich nun den gemeinsamen Schlüssel $k = e(g,g)^{abc}$ berechnen}
+\end{enumerate}
+
+\subsection{Boneh-Lynn-Shacham-Signaturen}
+\highlight{BLS} ist ein Pairing-basiertes Signaturverfahren mit kurzen Signaturen. Es ist EUF-CMA-sicher im \textbf{Random Oracle Modell}. Gegeben:
+\begin{itemize}
+  \item{$\mathbb{G}, \mathbb{G}_T$ Gruppen, $|\mathbb{G}| = |\mathbb{G}_T| = p$ prim, $\langle g \rangle = \mathbb{G}$}
+  \item{Symmetrisches Pairing $\mathbb{G} \times \mathbb{G} \rightarrow \mathbb{G}_T$}
+  \item{Hashfunktion $H: \{0,1\}^* \rightarrow \mathbb{G}$}
+\end{itemize}
+Konstruktion:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & x \stackrel{\$}{\leftarrow} \mathbb{Z}_p \\
+                 & pk \coloneqq (g, g^x)                    \\
+                 & sk \coloneqq x
+              \end{flalign*} }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                 & \sigma \coloneqq H(m)^x \in \mathbb{G}
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                 & e(H(m), g^x) \stackrel{?}{=} e(\sigma, g)
+              \end{flalign*}
+        }
+\end{itemize}
+\textbf{Correctness:} $e(H(m), g^x) = {e(H(m), g)}^x = e({H(m)}^x, g) = e(\sigma, g)$\par
+BLS-Signaturen sind EUF-CMA-sicher unter der \hyperref[sec:cdh-annahme]{\textbf{CDH-Annahme}} im \hyperref[sec:rom]{\textbf{Random-Oracle-Modell}}.\par
+\textit{Sicherheitsbeweis für BLS weggelassen.}
+
+\subsection{Computational-Diffie-Hellman-Problem}
+\subsubsection{CDH-Problem}
+Sei $g$ ein zufälliger Erzeuger und $x, y \stackrel{\$}{\leftarrow} \mathbb{Z}_p$.\par
+\highlight{CDH-Problem}: Gegeben $(g, g^x, g^y)$, berechne $g^{xy}$
+
+\subsubsection{CDH-Annahme}\label{sec:cdh-annahme}
+$\forall$ PPT $\mathcal{A}$ gilt:
+\begin{flalign*}
+  \Pr[\mathcal{A}(1^k, g, g^x, g^y) = g^{xy}: g \text{ mit } \langle g \rangle = \mathbb{G} \text{ zufällig}, x, y \stackrel{\$}{\leftarrow} \mathbb{Z}_p] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsection{Random-Oracle-Modell (ROM)}\label{sec:rom}
+Wir betrachten eine idealisierte Hashfunktion $H: \mathcal{D} \rightarrow \mathcal{R}$, bei der die Ausgaben $H(m)$ \textbf{gleichverteilt zufällig} sind für jede Eingabe $m$. H wird als Orakel modelliert, das von allen Teilnehmern benutzt wird und die Hashwerte ausgibt.
+
+\subsubsection{Das H-Orakel}
+Das \textbf{H-Orakel} besitzt intern einen \textit{Key-Value-Store} $T$.
+Falls es eine Hash-Anfrage für Nachricht $m$ erhält, schaut es in $T$ nach, ob $T[m]$ bereits existiert.
+Wenn ja, wird $T[m]$ zurückgegeben, ansonsten wählt das Orakel $y \stackrel{\$}{\leftarrow} \mathcal{R}$, setzt $T[m] \coloneqq y$ und gibt $y$ zurück.
+
+\subsubsection{Diskussion zum ROM}
+\begin{itemize}
+  \item{Es existiert kein ROM in der realen Welt}
+  \item{Manche kryptographischen Probleme sind \textbf{nur} im ROM lösbar}
+  \item{Lösungen im ROM sind oft effizienter und einfacher zu konstruieren als im Standardmodell}
+  \item{Für viele Konstruktionen im ROM sind keine realen Angriffe bekannt}
+\end{itemize}
 
 \newpage
 \bibliographystyle{apalike}
