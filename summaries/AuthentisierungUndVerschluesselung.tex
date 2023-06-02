@@ -690,12 +690,12 @@ Seien $\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ zyklische Gruppen mit Ordnung $
 mit den Eigenschaften
 \begin{itemize}
   \item{\textbf{Bilinearität}: $\forall g_1, g_1' \in \mathbb{G}_1, g_2, g_2' \in \mathbb{G}_2:$
-              \begin{flalign*}
-                e(g_1 \cdot g_1', g_2) & = e(g_1, g_2) \cdot e(g_1', g_2) \\
-                e(g_1, g_2 \cdot g_2') & = e(g_1, g_2) \cdot e(g_1, g_2')
-              \end{flalign*}
-              $\Rightarrow e(g_1^a, g_2) = e(g_1, g_2)^a = e(g_1, g_2^a)$
-        }
+  \begin{flalign*}
+    e(g_1 \cdot g_1', g_2) & = e(g_1, g_2) \cdot e(g_1', g_2) \\
+    e(g_1, g_2 \cdot g_2') & = e(g_1, g_2) \cdot e(g_1, g_2')
+  \end{flalign*}
+  $\Rightarrow e(g_1^a, g_2) = {e(g_1, g_2)}^a = e(g_1, g_2^a)$
+  }
   \item{\textbf{Nicht-Ausgeartetheit} (\textit{non-degenerate}): Für Erzeuger $g_1 \in \mathbb{G}_1, g_2 \in \mathbb{G}_2$ gilt:
               \begin{flalign*}
                 e(g_1, g_2) \text{ ist Erzeuger von } \mathbb{G}_T \hspace{2cm} (\stackrel{|\mathbb{G}_T| \text{ prim}}{\Longleftrightarrow} e(g_1, g_2) \neq 1)
@@ -734,8 +734,8 @@ $\mathbb{G}_1, \mathbb{G}_2$ sind in der Regel \textbf{elliptische Kurven}.
   \draw [->] (A) to [out=15,in=165] node[midway,above,inner sep=2pt] {$g^a$} (B);
   \draw [->] (B) to [out=195,in=-15] node[midway,below,inner sep=2pt] {$g^b$} (A);
 
-  \node (keyA) at (0,-2) {$k = (g^b)^a = g^{ab}$};
-  \node (keyB) at (10,-2) {$k = (g^a)^b = g^{ab}$};
+  \node (keyA) at (0,-2) {$k = {(g^b)}^a = g^{ab}$};
+  \node (keyB) at (10,-2) {$k = {(g^a)}^b = g^{ab}$};
 \end{tikzpicture}
 
 \textbf{\underline{Ablauf:}}
@@ -761,20 +761,20 @@ Joux' Verfahren \cite{jouxKeyExchange} ist ähnlich zu Diffie-Hellman, erlaubt a
   \draw [->] (B) to [out=345,in=195] node[midway,below,inner sep=8pt] {$g^b$} (C);
   \draw [->] (C) to [out=165,in=15] node[midway,above,inner sep=8pt] {$g^c$} (B);
 
-  \node (keyA) at (5,2) {$k = e(g^b, g^c)^a = e(g,g)^{abc} $};
-  \node (keyB) at (0,-7) {$k = e(g^a, g^c)^b = e(g,g)^{abc}$};
-  \node (keyB) at (10,-7) {$k = e(g^a, g^b)^c = e(g,g)^{abc}$};
+  \node (keyA) at (5,2) {$k = {e(g^b, g^c)}^a = {e(g,g)}^{abc} $};
+  \node (keyB) at (0,-7) {$k = {e(g^a, g^c)}^b = {e(g,g)}^{abc}$};
+  \node (keyB) at (10,-7) {$k = {e(g^a, g^b)}^c = {e(g,g)}^{abc}$};
 \end{tikzpicture}
 
 \textbf{\underline{Ablauf:}}
 \begin{enumerate}
   \item{$A$, $B$ und $C$ wählen ein zufälliges Element aus $\mathbb{Z}_p$}
   \item{Alle Teilnehmer senden sich gegenseitig ihre Werte $g^a$, $g^b$ bzw. $g^c$}
-  \item{Alle Teilnehmer können sich nun den gemeinsamen Schlüssel $k = e(g,g)^{abc}$ berechnen}
+  \item{Alle Teilnehmer können sich nun den gemeinsamen Schlüssel $k = {e(g,g)}^{abc}$ berechnen}
 \end{enumerate}
 
 \subsection{Boneh-Lynn-Shacham-Signaturen}
-\highlight{BLS} ist ein Pairing-basiertes Signaturverfahren mit kurzen Signaturen. Es ist EUF-CMA-sicher im \textbf{Random Oracle Modell}. Gegeben:
+\highlight{BLS} ist ein Pairing-basiertes Signaturverfahren mit kurzen Signaturen. Gegeben:
 \begin{itemize}
   \item{$\mathbb{G}, \mathbb{G}_T$ Gruppen, $|\mathbb{G}| = |\mathbb{G}_T| = p$ prim, $\langle g \rangle = \mathbb{G}$}
   \item{Symmetrisches Pairing $\mathbb{G} \times \mathbb{G} \rightarrow \mathbb{G}_T$}
@@ -788,7 +788,7 @@ Konstruktion:
                  & sk \coloneqq x
               \end{flalign*} }
   \item{$Sign(sk,m)$: \begin{flalign*}
-                 & \sigma \coloneqq H(m)^x \in \mathbb{G}
+                 & \sigma \coloneqq {H(m)}^x \in \mathbb{G}
               \end{flalign*} }
   \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
                  & e(H(m), g^x) \stackrel{?}{=} e(\sigma, g)
@@ -798,6 +798,41 @@ Konstruktion:
 \textbf{Correctness:} $e(H(m), g^x) = {e(H(m), g)}^x = e({H(m)}^x, g) = e(\sigma, g)$\par
 BLS-Signaturen sind EUF-CMA-sicher unter der \hyperref[sec:cdh-annahme]{\textbf{CDH-Annahme}} im \hyperref[sec:rom]{\textbf{Random-Oracle-Modell}}.\par
 \textit{Sicherheitsbeweis für BLS weggelassen.}
+
+\subsubsection{Aggregierbarkeit}
+BLS-Signaturen können \highlight{aggregiert} werden, d.h. zur Verifikation von $(m_1, \sigma_1), \dots, (m_n, \sigma_n)$ müssen nicht alle Signaturen $\sigma_1, \dots, \sigma_n$ mitgeschickt werden, sondern es kann eine aggregierte Signatur $\sigma_{\text{Agg}}$ berechnet werden. Die Gültigkeit kann dann mit $Vfy(pk_1, \dots, pk_n, m_1, \dots, m_n, \sigma_{\text{Agg}}) \stackrel{?}{=} 1$ überprüft werden.\par
+Dabei gilt außerdem, dass die aggregierte Signatur genau so lang ist, wie eine einzelne Signatur, also $|\sigma_{\text{Agg}}| = |\sigma|$. Zudem bieten sie einen Effizienzgewinn, da für $n$ Signaturen statt $2n$ nur noch $n + 1$ Pairingauswertungen erforderlich sind.\par
+\textbf{\underline{Aggregation:}}
+\begin{itemize}
+  \item{Signaturen haben die Form ${H(m_i)}^{x_i}$}
+  \item{Aggregierer berechnet \begin{flalign*}
+                \sigma_{\text{Agg}} = \prod_{i=1}^{n} \sigma_i
+              \end{flalign*}
+              Aggregation ist öffentlich, es wird kein geheimer Schlüssel benötigt
+        }
+  \item{Verifikation:\begin{flalign*}
+                e(\sigma_{\text{Agg}}, g) \stackrel{?}{=} \prod_{i=1}^{n} e(H(m_i), g^{x_i})
+              \end{flalign*}
+        }
+  \item{Correctness:\begin{flalign*}
+                e(\sigma_{\text{Agg}}, g) & = e(\sigma_1, g) \cdot ... \cdot e(\sigma_n, g)             \\
+                                          & = e({H(m_1)}^{x_1}, g) \cdot ... \cdot e({H(m_n)}^{x_n}, g) \\
+                                          & = e({H(m_1)}, g^{x_1}) \cdot ... \cdot e({H(m_n)}, g^{x_n}) \\
+                                          & = \prod_{i=1}^{n} e(H(m_i), g^{x_i})
+              \end{flalign*}
+        }
+\end{itemize}
+
+\subsubsection{Batch-Verifikation}
+Ein ähnliches Problem tritt bei der Verifikation auf, bisher verifizieren wir Nachrichten immer einzeln über $Vfy(pk_i, m_i, \sigma_i) \stackrel{?}{=} 1$.\par
+Optimaler wäre ein Verfahren, mit dem wir $(m_1, \sigma_1), \dots, (m_n, \sigma_n)$ auf einmal verifizieren können, die Lösung dafür ist die \highlight{Batch-Verifikation}:
+
+\begin{itemize}
+  \item{Gegeben: $\sigma_1, \dots, \sigma_n$ Signaturen für $m_1, \dots, m_n$ Nachrichten}
+  \item{$h = \prod_{i=1}^{n} H(m_i)$}
+  \item{$\sigma = \prod_{i=1}^{n} \sigma_i$}
+  \item{Prüfe, ob $e(\sigma, g) \stackrel{?}{=} e(h, g^x)$}
+\end{itemize}
 
 \subsection{Computational-Diffie-Hellman-Problem}
 \subsubsection{CDH-Problem}
