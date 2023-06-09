@@ -467,9 +467,9 @@ Um den geheimen Schlüssel zu komprimieren, verwenden wir statt echtem Zufall \t
 \subsubsection{Pseudozufallsfunktion}
 Eine Pseudozufallsfunktion oder Pseudorandom function (\textbf{PRF}) ist eine Funktion, die ununterscheidbar von einer zufälligen Funktion ist. Sie erhält dafür zusätzlich einen \textit{Seed} $s$ mit Länge $k$ als Eingabe:
 \begin{alignat*}{5}
-  \text{PRF: } & \{0,1\}^k \times        &  & \{0,1\}^n \rightarrow  &  & \{0,1\}^l               \\
-               & \hspace{0.3cm} \uparrow &  & \hspace{0.3cm}\uparrow &  & \hspace{0.3cm} \uparrow \\
-               & \text{Seed } s          &  & \hspace{0.4cm}\alpha   &  & PRF(s, \alpha)
+  \text{PRF: } & {\{0,1\}}^k \times      &  & {\{0,1\}}^n \rightarrow &  & {\{0,1\}}^l             \\
+               & \hspace{0.3cm} \uparrow &  & \hspace{0.3cm}\uparrow  &  & \hspace{0.3cm} \uparrow \\
+               & \text{Seed } s          &  & \hspace{0.4cm}\alpha    &  & PRF(s, \alpha)
 \end{alignat*}
 
 \subsubsection{Schlüsselgenerierung}
@@ -861,6 +861,120 @@ Wenn ja, wird $T[m]$ zurückgegeben, ansonsten wählt das Orakel $y \stackrel{\$
   \item{Lösungen im ROM sind oft effizienter und einfacher zu konstruieren als im Standardmodell}
   \item{Für viele Konstruktionen im ROM sind keine realen Angriffe bekannt}
 \end{itemize}
+
+\section{Waters-Signaturen}
+\subsection{Programmierbare Hashfunktionen}
+\subsubsection{Definition}
+Es sei $H_\kappa: {\{0,1\}}^\ell \rightarrow \mathbb{G}$ eine Hashfunktion und $\mathbb{G}$ eine zyklische, endliche Gruppe mit $g, h$ Erzeuger.\par
+Eine \highlight{Programmierbare Hashfunktion} (PHF) ist ein Tupel von 4 (P)PT-Algorithmen
+\begin{itemize}
+  \item{$Gen(g) \rightarrow \kappa$ \hspace{1cm} (Schlüsselerzeugung)}
+  \item{$Eval(\kappa, m) \rightarrow H_\kappa(m)$ \hspace{1cm} (deterministische Auswertung)}
+  \item{$TrapGen(g,h) \rightarrow (\kappa, \tau)$ \hspace{1cm} (Schlüsselerzeugung mit Trapdoor)}
+  \item{$TrapEval(\tau, m) \rightarrow (a,b)$ mit $h^a g^b = H_\kappa(m)$ \hspace{1cm} (deterministisch)}
+\end{itemize}
+\textbf{Intuition:} Trapdoor liefert uns ``Zerlegung'' $(a,b)$ von $H_\kappa(m)$, sodass $h^a g^b = H_\kappa(m)$
+
+\subsubsection{Anforderungen an PHF}
+\begin{itemize}
+  \item{$\kappa$ ist für $Gen$ und $TrapGen$ gleichverteilt, d.h. es ist unmöglich unterscheiden, mit welchem Algorithmus es erstellt wurde}
+  \item{\highlight{$(v, w, \gamma)$-Wohlverteilung}: Seien $v, w \in \mathbb{N}, \gamma \in [0,1]$. Für alle
+              \begin{itemize}
+                \item{Erzeuger $g, h$ von $\mathbb{G}$}
+                \item{$m^*_1, \dots, m^*_v \in {\{0, 1\}}^\ell$}
+                \item{$m_1, \dots, m_w \in {\{0, 1\}}^\ell$ (alle $m^*_i$ und $m_j$ paarweise verschieden)}
+              \end{itemize}
+              gilt
+              \begin{flalign*}
+                \let\scriptstyle\textstyle
+                \Pr\Biggl[\substack{a^*_i = 0 \hspace{0.5cm} \forall i = 1, \dots, v \hspace{0.5cm} \land \\ a^*_j = 0 \hspace{0.5cm} \forall j = 1, \dots, w \hspace{0.7cm}}\Biggr] \geq \gamma
+              \end{flalign*}
+              wobei
+              \begin{flalign*}
+                (\kappa, \tau) & \leftarrow TrapGen(g,h)                                                \\
+                (a^*_i, b^*_i) & \coloneqq TrapEval(\tau, m^*_i) \hspace{0.5cm} \forall i = 1, \dots, v \\
+                (a_j, b_j)     & \coloneqq TrapEval(\tau, m_j) \hspace{0.5cm} \forall j = 1, \dots, w   \\
+              \end{flalign*}
+              Eine $(v, w, \gamma)$-wohlverteilte PHF heißt auch \highlight{$(v, w, \gamma)$-PHF}.
+        }
+\end{itemize}
+
+\subsubsection{Waters Programmierbare Hashfunktion}
+\begin{itemize}
+  \item{$Gen(g)$: \begin{flalign*}
+                (u_0, \dots, u_\ell) & \stackrel{\$}{\leftarrow} \mathbb{G} \\
+                \kappa               & = (u_0, \dots, u_\ell)               \\
+              \end{flalign*}
+        }
+  \item{$Eval(\kappa, m = m_1 \dots m_\ell)$: \begin{flalign*}
+                H_\kappa(m) = u_0 \prod_{i = 1}^{\ell} u^{m_i}_i \\
+              \end{flalign*}
+              ($m_i \in \{0, 1\}$ ist das $i$-te Bit von $m$)\\
+              \textbf{Intuition:} $H_\kappa(m)$ ist das Produkt von $u_0$ und aller $u_i$ mit $m_i = 1$
+        }
+  \item{$TrapGen(g,h)$: \begin{flalign*}
+                \hat{a_i} & \stackrel{\$}{\leftarrow} \{-1, 0, 1\} \in \mathbb{Z}_p                             \\
+                \hat{b_i} & \stackrel{\$}{\leftarrow} \mathbb{Z}_p                                              \\
+                u_i       & \coloneqq h^{\hat{a_i}} g^{\hat{b_i}} \hspace{1cm} \forall i \in \{0, \dots, \ell\} \\
+                \kappa    & \coloneqq  (u_0, \dots, u_\ell)                                                     \\
+                \tau      & \coloneqq (\hat{a_0}, \dots, \hat{a_\ell}, \hat{b_0}, \dots, \hat{b_\ell})
+              \end{flalign*}
+        }
+  \item{$TrapEval(\tau, m = m_1 \dots m_\ell)$: Berechne \begin{flalign*}
+                a & = \hat{a_0} + \sum_{i=1}^\ell m_i \hat{a_i} \hspace{1cm} \text{und} \\
+                b & = \hat{b_0} + \sum_{i=1}^\ell m_i \hat{b_i}                         \\
+              \end{flalign*}
+        }
+\end{itemize}
+Dann gilt
+\begin{flalign*}
+  h^a g^b & = h^{\hat{a_0}} \prod_{i = 1}^{\ell} h^{\hat{a_i}m_i} \cdot g^{\hat{b_0}} \prod_{i = 1}^{\ell} g^{\hat{b_i}m_i} \\
+          & = (h^{\hat{a_0}} g^{\hat{b_0}}) \cdot \prod_{i = 1}^{\ell} (h^{\hat{a_i}m_i} g^{\hat{b_i}m_i})                  \\
+          & = (h^{\hat{a_0}} g^{\hat{b_0}}) \cdot \prod_{i = 1}^{\ell} {(h^{\hat{a_i}} g^{\hat{b_i}})}^{m_i}                \\
+          & = u_0 \cdot \prod_{i = 1}^{\ell} {u_i}^{m_i}                                                                    \\
+          & = H_\kappa(m)
+\end{flalign*}
+
+\subsection{Waters-Signaturen}
+\subsubsection{Konstruktion}
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                g^\alpha & \stackrel{\$}{\leftarrow} \mathbb{G}  \\
+                \kappa   & \leftarrow Gen_{\text{PHF}}(g)        \\
+                sk       & \coloneqq g^\alpha                    \\
+                pk       & \coloneqq (g, \kappa, e(g, g^\alpha))
+              \end{flalign*}
+              (Wir müssen $\alpha$ nicht kennen, da $g$ Erzeuger ist)
+        }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                r        & \stackrel{\$}{\leftarrow} \mathbb{Z}_p          \\
+                \sigma_1 & \coloneqq g^r                                   \\
+                \sigma_2 & \coloneqq g^\alpha \cdot {H_\kappa(m)}^r        \\
+                \sigma   & \coloneqq (\sigma_1, \sigma_2) \in \mathbb{G}^2
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                 & e(g, \sigma_2) \stackrel{?}{=} e(g, g^\alpha) * e(\sigma_1, H_\kappa(m))
+              \end{flalign*}
+        }
+\end{itemize}
+
+\subsubsection{Korrektheit}
+\begin{flalign*}
+  e(g, \sigma_2) & =  e(g, g^\alpha \cdot {H_\kappa(m)}^r)            \\
+                 & = e(g, g^\alpha) \cdot e(g,  {H_\kappa(m)}^r)      \\
+                 & = e(g, g^\alpha) \cdot e(g^r,  {H_\kappa(m)})      \\
+                 & = e(g, g^\alpha) \cdot e(\sigma_1,  {H_\kappa(m)}) \\
+\end{flalign*}
+
+\subsubsection{Eigenschaften}
+\begin{itemize}
+  \item{EUF-CMA-sicher unter der \hyperref[sec:cdh-annahme]{\textbf{CDH-Annahme}} im \textbf{Standardmodell}}
+  \item{$Gen, Sign, Vfy$ sind effiziente Algorithmen}
+  \item{Kleine Signaturen (zwei Gruppenelemente)}
+  \item{Public Key enthält $\kappa \coloneqq (u_0, \dots, u_\ell)$ (mit $\ell$ Länge der Nachricht), dadurch \textbf{sehr groß}}
+  \item{Bisher ist die $(1, q, \gamma)$-PHF von Walters die einzig bekannte $(1, q, \gamma)$-PHF}
+\end{itemize}
+
 
 \newpage
 \bibliographystyle{apalike}
