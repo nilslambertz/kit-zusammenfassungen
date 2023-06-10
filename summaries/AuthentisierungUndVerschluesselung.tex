@@ -975,6 +975,113 @@ Dann gilt
   \item{Bisher ist die $(1, q, \gamma)$-PHF von Walters die einzig bekannte $(1, q, \gamma)$-PHF}
 \end{itemize}
 
+\section{RSA-basierte Signaturen}
+\subsection{RSA-Problem}
+\textbf{Setting:}
+\begin{itemize}
+  \item{$P, Q$ ``große'' Primzahlen}
+  \item{$N = P \cdot Q$}
+  \item{$\varphi(N) = (P-1)(Q-1) = |\mathbb{Z}^*_N|$ (Eulersche Phi-Funktion)}
+  \item{Wähle $e \in \mathbb{N}$ zufällig, sodass $\text{ggT}(e, \varphi(N))=1$}
+  \item{Dann existiert $d \in \mathbb{N}$ mit $e \cdot d \equiv 1 \mod \varphi(N)$}
+  \item{Für $x \in \mathbb{Z}_N$ gilt dann auch $x^{e \cdot d} \equiv x \mod N$}
+\end{itemize}
+\highlight{RSA-Problem}: Gegeben $N, e$ (wie oben) und $y \stackrel{\$}{\leftarrow} \mathbb{Z}_N$, finde $x \in \mathbb{Z}_N : x^e \equiv y \mod N$
+
+\subsection{Textbook-RSA}\label{sec:textbook-rsa}
+\subsubsection{Konstruktion}
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & \text{Ziehe zufällige Primzahlen } P, Q              \\
+                 & N \coloneqq P \cdot Q                                \\
+                 & \text{Wähle } e > 2 \text{ mit ggT}(e, \varphi(N))=1 \\
+                 & d \coloneqq e^{-1} \mod \varphi(N)                   \\
+                 & pk \coloneqq (N,e)                                   \\
+                 & sk \coloneqq d
+              \end{flalign*}
+        }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                \sigma \coloneqq m^d \mod N
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                \sigma^e \stackrel{?}{\equiv} m \mod N
+              \end{flalign*}
+        }
+\end{itemize}
+
+\subsubsection{Korrektheit}
+\begin{flalign*}
+  \sigma^e \equiv {(m^d)}^e \equiv m^{de \mod \varphi(N)} \equiv m^1 \equiv m \mod N
+\end{flalign*}
+
+\subsubsection{Sicherheit}
+Textbook-RSA ist \textbf{nicht EUF-1-naCMA-sicher}, da Nachrichten aus zufälligen Signaturen berechnet werden können:
+\begin{itemize}
+  \item{Wähle $\sigma^* \stackrel{\$}{\leftarrow} \mathbb{Z}_N$}
+  \item{Berechne $m^* \coloneqq {(\sigma^*)}^e \mod N$}
+  \item{Gebe $(m^*, \sigma^*)$ als Fälschung aus}
+\end{itemize}
+Für das Verfahren ist keine einzige Signaturanfrage nötig!\par
+Zudem ist das Verfahren \textit{homomorph}:
+\begin{itemize}
+  \item{Seien $\sigma_1, \sigma_2$ gültige Signaturen für $m_1, m_2$}
+  \item{Dann ist $\sigma_3 \coloneqq \sigma_1 \sigma_2 \mod N$ gültig für $m_3 \coloneqq m_1 m_2 \mod N$}
+  \item{da $\sigma^e_3 \equiv {(\sigma_1 \sigma_2)}^e \equiv \sigma^e_1 \sigma^e_2 \equiv m_1 m_2 \equiv m_3 \mod N$}
+\end{itemize}
+Zur Konstruktion von sicheren RSA-basierten Signaturen wird häufig die Nachricht vorverarbeitet, bevor signiert wird.
+
+\subsection{RSA Full-Domain-Hash}
+\subsubsection{Idee}
+Es sei $H \coloneqq {\{0, 1\}}^* \rightarrow \mathbb{Z}_N$ eine kollisionsresistente Hashfunktion.
+\begin{itemize}
+  \item{Signiere $H(m)$ mit \hyperref[sec:textbook-rsa]{Textbook-RSA}}
+  \item{Nachrichtenraum (Domäne) bei Textbook-RSA: $\mathbb{Z}_N$}
+  \item{$H$ soll auf die gesamte Domäne $\mathbb{Z}_N$ abbilden (\textbf{Full-Domain-Hash})}
+\end{itemize}
+
+\subsubsection{Konstruktion}
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & \text{Wie bei Textbook-RSA, außer} \\
+                 & pk \coloneqq (N,e, \notice{H})
+              \end{flalign*}
+        }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                \sigma \coloneqq \notice{H(}m\notice{)}^d \mod N
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                \sigma^e \stackrel{?}{\equiv} \notice{H(}m\notice{)} \mod N
+              \end{flalign*}
+        }
+\end{itemize}
+
+\subsubsection{Korrektheit}
+\begin{flalign*}
+  \sigma^e \equiv {({H(m)}^d)}^e \equiv {H(m)}^{de \mod \varphi(N)} \equiv {H(m)}^1 \equiv H(m) \mod N
+\end{flalign*}
+
+\subsubsection{Sicherheit}
+Wenn die RSA-Annahme gilt, dann ist das RSA-FDH EUF-CMA-sicher im \hyperref[sec:rom]{Random-Oracle-Modell}.
+
+\subsection{RSA-PSS}
+Bei \textbf{RSA-PSS} wird die Nachricht vorverarbeitet und dann signiert.
+
+\subsubsection{Konstruktion}
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                \text{Wie bei Textbook-RSA}
+              \end{flalign*}
+        }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                \sigma \coloneqq \text{PSS-Encode}{(m)}^d \mod N
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                 & \text{Berechne } y = \sigma^e \mod N                           \\
+                 & \text{Gib $1$ aus gdw. $y$ eine gültige Codierung von $m$ ist}
+              \end{flalign*}
+        }
+\end{itemize}
+
 
 \newpage
 \bibliographystyle{apalike}
