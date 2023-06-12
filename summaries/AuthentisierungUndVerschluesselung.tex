@@ -976,7 +976,8 @@ Dann gilt
 \end{itemize}
 
 \section{RSA-basierte Signaturen}
-\subsection{RSA-Problem}
+\subsection{RSA-Problem und -Annahme}
+\subsubsection{RSA-Problem}
 \textbf{Setting:}
 \begin{itemize}
   \item{$P, Q$ ``große'' Primzahlen}
@@ -987,6 +988,32 @@ Dann gilt
   \item{Für $x \in \mathbb{Z}_N$ gilt dann auch $x^{e \cdot d} \equiv x \mod N$}
 \end{itemize}
 \highlight{RSA-Problem}: Gegeben $N, e$ (wie oben) und $y \stackrel{\$}{\leftarrow} \mathbb{Z}_N$, finde $x \in \mathbb{Z}_N : x^e \equiv y \mod N$
+
+\subsubsection{RSA-Annahme}
+Für alle PPT $\mathcal{A}$ gilt:
+\begin{flalign*}
+  \let\scriptstyle\textstyle
+  \Pr\Biggl[\mathcal{A}(1^k, N, e, y) = x: \substack{N = P \cdot Q, e \stackrel{\$}{\leftarrow} \mathbb{Z}^*_{\varphi(N)} \\ y \stackrel{\$}{\leftarrow} \mathbb{Z}_N, x^e \equiv y \mod N}\Biggr] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsection{Strong-RSA-Problem und -Annahme}
+\subsubsection{Strong-RSA-Problem}
+Viele RSA-Algorithmen sind nur im \hyperref[sec:rom]{Random-Oracle-Modell} sicher. Wir würden allerdings gerne ein EUF-CMA-sicheres Signaturverfahren haben, das auf der RSA-Annahme basiert, aber auch im Standardmodell sicher ist.\par
+Dies ist bei einigen Algorithmen mithilfe der \textbf{Strong}-RSA-Annahme gegeben. Das Setting ist analog wie zuvor.\par
+\highlight{Strong-RSA-Problem}:  Gegeben \notice{$N$} ``geeignet'' und $y \stackrel{\$}{\leftarrow} \mathbb{Z}_N$, finde $x \in \mathbb{Z}_N$ \notice{und $e \in \mathbb{N}, e > 1$} mit $x^e \equiv y \mod N$\par
+
+\subsubsection{Strong-RSA-Annahme}\label{sec:strongRSAAnnahme}
+Für alle PPT $\mathcal{A}$ gilt:
+\begin{flalign*}
+  \let\scriptstyle\textstyle
+  \Pr\Biggl[\mathcal{A}(1^k, N, y) = (x, \notice{e}): \substack{N = P \cdot Q, \notice{e > 1} \\ y \stackrel{\$}{\leftarrow} \mathbb{Z}_N, x^e \equiv y \mod N}\Biggr] \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Unterschied zum normalen RSA-Problem und -Annahme}
+Die Strong-RSA-Annahme ist \textbf{stärker} als die RSA-Annahme, da der Angreifer mehr Kontrolle hat.\par
+Das Strong-RSA-Problem hingegen ist \textbf{schwächer} als das RSA-Problem, da die Gewinnbedingung ``einfacher'' zu erfüllen ist.
 
 \subsection{Textbook-RSA}\label{sec:textbook-rsa}
 \subsubsection{Konstruktion}
@@ -1082,6 +1109,58 @@ Bei \textbf{RSA-PSS} wird die Nachricht vorverarbeitet und dann signiert.
         }
 \end{itemize}
 
+\subsection{GHR-Signaturen}
+\subsubsection{Konstruktion}
+Gennaro-Halevi-Rabin-Signaturen (\textbf{GHR-Signaturen}) basieren auf der \hyperref[sec:strongRSAAnnahme]{Strong-RSA-Annahme} und benötigen (anders als die vorherigen Verfahren) kein ROM.\par
+Es sei $H \coloneqq {\{0, 1\}}^* \rightarrow \mathbb{P}$ eine Hashfunktion ($\mathbb{P} =$ Primzahlen).
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & \text{Ziehe zufällige Primzahlen } P, Q                                              \\
+                 & N \coloneqq P \cdot Q                                                                \\
+                 & s \stackrel{\$}{\leftarrow} \mathbb{Z}_N                                             \\
+                 & \text{Wähle } h \text{ so, dass für alle $m$ ggT}(h(m), \varphi(N)) = 1 \text{ gilt} \\
+                 & pk \coloneqq (N,s,h)                                                                 \\
+                 & sk \coloneqq \varphi(N) = (P-1)(Q-1)
+              \end{flalign*}
+        }
+  \item{$Sign(sk,m)$: \begin{flalign*}
+                \sigma \coloneqq s^{1 / h(m)} \mod N
+              \end{flalign*} }
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
+                \sigma^{h(m)} \stackrel{?}{\equiv} s \mod N
+              \end{flalign*}
+        }
+\end{itemize}
+
+\subsubsection{Hashfunktionen für GHR-Signaturen}
+Wir haben zwei Bedingungen an unsere Hashfunktion $h$:
+\begin{enumerate}
+  \item{$h$ muss auf Primzahlen abbilden}
+  \item{$h$ muss so gewählt sein, dass für alle $m$ ggT$(h(m), \varphi(N)) = 1$ gilt}
+\end{enumerate}
+
+\subsubsection{Hashfunktionen, die auf Primzahlen abbilden}
+Hashfunktionen, die auf Primzahlen abbilden, können wie folgt konstruiert werden:
+\begin{itemize}
+  \item{Sei $H: {\{0,1\}}^* \rightarrow {\{0,1\}}^\ell$ eine kollisionsresistente Hashfunktion}
+  \item{Annahme: $H$ bildet ``einigermaßen gleichverteilt'' nach ${\{0,1\}}^\ell$ ab}
+  \item{Definiere $h: {\{0,1\}}^* \rightarrow \mathbb{P} \cap {\{0,1\}}^\ell$ durch \begin{flalign*}
+    h(m) \coloneqq H(m \parallel \gamma)
+  \end{flalign*}
+  mit $\gamma \in \mathbb{N}$ kleinste Zahl, sodass $H(m \parallel \gamma)$ prim.}
+  \item{$\gamma$ kann bei der Auswertung von $h$ durch Hochzählen gefunden werden}
+\end{itemize}
+
+\subsubsection{Hashfunktionen, für die für alle \texorpdfstring{$m$}{} gilt, dass \texorpdfstring{ggT$(h(m), \varphi(N)) = 1$}{}}
+Die Bedingung kann mit der Verwendung von \highlight{Strong Primes} erfüllt werden:
+\begin{itemize}
+  \item{Primzahl $P$ ist eine Strong Prime $\Leftrightarrow$ Es existiert eine Primzahl $p$ mit $P = 2p + 1$}
+  \item{Wähle Strong Primes $P = 2p + 1,Q = 2q + 1$}
+  \item{$N = P \cdot Q$}
+  \item{Dann gilt $\varphi(N) = 4 \cdot p \cdot q$}
+  \item{Wähle $p,q$ so, dass sie keine Ausgabe von $H$ sind (z.B. $p, q > 2^\ell$)}
+  \item{Passe $H$ so an, dass $2$ und $4$ keine möglichen Hashwerte sind}
+\end{itemize}
 
 \newpage
 \bibliographystyle{apalike}
