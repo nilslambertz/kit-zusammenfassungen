@@ -152,7 +152,7 @@ Der Angriff lässt sich ``verbessern'', indem ein Teil des Platzbedarfs mit erh�
   \draw[->] (A) -- (B);
   \draw[->] (B) -- (C);
   \draw[->] (C) -- (END);
-  
+
   \draw[->] (0,1) -- (A) node at (0.25, 0.75) {$k_1$};
   \draw[->] (3,1) -- (B) node at (3.25, 0.75) {$k_2$};
   \draw[->] (6,1) -- (C) node at (6.25, 0.75) {$k_3$};
@@ -178,7 +178,7 @@ Der Angriff lässt sich ``verbessern'', indem ein Teil des Platzbedarfs mit erh�
   \draw[->] (A) -- (B);
   \draw[->] (B) -- (C) node at (4.5, 0.25) {$P_j$};
   \draw[->] (C) -- (END);
-  
+
   \draw[->] (0,1) -- (A) node at (0.25, 0.75) {\redBold{$k_1$}};
   \draw[->] (3,1) -- (B) node at (3.25, 0.75) {$k_2$};
   \draw[->] (6,1) -- (C) node at (6.25, 0.75) {\redBold{$k_1$}};
@@ -187,7 +187,7 @@ Der Angriff lässt sich ``verbessern'', indem ein Teil des Platzbedarfs mit erh�
 \subsubsection{Advanced Meet-in-the-Middle-Angriff gegen 2Key-3DES}
 \begin{enumerate}
   \item{Wähle $0 \dots 0$ als Ergebnis nach erster DES-Box, entschlüssele für alle möglichen Schlüssel: $DES^{-1}_k(0 \dots 0)$\\
-  und schreibe Ergebnis in eine Tabelle (die Berechnung liefert sowohl $m$ als auch $P_j$)}
+              und schreibe Ergebnis in eine Tabelle (die Berechnung liefert sowohl $m$ als auch $P_j$)}
   \item{Lasse alle $2^{56}$ Klartexte $m$ verschlüsseln (chosen-plaintext-attack)}
   \item{Entschlüssele jedes Chiffrat mit \textbf{dem einen} bekannten $k_1$}
   \item{Suche den Wert in der Tabelle, bei Treffern \textit{Kandidat} für $(k_1, k_2)$}
@@ -220,7 +220,7 @@ Findet man nun zwei Paare $(m, c)$ und $(m', c')$ wie in der folgenden Grafik, m
   \draw[->] (D) -- (E);
   \draw[->] (E) -- (F);
   \draw[->] (F) -- (END);
-  
+
   \draw[->] (0,1) -- (A) node at (0.25, 0.75) {$k$};
   \draw[->] (2,1) -- (B) node at (2.25, 0.75) {$k$};
   \draw[->] (4,1) -- (C) node at (4.25, 0.75) {$k$};
@@ -245,7 +245,7 @@ Findet man nun zwei Paare $(m, c)$ und $(m', c')$ wie in der folgenden Grafik, m
   \draw[->] (D) -- (E);
   \draw[->] (E) -- (F);
   \draw[->] (F) -- (END);
-  
+
   \draw[->] (2,1) -- (A) node at (2.25, 0.75) {$k$};
   \draw[->] (4,1) -- (B) node at (4.25, 0.75) {$k$};
   \draw[->] (6,1) -- (C) node at (6.25, 0.75) {$k$};
