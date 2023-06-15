@@ -59,7 +59,7 @@
 \subsection{Ziel von Kryptographischen Verfahren}
 Kryptographische Verfahren sollen \highlight{Authentizität} (Dokument wurde von einer bestimmten Person signiert) und \highlight{Integrität} (Dokument wurde nicht verändert) sicherstellen.
 
-\subsection{Informelle Definition von Signaturen}
+\subsection{Informelle Definition von Signaturen}\label{sec:signaturenDefinition}
 \begin{itemize}
   \item{\textbf{asymmetrische} Verfahren}
   \item{Schlüsselpaar $(pk, sk)$}
@@ -269,7 +269,7 @@ Eine Hashfunktion $H = (Gen_H, Eval_H)$ ist \highlight{kollisionsresistent}, fal
 \end{flalign*}
 für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 
-\subsubsection{Signatur mit unbeschränktem Nachrichtenraum (\highlight{Hash-then-Sign})}
+\subsubsection{Signatur mit unbeschränktem Nachrichtenraum (\highlight{Hash-then-Sign})}\label{sec:hash-then-sign}
 Wir wollen nun Signaturen mit unbeschränktem Nachrichtenraum konstruieren. Gegeben:
 \begin{itemize}
   \item{$\Sigma' = (Gen', Sign', Vfy')$ mit Nachrichtenraum $\mathcal{M}$}
@@ -670,7 +670,7 @@ $\Sigma$ ist EUF-1-naCMA-sicher, wenn $CH$ kollisionsresistent ist.\par
 \subsection{EUF-CMA verstärken}
 Statt wie bisher in \hyperref[sec:euf-cma]{EUF-CMA} $m^* \notin \{m_1, \dots, m_q\}$ zu fordern, könnten wir auch fordern, dann nur das Paar $(m^*, \sigma^*)$ frisch sein muss, die Nachricht aber nicht unbedingt.
 
-\subsubsection{Definition: sEUF-CMA}
+\subsubsection{Definition: sEUF-CMA}\label{sec:sEUF-CMA}
 Ein digitales Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$ ist \textit{sEUF-CMA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
 \begin{flalign*}
   \let\scriptstyle\textstyle
@@ -1160,6 +1160,85 @@ Die Bedingung kann mit der Verwendung von \highlight{Strong Primes} erfüllt wer
   \item{Dann gilt $\varphi(N) = 4 \cdot p \cdot q$}
   \item{Wähle $p,q$ so, dass sie keine Ausgabe von $H$ sind (z.B. $p, q > 2^\ell$)}
   \item{Passe $H$ so an, dass $2$ und $4$ keine möglichen Hashwerte sind}
+\end{itemize}
+
+\section{Message Authentication Codes}
+Bei den bisher vorgestellten Signaturverfahren handelt es sich um \hyperref[sec:signaturenDefinition]{asymmetrische Verfahren}, die ein \textbf{Schlüsselpaar} $(sk, pk)$ verwendet haben.\par
+Message Authentication Codes (\highlight{MAC}s) werden ebenfalls zur Sicherstellung der Authentizität und Integrität von Nachrichten verwendet, basieren aber auf einem \textbf{symmetrischen} System, bei dem das Authentifizieren \textbf{und} das Verifizieren mit dem gleichen Schlüssel $\kappa$ geschieht.
+
+\subsection{Grundlagen}
+\subsubsection{Definition}
+Ein \textbf{Message Authentication Code} (MAC) $\Pi$ ist ein Tupel $(Gen, Sign, Vfy)$ von (P)PT-Algorithmen:
+\begin{itemize}
+  \item{$Gen(1^k) \rightarrow \kappa$}
+  \item{$Sign(\kappa, m) \rightarrow t$, $m \in {\{0,1\}}^*$}
+  \item{$Vfy(\kappa, m, t) \in \{0, 1\}$}
+\end{itemize}
+\textbf{Korrektheit:} $\forall \kappa \leftarrow Gen(1^k) \forall m \in {\{0,1\}}^*: Vfy(\kappa, m, Sign(\kappa, m)) = 1$\par
+$Sign$ kann entweder probabilistisch oder deterministisch sein, der MAC wird dann je nach Fall als \textbf{probabilistischer MAC} oder \textbf{deterministischer MAC} bezeichnet. $t$ wird ``MAC'' oder ``Tag'' genannt.
+
+\subsubsection{Fixed- und variable-length MACs}
+\highlight{Fixed-length MAC}: Es gibt eine Funktion $\ell$, sodass für alle $\kappa \leftarrow Gen(1^k)$ der $Sign$-Algorithmus nur für Nachrichten $m \in {\{0,1\}}^{\ell(k)}$ definiert ist.\par
+MACs mit variabler Nachrichtenlänge werden \highlight{variable-length MAC}s genannt.
+
+\subsubsection{Kanonische Verifikation}\label{sec:kanonischeVerifikation}
+Bei deterministischen MACs kann die Verifikation erfolgen, indem das Tag einfach neu berechnet wird:\par
+$Vfy(\kappa, m, t):$
+\begin{itemize}
+  \item{$\tilde{t} \coloneqq Sign(\kappa, m)$}
+  \item{\texttt{return} $\tilde{t} \stackrel{?}{=} t$}
+\end{itemize}
+
+\subsection{Sicherheitsbegriffe für MACs}
+Die Sicherheitsbegriffe \hyperref[sec:euf-cma]{\textbf{EUF-CMA}} und \hyperref[sec:sEUF-CMA]{\textbf{sEUF-CMA}} sind analog zu den Sicherheitsbegriffen für Digitale Signaturen definiert.
+Bei den jeweiligen Sicherheitsexperimenten sendet der Challenger am Anfang jedoch nun keine Nachricht mehr, da es keinen $pk$ mehr gibt, sondern nur noch einen Schlüssel $\kappa$.\par
+sEUF-CMA-sichere MACS werden \highlight{strong MACs} genannt.
+
+\subsubsection{strong MACs durch eindeutige Tags}
+Ein MAC-Verfahren hat \textbf{eindeutige Tags} $\Leftrightarrow$ Für $\kappa$ und $m$ gibt es genau einen Tag $t$ mit $Vfy(\kappa, m, t) = 1$.\par
+Ein EUF-CMA-sicherer MAC $\Pi$ mit eindeutigen Tags ist sEUF-CMA-sicher.
+
+\subsubsection{Anmerkungen zu eindeutigen Tags}
+\begin{itemize}
+  \item{MACs, die die kanonische Verifikation verwenden, haben eindeutige Tags}
+  \item{Deterministische MACs haben eindeutige Tags}
+\end{itemize}
+
+\subsection{Konstruktion von MACs aus PRFs}
+\subsubsection{Konstruktion eines fixed-length MAC}
+Es sei $PRF: {\{0, 1\}}^k \times {\{0, 1\}}^k \rightarrow {\{0, 1\}}^k$ eine PRF. Definiere MAC $\Pi$ für Nachrichten $m \in {\{0, 1\}}^k$ wie folgt:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                \kappa \stackrel{\$}{\leftarrow} {\{0, 1\}}^k
+              \end{flalign*}
+        }
+  \item{$Sign(\kappa, m)$: \begin{flalign*}
+                t \leftarrow PRF(\kappa,m)
+              \end{flalign*}
+        }
+  \item{$Vfy(\kappa, m, t)$: (\hyperref[sec:kanonischeVerifikation]{\textit{kanonisch}})\begin{flalign*}
+                 & \tilde{t} \coloneqq Sign(\kappa, m) \\
+                 & \tilde{t} \stackrel{?}{=} t
+              \end{flalign*}}
+\end{itemize}
+
+\newpage
+\subsubsection{Erweiterung auf variable-length MAC}
+Analog zu Signaturen kann auch bei MACs das \hyperref[sec:hash-then-sign]{Hash-then-Sign}-Paradigma verwendet werden.\par
+Es sei $H: {\{0, 1\}}^* \rightarrow {\{0, 1\}}^k$ eine Hashfunktion und $\Pi' = (Gen', Sign', Vfy')$ ein fixed-length MAC für Nachrichten $m \in {\{0, 1\}}^k$. Definiere den variable-length MAC $\Pi$ für Nachrichten $m \in {\{0, 1\}}^*$ wie folgt:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                \kappa \leftarrow Gen'(1^k)
+              \end{flalign*}
+        }
+  \item{$Sign(\kappa, m)$: \begin{flalign*}
+                t \leftarrow Sign'(\kappa, H(m))
+              \end{flalign*}
+        }
+  \item{$Vfy(\kappa, m, t)$: \begin{flalign*}
+                 & b \leftarrow Vfy'(\kappa, H(m), t) \\
+                 & b \stackrel{?}{=} 1
+              \end{flalign*}}
 \end{itemize}
 
 \newpage
