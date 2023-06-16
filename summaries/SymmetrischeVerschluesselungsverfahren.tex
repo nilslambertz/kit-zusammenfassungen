@@ -8,6 +8,7 @@
 \usepackage{tikz}
 \usetikzlibrary{calc, decorations.text}
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
+\usetikzlibrary{arrows, chains}
 
 
 \newcommand{\lectureTitle}{Symmetrische Verschlüsselungsverfahren [WIP]}
@@ -20,6 +21,9 @@
 
 \definecolor{highlightColor}{RGB}{66, 135, 245}
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+
+\definecolor{noticeColor}{RGB}{235, 110, 38}
+\newcommand{\notice}[1]{\textcolor{noticeColor}{#1}}
 
 \newcommand{\redBold}[1]{\textcolor{red}{\textbf{#1}}}
 
@@ -253,5 +257,194 @@ Findet man nun zwei Paare $(m, c)$ und $(m', c')$ wie in der folgenden Grafik, m
   \draw[->] (12,1) -- (F) node at (12.25, 0.75) {$k$};
 \end{tikzpicture}
 
+\subsubsection{Zellularautomaten}
+Eindimensionale, binäre Zellularautomaten bestehen aus $n$ Zellen, die jeweils ein Bit enthalten.\par
+Die Übergangsfunktion $f$ erhält typischerweise $k$ (z.B. 5) Nachbarn (inklusive der Zelle selbst) als Eingabe und gibt als Ergebnis das Bit aus, das im nächsten Schritt an dieser Position steht:\par
+
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, 1, 0, 1, 1, 0, 1, 1, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt $t$] (END) at (12,0) {};
+
+  \draw [thick,decorate,decoration={brace,amplitude=10pt,mirror},yshift=-0.75cm](2.5,0) -- (7.5,0) node[black,midway] {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, \dots, \dots, \dots, 1, \dots, \dots, \dots, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt $t+1$] (END) at (12,0) {};
+\end{tikzpicture}
+
+\newpage
+Die Übergangsfunktion kann auch als Tabelle dargestellt werden:\par
+\begin{table}[h]
+  \begin{tabular}{c|c}
+    Nachbarschaft $N$ & $f(N)$ \\ \hline\hline
+    $(0,0,0,0,0)$     & $0$    \\ \hline
+    \vdots            & \vdots \\ \hline
+    $(0,1,1,0,1)$     & $1$    \\ \hline
+    \vdots            & \vdots \\ \hline
+    $(1,1,1,1,1)$     & $0$
+  \end{tabular}
+\end{table}
+
+\subsubsection{Verschlüsselung mit Zellularautomaten}
+Um Zellularautomaten als Verschlüsselungsverfahren zu verwenden, müssen sie zudem invertierbar sein, was standardmäßig nicht gegeben ist. Dafür verwenden wir eine Feistel-Struktur, bei dir wir das jedes ``Ergebnis'' $f(N)$ mit dem bisherigen Wert an dieser Stelle XORen:\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, \dots, \dots, \dots, \notice{1}, \dots, \dots, \dots, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt 0: $IV$] (END) at (12,0) {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, 1, 0, 1, 1, 0, 1, 1, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt 1: $m$] (END) at (12,0) {};
+
+  \draw [thick,decorate,decoration={brace,amplitude=10pt,mirror},yshift=-0.75cm](2.5,0) -- (7.5,0) node[black,midway,yshift=-0.75cm] {\notice{1}};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, \dots, \dots, \dots, \notice{0}, \dots, \dots, \dots, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt 2] (END) at (12,0) {};
+  \node (DOTS) at (5,-1) {\vdots};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt $n$: $c$] (END) at (12,0) {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots, \dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt $n+1$: Zusatzinformation] (END) at (12,0) {};
+\end{tikzpicture}\par
+Die Zusatzinformation wird benötigt, um zu entschlüsseln.
+
+\subsubsection{Slide-Attack auf Zellularautomaten}
+Bei dem Angriff handelt es sich um einen \textbf{Chosen-Plaintext-Angriff}, der wie folgt funktioniert:
+\begin{enumerate}
+  \item{Setze $m \coloneqq 1 \dots 1$ und $IV \coloneqq 0 \dots 010 \dots 0$ ($IV$ überall 0, außer an einer Stelle)}
+  \item{In Zeitpunkt 2 steht damit überall der selbe Wert $a \in \{0, 1\}$, außer an einer Stelle, wo $\neg a$ steht}
+  \item{Speichere $m, c$ und $ZI$ (Teil 1)}
+  \item{Verschlüssele nun $m' = a \dots a \neg a a \dots a$ (für $a = 0$ und $a = 1$)}
+  \item{Bei einem der beiden Fälle erhalten wir als Chiffrat $c'$ (gleich dem Chiffrat aus Teil 1) und $ZI'$}
+  \item{Da wir zusätzlich zur Übergangsfunktion XORen, machen wir diese Operation mit $b = c \oplus ZI'$ rückgängig}
+  \item{$b$ ist dann das Ergebnis der Übergangsfunktion zum Zeitpunkt $n+1$}
+  \item{Damit haben wir Eingaben $c'$ und Ergebnisse $b$ der Übergangsfunktion und können anfangen, die Tabelle zu befüllen}
+  \item{Wiederhole das Vorgehen mit anderen $IV$, bis die Tabelle vollständig ist}
+  \item{Die fertige Tabelle ist der gesuchte Schlüssel}
+\end{enumerate}
+
+\newpage
+\textbf{\underline{Visualisierung:}}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt 0: $IV$] (END) at (12,0) {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt 1: $m$] (END) at (12,0) {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {a, a, a, a, a, \neg a, a, a, a, a, a}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt 2: $m'$] (END) at (12,0) {};
+
+  \node (DOTS) at (5,-1) {\vdots};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots}
+  \node[box] {$\i$};
+
+  \node[label=right:Zeitpunkt $n$: $c$] (END) at (12,0) {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots}
+  \node[box] {$\i$};
+
+  \node[label=right:{Zeitpunkt $n+1$: $ZI = c'$}] (END) at (12,0) {};
+\end{tikzpicture}\par
+\begin{tikzpicture}[
+    node distance = 0mm,
+    start chain = going right,
+    box/.style = {draw, semithick, minimum size=1cm,
+        outer sep = 0mm, on chain}
+  ]
+  \foreach \i [count=\j from 0] in {\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots,\dots}
+  \node[box] {$\i$};
+
+  \node[label=right:{Zeitpunkt $n+2$: $ZI'$}] (END) at (12,0) {};
+\end{tikzpicture}\par
 
 \end{document}
