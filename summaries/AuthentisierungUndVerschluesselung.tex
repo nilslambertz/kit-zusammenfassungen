@@ -1,5 +1,6 @@
 \documentclass[12pt,A4]{extarticle}	
 
+\usepackage[table]{xcolor}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -464,7 +465,7 @@ Wenn $\Sigma^{(1)}$ EUF-1-CMA-sicher ist und $H$ kollisionsresistent, dann ist d
 
 \subsection{Komprimieren des geheimen Schlüssels}
 Um den geheimen Schlüssel zu komprimieren, verwenden wir statt echtem Zufall \textit{Pseudozufall} zur Generierung.
-\subsubsection{Pseudozufallsfunktion}
+\subsubsection{Pseudozufallsfunktion}\label{sec:prf}
 Eine Pseudozufallsfunktion oder Pseudorandom function (\textbf{PRF}) ist eine Funktion, die ununterscheidbar von einer zufälligen Funktion ist. Sie erhält dafür zusätzlich einen \textit{Seed} $s$ mit Länge $k$ als Eingabe:
 \begin{alignat*}{5}
   \text{PRF: } & {\{0,1\}}^k \times      &  & {\{0,1\}}^n \rightarrow &  & {\{0,1\}}^l             \\
@@ -1240,6 +1241,183 @@ Es sei $H: {\{0, 1\}}^* \rightarrow {\{0, 1\}}^k$ eine Hashfunktion und $\Pi' = 
                  & b \stackrel{?}{=} 1
               \end{flalign*}}
 \end{itemize}
+
+\subsection{CBC-MAC}
+Der \highlight{CBC-MAC} (\textbf{C}ipher \textbf{B}lock \textbf{C}haining \textbf{M}essage \textbf{A}uthentication \textbf{C}ode) ist verwandt mit dem CBC-Modus für symmetrische Verschlüsselung. Es handelt sich um einen \textbf{fixed-length MAC}, der auf \hyperref[sec:prf]{\textbf{PRF}}s basiert.
+
+\subsubsection{Konstruktion}
+Es sei $PRF: {\{0, 1\}}^k \times {\{0, 1\}}^k \rightarrow {\{0, 1\}}^k$ eine PRF, $m \in {\{0, 1\}}^{\ell \cdot k}$ mit $m = m_1, \dots, m_\ell$ und $|m_i| = k$
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                \kappa \stackrel{\$}{\leftarrow} {\{0, 1\}}^k
+              \end{flalign*}
+        }
+  \item{$Sign(\kappa, m)$: \begin{flalign*}
+                 & t_0 \coloneqq 0^k                                           \\
+                 & \texttt{for } i \texttt{ from } 1 \texttt{ to } \ell:       \\
+                 & \hspace{1cm} t_i \leftarrow PRF(\kappa, t_{i-1} \oplus m_i) \\
+                 & \texttt{return } t \coloneqq t_\ell
+              \end{flalign*}
+        }
+  \item{$Vfy(\kappa, m, t)$: \begin{flalign*}
+                 & \texttt{if } |m| \neq \ell \cdot k: \\
+                 & \hspace{1cm} \texttt{return } 0     \\
+                 & t \stackrel{?}{=} Sign(\kappa, m)
+              \end{flalign*}}
+\end{itemize}
+
+\subsubsection{Anmerkungen}
+\begin{itemize}
+  \item{Wird unsicher, wenn Nachrichten verschiedener Länge authentifiziert werden}
+  \item{Wird unsicher, wenn der Initialisierungsvektor $t_0 = 0^k$ durch ein zufälliges $t_0$ ersetzt wird}
+\end{itemize}
+
+\newpage
+\subsubsection{Unterschiede zum CBC-Modus bei Verschlüsselung}
+\bgroup
+\def\arraystretch{1.5}
+\begin{table}[h]
+  \begin{tabular}{|l|p{0.3\linewidth}|p{0.4\linewidth}|}
+    \hline \rowcolor{gray!30}
+                           & CBC-MAC                      & CBC-Modus bei Verschlüsselung \\ \hline
+    Initialisierungsvektor & Fest $0^k$                   & Zufällig                      \\ \hline
+    Ausgaben               & Nur der finale Wert $t_\ell$ & Alle ``Zwischenwerte'' $t_i$  \\ \hline
+  \end{tabular}
+\end{table}
+\egroup
+
+\subsection{MACs aus Hashfunktionen}
+Wir wollen nun MACs basierend auf Hashfunktionen konstruieren. Hashfunktionen sind definiert als $H: {\{0,1\}}^* \rightarrow {\{0,1\}}^n$ und können mit der \highlight{Merkle-Damgård-Transformation} konstruiert werden:
+\begin{enumerate}
+  \item{Baue Hashfunktion mit \textit{fester} Eingabelänge (\textbf{Kompressionsfunktion})}
+  \item{Baue daraus Hashfunktion mit \textit{variabler} Eingabelänge}
+\end{enumerate}
+
+\subsubsection{Merkle-Damgård-Transformation}
+Gegeben ist eine Kompressionsfunktion $F: {\{0,1\}}^{2n} \rightarrow {\{0,1\}}^n$. Konstruiere nun eine Hashfunktion $H: {\{0,1\}}^* \rightarrow {\{0,1\}}^n$ wie folgt:
+\begin{enumerate}
+  \item{Wähle festen $IV \in {\{0,1\}}^n$ und setze $Z_0 \coloneqq IV$}
+  \item{Teile $m$ in Blöcke der Länge $n$ auf (falls nötig padde den letzten Block mit Nullen)}
+  \item{Füge einen weiteren Block am Ende an, der $|m|$ kodiert}
+  \item{Die Anzahl der Blöcke ist dann $\ell = \lceil \frac{|m|}{n} + 1 \rceil$}
+  \item{$\forall i \in \{1, \dots, \ell\}: Z_i \coloneqq F(Z_{i-1} \parallel m_i)$}
+  \item{$H(m) \coloneqq Z_\ell$}
+\end{enumerate}
+
+\begin{tikzpicture}
+  \node (START) at (-2,0) {$IV$};
+
+  \node[draw=black, line width=1pt] (A) at (0,0) {$F$};
+  \node (A_key) at (0,1) {$m_1$};
+
+  \node[draw=black, line width=1pt] (B) at (2,0) {$F$};
+  \node (B_key) at (2,1) {$m_2$};
+
+  \node (C) at (4,0) {$\dots$};
+
+  \node[draw=black, line width=1pt] (D) at (6,0) {$F$};
+  \node (D_key) at (6,1) {$|m|$};
+  \node (END) at (8,0) {$Z_\ell$};
+
+  \draw[->] (START) -- (A);
+  \draw[->] (A) -- node [midway,above] {$Z_1$} (B);
+  \draw[->] (B) -- node [midway,above] {$Z_2$} (C);
+  \draw[->] (C) -- node [midway,above] {$Z_{\ell-1}$} (D);
+  \draw[->] (D) -- (END);
+
+  \draw[->] (A_key) -- (A);
+  \draw[->] (B_key) -- (B);
+  \draw[->] (D_key) -- (D);
+\end{tikzpicture}\par
+
+\textbf{Eigenschaften:}
+\begin{itemize}
+  \item{\textbf{Length-Extension-Angriff}: Wenn Hashwert $H(X_1 \parallel X_2)$ bekannt ist, kann $H(X_1 \parallel X_2 \parallel X_3)$ berechnet werden}
+  \item{Viele bekannte Hashfunktionen basieren auf Merkle-Damgård, z.B. MD5, SHA-1 und SHA-2}
+\end{itemize}
+
+\subsubsection{Secretly Keyed Hashfunctions}
+Es sei $H$ eine Hashfunktion, die die Merkle-Damgård-Konstruktion nutzt und $F$ die Kompressionsfunktion in $H$. Wenn wir nun einen Schlüssel $\kappa$ in $H$ unterbringen wollen, können wir $\kappa$ als Initialisierungsvektor $IV$ verwenden:\par
+\begin{tikzpicture}
+  \node (START) at (-2,0) {$\kappa$};
+
+  \node[draw=black, line width=1pt] (A) at (0,0) {$F$};
+  \node (A_key) at (0,1) {$m_1$};
+
+  \node[draw=black, line width=1pt] (B) at (2,0) {$F$};
+  \node (B_key) at (2,1) {$m_2$};
+
+  \node (C) at (4,0) {$\dots$};
+
+  \node[draw=black, line width=1pt] (D) at (6,0) {$F$};
+  \node (D_key) at (6,1) {$|m|$};
+  \node (END) at (8,0) {$Z_\ell$};
+
+  \draw[->] (START) -- (A);
+  \draw[->] (A) -- node [midway,above] {$Z_1$} (B);
+  \draw[->] (B) -- node [midway,above] {$Z_2$} (C);
+  \draw[->] (C) -- node [midway,above] {$Z_{\ell-1}$} (D);
+  \draw[->] (D) -- (END);
+
+  \draw[->] (A_key) -- (A);
+  \draw[->] (B_key) -- (B);
+  \draw[->] (D_key) -- (D);
+\end{tikzpicture}\par
+
+\textbf{Notation:} $H_{IV}(m)$ ist $H$ mit geheimem Initialisierungsvektor $IV$ angewendet auf $m$.\par
+$H_{IV}(m)$ wird \highlight{Secretly Keyed Hashfunction} genannt.
+
+\newpage
+\subsubsection{NMAC}
+Es sei $H$ eine Hashfunktion, die die Merkle-Damgård-Konstruktion nutzt, $F$ die Kompressionsfunktion in $H$ und $m \in {\{0,1\}}^*$:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                \kappa \coloneqq (\kappa_1, \kappa_2) \stackrel{\$}{\leftarrow} {\{0, 1\}}^k \times {\{0, 1\}}^k
+              \end{flalign*}
+        }
+  \item{$Sign(\kappa, m)$: \begin{flalign*}
+                t \leftarrow F(\kappa_1, H_{\kappa_2}(m))
+              \end{flalign*}
+        }
+  \item{$Vfy(\kappa, m, t)$: (\hyperref[sec:kanonischeVerifikation]{\textit{kanonisch}})\begin{flalign*}
+                 & \tilde{t} \coloneqq Sign(\kappa, m) \\
+                 & \tilde{t} \stackrel{?}{=} t
+              \end{flalign*}}
+\end{itemize}
+
+\textbf{Eigenschaften:}
+\begin{itemize}
+  \item{Wenn $H$ kollisionsresistent und $F$ in $H$ EUF-CMA-sicherer fixed-length MAC, dann ist ein NMAC EUF-CMA-sicherer variable-length MAC}
+  \item{NMAC ist auch sicher, wenn $\kappa_2 \coloneqq 0^k$ fest ist}
+  \item{Vorteil von NMAC: Sicherheit gilt auch unter \textit{schwächerer} Annahme}
+  \item{Nachteil von NMAC: $IV$ muss explizit gesetzt werden, $H$ nicht mehr als Black Box verwendbar}
+\end{itemize}
+
+\subsubsection{HMAC}
+Ein \highlight{HMAC} (Keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode) ist ein Spezialfall von NMAC. $\kappa_1, \kappa_2$ werden hier durch Anwendung von $F$ erzeugt ($IV$ ist fest):
+\begin{enumerate}
+  \item{Definiere zwei Konstanten $opad, ipad \in {\{0, 1\}}^k$}
+  \item{Sei $\kappa$ der Schlüssel im HMAC}
+  \item{Setze $\kappa_1 \coloneqq F(IV \parallel \kappa \oplus opad)$}
+  \item{Setze $\kappa_2 \coloneqq F(IV \parallel \kappa \oplus ipad)$}
+\end{enumerate}
+Es sei $H: {\{0,1\}}^* \rightarrow {\{0,1\}}^k$ eine Hashfunktion, $opad, ipad \in {\{0,1\}}^k$ zwei Konstanten und $m \in {\{0,1\}}^*$:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                \kappa \stackrel{\$}{\leftarrow} {\{0, 1\}}^k
+              \end{flalign*}
+        }
+  \item{$Sign(\kappa, m)$: \begin{flalign*}
+                t \leftarrow H((\kappa \oplus opad) \parallel H((\kappa \oplus ipad) \parallel m))
+              \end{flalign*}
+        }
+  \item{$Vfy(\kappa, m, t)$: (\hyperref[sec:kanonischeVerifikation]{\textit{kanonisch}})\begin{flalign*}
+                 & \tilde{t} \coloneqq Sign(\kappa, m) \\
+                 & \tilde{t} \stackrel{?}{=} t
+              \end{flalign*}}
+\end{itemize}
+\textbf{Informell:} HMAC ist genau so sicher wie NMAC, wenn die von $F$ erzeugten $\kappa_1, \kappa_2$ genau so gut wie echte Schlüssel sind.\par
+HMAC ist ein variable-length MAC, der nur einen Schlüssel $\kappa$ benötigt und \textit{unkeyed} Hashfunktionen verwendet. Er ist standardisiert und in der Praxis weit verbreitet (z.B. in TLS, SSL und SSH).
 
 \newpage
 \bibliographystyle{apalike}
