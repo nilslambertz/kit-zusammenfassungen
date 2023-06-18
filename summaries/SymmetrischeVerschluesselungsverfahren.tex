@@ -9,6 +9,8 @@
 \usetikzlibrary{calc, decorations.text}
 \usetikzlibrary{decorations.pathreplacing,calligraphy}
 \usetikzlibrary{arrows, chains}
+\usetikzlibrary{arrows.meta}
+\tikzset{>={Latex[width=1.5mm,length=1.5mm]}}
 
 
 \newcommand{\lectureTitle}{Symmetrische Verschlüsselungsverfahren [WIP]}
@@ -95,7 +97,7 @@ Eine \highlight{Ideal Cipher} (IC) ist eine (Über-)Idealisierung einer Blockchi
   \caption{F-Funktion}
   \vspace*{-10cm}
 \end{wrapfigure}
-\subsection{DES (Data Encryption Standard)}
+\subsection{DES (Data Encryption Standard)}\label{sec:DES}
 Der \textbf{Data Encryption Standard} ist eine Blockchiffre mit Schlüssellänge $k = 56$ und Blocklänge $n = 64$, die Verschlüsselungsfunktion ist also $\{0, 1\}^k \times \{0, 1\}^n \rightarrow \{0, 1\}^n$. Er besteht aus einer \textbf{Feistel-Struktur} mit 16 Runden und wurden aufgrund der kurzen Schlüssellänge \textbf{gebrochen}.
 \subsubsection{Beispiel für Encryption-Schritt}
 $L_1 = R_0$\\
@@ -445,6 +447,170 @@ Bei dem Angriff handelt es sich um einen \textbf{Chosen-Plaintext-Angriff}, der 
   \node[box] {$\i$};
 
   \node[label=right:{Zeitpunkt $n+2$: $ZI'$}] (END) at (12,0) {};
-\end{tikzpicture}\par
+\end{tikzpicture}
+
+\subsubsection{Advanced Slide-Attack gegen DES-X}
+\highlight{DES-X} verwendet DES als Grundlage, arbeitet jedoch zwei Schlüsseln $k_y, k_x$ (jeweils 64-Bit):
+\begin{flalign*}
+   & c = \text{DES-X}(m) = k_y \oplus \text{DES}_k(m \oplus k_x)            \\
+   & m =  \text{DES-X}^{-1}(c) = k_x \oplus \text{DES}^{-1}_k(c \oplus k_y)
+\end{flalign*}
+Auf den ersten Blick ist nicht klar, wie eine Slide-Attack auf DES-X funktionieren kann, da nichts mehrfach durchgeführt wird. Werden Ver- und Entschlüsselung leicht überlappend aneinandergehangen, kann allerdings ein Angriff konstruiert werden.\par
+\begin{wrapfigure}{r}{8.5cm}
+  \vspace{-1cm}
+  \centering
+  \begin{tikzpicture}
+    \node (START) at (1,0) {$m$};
+    \node (A) at (1,-1) {$\oplus$};
+    \node (key-x) at (0,-1) {$k_x$};
+    \node[draw=black, line width=1pt] (B) at (1,-2) {$E$};
+    \node (key) at (0,-2) {$k$};
+    \node (C) at (1,-4) {$\oplus$};
+    \node (D) at (1,-5) {$c$};
+
+    \node (E) at (3,-4) {$k_y$};
+
+    \node (F) at (5,-4) {$\oplus$};
+    \node[draw=black, line width=1pt] (G) at (5,-6) {$D$};
+    \node (key-d) at (4,-6) {$k$};
+    \node (H) at (5,-7) {$\oplus$};
+    \node (I) at (5,-8) {$m'$};
+    \node (key-x-2) at (4,-7) {$k_x$};
+
+    \draw[->] (START) -- (A);
+    \draw[->] (key-x) -- (A);
+    \draw[->] (key) -- (B);
+    \draw[->] (A) -- (B);
+    \draw[->] (B) -- (C) node at (1.25, -3) {$c'$};
+    \draw[->] (C) -- (D);
+
+    \draw[->] (E) -- (C);
+    \draw[->] (E) -- (F);
+
+    \draw[->] (5,-2) -- (F) node at (5.25, -3) {$c'$};
+    \draw[->] (F) -- (G) node at (5.25, -5) {$c$};
+    \draw[->] (key-d) -- (G);
+    \draw[->] (G) -- (H);
+    \draw[->] (key-x-2) -- (H);
+    \draw[->] (H) -- (I);
+
+  \end{tikzpicture}
+  \caption{Konstruktion für den Angriff}
+\end{wrapfigure}
+
+\noindent
+Was suchen wir überhaupt?
+\begin{itemize}
+  \item{Wir benötigen ``slid pairs'' $(m,c)$ und $(m', c')$ mit $c \oplus c' = k_y$}
+  \item{$m$ erhalten wir durch Zurückrechnen von DES:\begin{flalign*}
+                m & = k_x \oplus \text{DES}^{-1}_k(c \oplus k_y) \\
+                  & = k_x \oplus \text{DES}^{-1}_k(c')
+              \end{flalign*}}
+  \item{$m'$ erhalten wir analog:\begin{flalign*}
+                m' & = k_x \oplus \text{DES}^{-1}_k(c' \oplus k_y) \\
+                   & = k_x \oplus \text{DES}^{-1}_k(c)
+              \end{flalign*}}
+  \item{Durch Auflösen nach $k_x$ und Gleichsetzen ergibt sich:\begin{flalign*}
+                m \oplus \text{DES}^{-1}_k(c'){ }                         & { }= m' \oplus \text{DES}^{-1}_k(c)           \\
+                \Leftrightarrow \notice{m \oplus \text{DES}^{-1}_k(c){ }} & \notice{{ }= m' \oplus \text{DES}^{-1}_k(c')} \\
+              \end{flalign*}}
+  \item{Nun kann der Angriff mit $(m,c)$-Paaren gestartet werden}
+\end{itemize}
+
+\newpage
+\textbf{Angriff:}\par
+Gegeben sind eine Menge von $(m,c)$-Paaren. Für alle ($2^{56}$) Schlüssel $k$:
+\begin{enumerate}
+  \item{Berechne $m \oplus \text{DES}^{-1}_k(c)$ für alle $(m,c)$-Paare}
+  \item{Falls für zwei unterschiedliche Paare $(m, c)$ und $(m',c)$ gilt, dass $m \oplus \text{DES}^{-1}_k(c) = m' \oplus \text{DES}^{-1}_k(c')$, dann sind die Paare ein ``slid pair''-Kandidat}
+  \item{Berechne $k_y = c \oplus c'$}
+  \item{Berechne damit $k_x = m \oplus \text{DES}^{-1}_k(c \oplus k_y)$}
+  \item{Teste $(k, k_x, k_y)$ mit weiteren Paaren auf Korrektheit}
+\end{enumerate}
+
+\subsubsection{Aufwand für Advanced Slide-Attack gegen DES-X}
+\begin{itemize}
+  \item{Mindestens $2^{64 / 2} = 2^{32}$ Klartext-Chiffrat-Paare benötigt ($\approx 32$ GB)}
+  \item{Für alle $2^{56}$ Schlüssel: $\approx 2^{32}$ DES-Operationen und Sortieren: $\approx 32 \cdot 2^{32}$}
+  \item{Kollision auf Korrektheit prüfen (konstant)}
+\end{itemize}
+Insgesamt also
+\begin{itemize}
+  \item{$\approx 2^{88}$ $(= 2^{56} \cdot 2^{32})$ DES-Operationen}
+  \item{$\approx 2^{32}$ benötigte $(m,c)$-Paare}
+\end{itemize}
+
+\section{Lineare Kryptoanalyse}
+Bei der \highlight{Linearen Kryptoanalyse} wird versucht, lineare Abhängigkeiten innerhalb eines Verschlüsselungssystems zu finden (auch wenn diese nur mit einer gewissen Wahrscheinlichkeit auftreten).
+\subsection{FEAL-4}
+\subsubsection{F-Funktion}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \node[label=left:{$F[0 \dots 7]$}] (F1) at (0,0) {};
+    \node[label=left:{$F[8 \dots 15]$}] (F2) at (0,-2) {};
+    \node[label=left:{$F[16 \dots 23]$}] (F3) at (0,-4) {};
+    \node[label=left:{$F[24 \dots 31]$}] (F4) at (0,-6) {};
+
+    \node[draw=black, line width=1pt] (S0_1) at (2,0) {$S_0$};
+    \node[draw=black, line width=1pt] (S1_1) at (6,-2) {$S_1$};
+    \node[draw=black, line width=1pt] (S0_2) at (4,-4) {$S_0$};
+    \node[draw=black, line width=1pt] (S1_2) at (2,-6) {$S_1$};
+
+    \draw[->] (S0_1) -- (F1);
+    \draw[->] (S1_1) -- (F2);
+    \draw[->] (S0_2) -- (F3);
+    \draw[->] (S1_2) -- (F4);
+
+    \node[label=right:{$B[0 \dots 7]$}] (B1) at (12,0) {};
+    \node[label=right:{$B[8 \dots 15]$}] (B2) at (12,-2) {};
+    \node[label=right:{$B[16 \dots 23]$}] (B3) at (12,-4) {};
+    \node[label=right:{$B[24 \dots 31]$}] (B4) at (12,-6) {};
+
+    \draw[->] (B1) -- (S0_1);
+    \draw[->] (B2) -- (S1_1);
+    \draw[->] (B3) -- (S0_2);
+    \draw[->] (B4) -- (S1_2);
+
+    \node (XOR1) at (8,-2) {\large{$\oplus$}};
+    \node (XOR2) at (10,-2) {\large{$\oplus$}};
+    \node (XOR3) at (8,-4) {\large{$\oplus$}};
+    \node (XOR4) at (10,-4) {\large{$\oplus$}};
+
+    \draw[->] (2,-2) -- (S0_1);
+    \draw[->] (4,-2) -- (S0_2);
+    \draw[->] (6,-4) -- (S1_1);
+    \draw[->] (2,-4) -- (S1_2);
+
+    \draw[->] (10,0) -- (XOR2);
+    \draw[->] (10,-6) -- (XOR4);
+
+    \node (k1) at (8,-1) {$k[0 \dots 7]$};
+    \node (k2) at (8,-5) {$k[8 \dots 15]$};
+
+    \draw[->] (k1) -- (XOR1);
+    \draw[->] (k2) -- (XOR3);
+  \end{tikzpicture}
+  \caption{$F$-Funktion von FEAL-4}
+  \label{feal4_f-function}
+\end{figure}
+\textbf{FEAL-4} verwendet wie \hyperref[sec:DES]{DES} eine Feistel-Struktur mit einer $F$-Funktion, die in Abbildung \ref{feal4_f-function} dargestellt ist. Die $S$-Boxen führen folgende Berechnung durch:
+\begin{flalign*}
+  S_i(a,b) \coloneqq rot2((a + b + i) \mod 256)
+\end{flalign*}
+wobei $rot2$ die Bits um zwei nach links verschiebt (also z.B. $rot2(00000001) = 00000100$).
+
+\subsubsection{Beobachtung}
+Die S-Boxen verhalten sich an einer Stelle linear: Das niederwertigste Bit von $(a + b) \mod 256$ entspricht der Summe (dem XOR) der niederwertigsten Bits von $a$ und $b$, da kein Übertrag auftreten kann. Unter Beachtung der Rotation gilt dann
+\begin{flalign*}
+   & S_0(a,b)[2] = a[0] \oplus b[0]          \\
+   & S_1(a,b)[2] = a[0] \oplus b[0] \oplus 1
+\end{flalign*}
+Damit können wir folgende Gleichungen für das Ergebnis der $F$-Funktion aufstellen:
+\begin{flalign*}
+   & F[2] = B[0] \oplus F[8]                                                                 \\
+   & F[10] = 1 \oplus (B[8] \oplus B[0] \oplus k[0]) \oplus (B[16] \oplus B[24] \oplus k[8])
+\end{flalign*}
 
 \end{document}
