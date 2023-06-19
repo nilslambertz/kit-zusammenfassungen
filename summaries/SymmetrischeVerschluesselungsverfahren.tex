@@ -708,7 +708,7 @@ Durch Gleichsetzen erhalten wir:
 Dadurch haben wir eine Beziehung zwischen der Nachricht und dem Ergebnis der vorletzten Runde ($L_3$ und $R_3$) gefunden.
 
 \newpage
-\subsubsection{Angriff}
+\subsubsection{Angriff}\label{sec:feal4-angriff}
 Gegeben sind eine Menge von $(m,c)$-Paaren. Für alle ($2^{16}$) Schlüssel $k_4$:
 \begin{enumerate}
   \item{Entschlüssele $c$ mit $k_4$, daduch erhalten wir $L_3$ und $R_3$}
@@ -723,5 +723,83 @@ Gegeben sind eine Menge von $(m,c)$-Paaren. Für alle ($2^{16}$) Schlüssel $k_4
   \item{$\approx 16$ (besser $\approx 20$) Klartext-Chiffrat-Paare benötigt}
   \item{Rechenaufwand $\approx 2^{16}$}
 \end{itemize}
+
+\subsection{DES}
+\subsubsection{Angriff}
+Auch bei \hyperref[sec:DES]{DES} ist die lineare Analyse möglich, obwohl die $S$-Boxen (6 Eingänge, 4 Ausgänge) keine linearen Funktionen sind. Bei $S_5$ hat eine lineare Beziehung der Ein- und Ausgänge die Wahrscheinlichkeit $\frac{3}{16} \approx 0.19$.\par
+Diese Beziehung lässt sich auf 3 Runden erweitern. Dann kann der Angriff wie bei \hyperref[sec:feal4-angriff]{FEAL-4} durchgeführt werden. Für 16 Runden (wie bei DES üblich) kann auch eine Beziehung gefunden werden, die Erfolgswahrscheinlichkeit sinkt dabei allerdings.\par
+\textit{Details zum Angriff im Skript.}
+
+\subsubsection{Aufwand}
+\begin{itemize}
+  \item{$\approx 2^{47}$ Klartext-Chiffrat-Paare benötigt}
+  \item{``Zurückrechnen'' der ersten und letzten Runde nur $2 \cdot 2^6$ (liefert 14 Bit des Schlüssels)}
+  \item{Restliche 42 Bit des Schlüssels müssen durch vollständige Suche gefunden werden}
+  \item{Schneller als Brute-Force ($2^{56}$), aber sehr viele  Klartext-Chiffrat-Paare benötigt}
+\end{itemize}
+
+\section{Differentielle Kryptoanalyse}
+Bei der \highlight{Differentiellen Kryptoanalyse} werden Differenzen zwischen Klartexten betrachtet (meistens per XOR), welche mit einer gewissen Wahrscheinlichkeit zu bestimmten Differenzen in den zugehörigen Chiffraten führen.
+
+\subsection{DES}
+\subsubsection{Idee}
+Wir betrachten nun nicht mehr $(m, c)$-Paare, sondern zwei Paare $(m_1, c_1), (m_2, c_2)$ und deren Differenz $(m', c')$ mit $m' \coloneqq m_1 \oplus m_2$ und $c' \coloneqq c_1 \oplus c_2$.\par
+Da der Schlüssel nur per XOR eingeht und sich dadurch die Differenzen der Zwischenergebnisse nicht ändern, können dadurch Informationen über den Schlüssel gewonnen werden.
+
+\newpage
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \node(m) at (0,0) {$m_1$};
+    \node[draw=black, line width=1pt] (Exp) at (0,-1) {$Erw.$};
+    \node (k) at (1,-3) {$k$};
+    \node (XOR) at (0,-3) {\large{$\oplus$}};
+    \node[draw=black, line width=1pt] (S) at (0,-5) {$S$};
+    \node(End) at (0,-7) {};
+    \draw[->] (m) -- (Exp);
+    \draw[->] (Exp) -- node [midway,right] {$e_1$} (XOR);
+    \draw[->] (k) -- (XOR);
+    \draw[->] (XOR) -- node [midway,right] {$s_{\text{in},1} = e_1 \oplus k$} (S);
+    \draw[->] (S) -- node [midway,right] {$s_{\text{out},1}$} (End);
+  \end{tikzpicture}
+  \hspace{1.5cm}
+  \begin{tikzpicture}
+    \node(m) at (0,0) {$m_2$};
+    \node[draw=black, line width=1pt] (Exp) at (0,-1) {$Erw.$};
+    \node (k) at (1,-3) {$k$};
+    \node (XOR) at (0,-3) {\large{$\oplus$}};
+    \node[draw=black, line width=1pt] (S) at (0,-5) {$S$};
+    \node(End) at (0,-7) {};
+    \draw[->] (m) -- (Exp);
+    \draw[->] (Exp) -- node [midway,right] {$e_2$} (XOR);
+    \draw[->] (k) -- (XOR);
+    \draw[->] (XOR) -- node [midway,right] {$s_{\text{in},2} = e_2 \oplus k$} (S);
+    \draw[->] (S) -- node [midway,right] {$s_{\text{out},2}$} (End);
+  \end{tikzpicture}
+  \hspace{1.5cm}
+  \begin{tikzpicture}
+    \node(m) at (0,0) {$m' = m_1 \oplus m_2$};
+    \node[draw=black, line width=1pt] (Exp) at (0,-1) {$Erw.$};
+    \node (NO-XOR) at (0,-3) {};
+    \node[draw=black, line width=1pt] (S) at (0,-5) {$S$};
+    \node(End) at (0,-7) {};
+    \draw[->] (m) -- (Exp);
+    \draw[->] (Exp) -- (S);
+    \draw(Exp) -- node [midway,right] {$e' = e_1 \oplus e_2 = Erw.(m')$} (NO-XOR);
+    \draw (NO-XOR) -- node [midway,right] {$s'_{\text{in}} = e'$} (S);
+    \draw[->] (S) -- node [midway,right] {$s'_{\text{out}} = s_{\text{out},1} \oplus s_{\text{out},2}$} (End);
+  \end{tikzpicture}
+  \caption{DES-$S$-Boxen und Zwischenergebnisse mit Eingaben und Differenzen}
+\end{figure}
+
+\subsubsection{Angriff auf 1-Runden-DES}
+\textbf{Beobachtung:} $s'_{\text{in}} = e' = e_1 \oplus e_2$ ist unabhängig von $k$.\par
+Wir erstellen uns nun für jede $S$-Box eine \textbf{Differenz-Tabelle}, die alle möglichen Kombinationen von Ein- und Ausgangsdifferenzen enthält ($64 \times 16$-Tabelle). Zeile $i$ entspricht der Eingangsdifferenz $s'_{\text{in}} = i$. In Spalte $j$ sind alle Paare $s_{\text{in},1}$ und $s_{\text{in},2}$ eingetragen, für die die Ausgangsdifferenz $s'_{\text{out}} = j$ ist.
+\begin{enumerate}
+  \item{Berechne $s'_{\text{in}}$ und $s'_{\text{out}}$ aus $(m_1, c_1)$ und $(m_2, c_2)$}
+  \item{Lese mögliche $s_{\text{in},1}$ und $s_{\text{in},2}$ aus der Tabelle ab}
+  \item{Berechne alle Schlüsselkandidaten $k$ durch $k = s_{\text{in},1} \oplus e_1$ (gilt, da $s_{\text{in},1} = e_1 \oplus k$)}
+  \item{Wiederhole mit anderen Paaren, bis nur noch ein Kandidat $k$ übrig ist}
+\end{enumerate}
 
 \end{document}
