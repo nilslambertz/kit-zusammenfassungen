@@ -57,8 +57,8 @@
 \clearpage
 
 \section{Einführung}
-\subsection{Ziel von Kryptographischen Verfahren}
-Kryptographische Verfahren sollen \highlight{Authentizität} (Dokument wurde von einer bestimmten Person signiert) und \highlight{Integrität} (Dokument wurde nicht verändert) sicherstellen.
+\subsection{Ziel von Digitalen Signaturen}\label{sec:zielDigitaleSignaturen}
+Digitale Signaturen sollen \highlight{Authentizität} (Dokument wurde von einer bestimmten Person signiert) und \highlight{Integrität} (Dokument wurde nicht verändert) sicherstellen.
 
 \subsection{Informelle Definition von Signaturen}\label{sec:signaturenDefinition}
 \begin{itemize}
@@ -80,7 +80,7 @@ Ein digitales Signaturverfahren für einen Nachrichtenraum $\mathcal{M}$ ist ein
 \subsubsection{Correctness}
 \highlight{Correctness} (``Das Verfahren funktioniert''): $\forall (pk, sk) \leftarrow Gen(1^k) \forall m \in \mathcal{M}: Vfy(pk, m, Sign(sk, m)) = 1$
 
-\subsection{Sicherheitsdefinitionen}
+\subsection{Sicherheitsdefinitionen}\label{sec:signaturenSicherheitsdefinitionen}
 Sicherheit besteht aus einem \highlight{Angreifermodell} (was kann der Angreifer tun, welche Angriffsmöglichkeiten stehen zur Verfügung) und einem \highlight{Angreiferziel} (was muss der Angreifer tun, um das Verfahren zu brechen).
 
 \subsubsection{Angreifermodelle}
@@ -1163,7 +1163,7 @@ Die Bedingung kann mit der Verwendung von \highlight{Strong Primes} erfüllt wer
   \item{Passe $H$ so an, dass $2$ und $4$ keine möglichen Hashwerte sind}
 \end{itemize}
 
-\section{Message Authentication Codes}
+\section{Message Authentication Codes}\label{sec:MACs}
 Bei den bisher vorgestellten Signaturverfahren handelt es sich um \hyperref[sec:signaturenDefinition]{asymmetrische Verfahren}, die ein \textbf{Schlüsselpaar} $(sk, pk)$ verwendet haben.\par
 Message Authentication Codes (\highlight{MAC}s) werden ebenfalls zur Sicherstellung der Authentizität und Integrität von Nachrichten verwendet, basieren aber auf einem \textbf{symmetrischen} System, bei dem das Authentifizieren \textbf{und} das Verifizieren mit dem gleichen Schlüssel $\kappa$ geschieht.
 
@@ -1195,7 +1195,7 @@ Die Sicherheitsbegriffe \hyperref[sec:euf-cma]{\textbf{EUF-CMA}} und \hyperref[s
 Bei den jeweiligen Sicherheitsexperimenten sendet der Challenger am Anfang jedoch nun keine Nachricht mehr, da es keinen $pk$ mehr gibt, sondern nur noch einen Schlüssel $\kappa$.\par
 sEUF-CMA-sichere MACS werden \highlight{strong MACs} genannt.
 
-\subsubsection{strong MACs durch eindeutige Tags}
+\subsubsection{strong MACs durch eindeutige Tags}\label{sec:eindeutigeTags}
 Ein MAC-Verfahren hat \textbf{eindeutige Tags} $\Leftrightarrow$ Für $\kappa$ und $m$ gibt es genau einen Tag $t$ mit $Vfy(\kappa, m, t) = 1$.\par
 Ein EUF-CMA-sicherer MAC $\Pi$ mit eindeutigen Tags ist sEUF-CMA-sicher.
 
@@ -1418,6 +1418,210 @@ Es sei $H: {\{0,1\}}^* \rightarrow {\{0,1\}}^k$ eine Hashfunktion, $opad, ipad \
 \end{itemize}
 \textbf{Informell:} HMAC ist genau so sicher wie NMAC, wenn die von $F$ erzeugten $\kappa_1, \kappa_2$ genau so gut wie echte Schlüssel sind.\par
 HMAC ist ein variable-length MAC, der nur einen Schlüssel $\kappa$ benötigt und \textit{unkeyed} Hashfunktionen verwendet. Er ist standardisiert und in der Praxis weit verbreitet (z.B. in TLS, SSL und SSH).
+
+\newpage
+\section{Symmetrische Verschlüsselung}
+\subsection{Grundlagen}
+\subsubsection{Sicherheitsziel}
+Bisher wollten wir die \hyperref[sec:zielDigitaleSignaturen]{Authentizität und Integrität} von Nachrichten sicherstellen, entweder asymmetrisch (\hyperref[sec:signaturenDefinition]{Digitale Signaturen}) oder symmetrisch (\hyperref[sec:MACs]{MACs}).\par
+Nun soll die \highlight{Vertraulichkeit} betrachtet werden, also das Geheimhalten des Inhalts durch \textbf{Verschlüsselung}. Hierbei gibt es ebenfalls den symmetrischen und den asymmetrischen Ansatz.
+
+\subsubsection{Symmetrisches Primitiv}
+Im \textbf{symmetrischen} Fall besitzen Sender und Empfänger den gleichen geheimen Schlüssel. Die Verfahren werden \highlight{SKE-Schema} (``secret-key encryption scheme'') genannt.
+
+\subsubsection{Ablauf}
+\begin{enumerate}
+  \item{Sender und Empfänger einigen sich auf einen geheimen Schlüssel $\kappa$}
+  \item{Der Sender verschlüsselt die Nachricht $m$ mit $\kappa$}
+  \item{Der Sender schickt das Chiffrat $c$ an den Empfänger}
+  \item{Der Empfänger entschlüsselt das Chiffrat $c$ mit $\kappa$ und erhält wieder die Nachricht $m$}
+\end{enumerate}
+
+\subsubsection{Definition: SKE-Schema}
+Ein SKE-Schema $SKE$ ist ein Tupel $(Gen, Enc, Dec)$ von (P)PT-Algorithmen:
+\begin{itemize}
+  \item{$Gen(1^k) \rightarrow \kappa$}
+  \item{$Enc(\kappa, m) \rightarrow c$, $m \in \mathcal{M}$ \hspace{1cm} (meistens $\mathcal{M} \subseteq {\{0, 1\}}^*$)}
+  \item{$Dec(\kappa, m) \rightarrow  m$ \hspace{2.515cm} (oder $\bot$, falls $c$ kein gültiges Chiffrat)}
+\end{itemize}
+\textbf{Korrektheit:} $\forall \kappa \leftarrow Gen(1^k) \forall m \in \mathcal{M}: Dec(\kappa, Enc(\kappa, m)) = m$
+
+\subsection{Sicherheitsbegriffe}
+Wie bei \hyperref[sec:signaturenSicherheitsdefinitionen]{Signaturen} bestehen unsere Sicherheitsdefinitionen aus einem \textbf{Angreiferziel} und einem \textbf{Angreifermodell}.
+Angreiferziele sind beispielsweise OW (\textit{One-way}), IND (\textit{Indistinguishability}), ROR (\textit{Real-Or-Random}) und NM (\textit{Non-Malleability}). Angreifermodelle sind CPA (\textit{chosen-plaintext attack}), CCA1 (\textit{non-adaptive chosen-ciphertext attack}) und CCA2 (\textit{adaptive chosen-ciphertext attack}).\par
+Wir betrachten \textbf{IND-CPA} und \textbf{IND-CCA2} (oft auch nur IND-CCA genannt).
+
+\subsubsection{IND-CPA-Sicherheit}
+Bei \highlight{IND-CPA}-Sicherheit ist das Angreiferziel \textbf{Ind}istinguishability (kein Angreifer kann die Chiffrate von zwei selbstgewählten Nachrichten voneinander unterscheiden) und das Angreifermodell \textbf{c}hosen-\textbf{p}laintext \textbf{a}ttack (Angreifer hat Zugriff auf Orakel, über das er beliebige Nachrichten verschlüsseln lassen kann).
+
+\newpage
+\subsubsection{Definition: IND-CPA für SKE}
+Ein SKE-Schema $\text{SKE} = (Gen, Enc, Dec)$ ist \textit{IND-CPA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt IND-CPA-Experiment}]                                                \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}^{\text{SKE}}_\text{IND-CPA}}(1^k) = b': b = b' \land |m_0| = |m_1|] \\
+   & \leq \frac{1}{2} + negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Visualisierung: IND-CPA-Sicherheitsexperiment}
+Bei dem IND-CPA-Sicherheitsexperiment wird das Verschlüsselungs-Orakel $\mathcal{O}$ ebenfalls vom Challenger implementiert und ist in der Visualisierung zur besseren Lesbarkeit getrennt. Der Angreifer $\mathcal{A}$ darf zu jedem Zeitpunkt Verschlüsselungs-Anfragen an das Orakel stellen.\par
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}^{\text{SKE}}_\text{IND-CPA}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node (Orakel) at (10,6) {$\mathcal{O}$};
+  \node[label={[align=center]below:$b \stackrel{?}{=} b'$\\ $\land$ \\ $|m_0| \stackrel{?}{=} |m_1|$}] (C) at (0,0) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (5,0);
+  \draw[dashed] (Orakel) -- (10,0);
+
+  \node[label={[align=right]left:$\kappa \leftarrow Gen(1^k)$\\$b \stackrel{\$}{\leftarrow} \{0,1\}$}] at (0,5) {};
+  \node[label={left:$c^* \leftarrow Enc(\kappa, m_b)$}]  at (0,3) {};
+
+  \node[label={right:$c_i \leftarrow Enc(\kappa, m_i)$}]  at (10,3.5) {};
+
+  \node at (7.5,1.5) {\small{(Anfragen immer erlaubt)}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4.5) -- (10,4) node[midway, above, sloped] {$m_i$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (10,3) -- (5,2.5) node[midway, above, sloped] {$c_i$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_0, m_1$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$c^*$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$b'$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $b = b'$ \textbf{und} $|m_0| = |m_1|$
+
+\subsubsection{IND-CCA2-Sicherheit}\label{sec:ind-cca2}
+Bei \highlight{IND-CCA2}-Sicherheit ist das Angreiferziel \textbf{Ind}istinguishability (kein Angreifer kann die Chiffrate von zwei selbstgewählten Nachrichten voneinander unterscheiden) und das Angreifermodell (adaptive) \textbf{c}hosen-\textbf{c}iphertext \textbf{a}ttack (Angreifer hat Zugriff auf Orakel, über das er beliebige Nachrichten verschlüsseln lassen kann und beliebige Nachrichten außer das \textit{Challenge-Chiffrat} entschlüsseln lassen kann).
+
+\subsubsection{Definition: IND-CCA2 für SKE}
+Ein SKE-Schema $\text{SKE} = (Gen, Enc, Dec)$ ist \textit{IND-CCA2-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt IND-CCA2-Experiment}]                                                                             \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}^{\text{SKE}}_\text{IND-CCA2}}(1^k) = b': b = b' \land |m_0| = |m_1| \land c^* \neq c_j \forall j] \\
+   & \leq \frac{1}{2} + negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Visualisierung: IND-CCA2-Sicherheitsexperiment}
+Bei dem IND-CCA2-Sicherheitsexperiment wird das Orakel $\mathcal{O}$ ebenfalls vom Challenger implementiert und ist in der Visualisierung zur besseren Lesbarkeit getrennt. Der Angreifer $\mathcal{A}$ darf zu jedem Zeitpunkt Verschlüsselungs-Anfragen und Entschlüsselungs-Anfragen an das Orakel stellen.\par
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}^{\text{SKE}}_\text{IND-CCA2}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node (Orakel) at (10,6) {$\mathcal{O}$};
+  \node[label={[align=center]below:$b \stackrel{?}{=} b'$ $\land$  $|m_0| \stackrel{?}{=} |m_1|$ \notice{$\land$} \notice{$c^* \neq c_j \forall j$}}] (C) at (0,0) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (5,0);
+  \draw[dashed] (Orakel) -- (10,0);
+
+  \node[label={[align=right]left:$\kappa \leftarrow Gen(1^k)$\\$b \stackrel{\$}{\leftarrow} \{0,1\}$}] at (0,5) {};
+  \node[label={left:$c^* \leftarrow Enc(\kappa, m_b)$}]  at (0,3) {};
+
+  \node[label={right:$c_i \leftarrow Enc(\kappa, m_i)$}]  at (10,4.25) {};
+  \node[label={right:\notice{$m_j \leftarrow Dec(\kappa, c_j)$}}]  at (10,1.75) {};
+
+  \node at (7.5,0) {\small{(Anfragen immer erlaubt)}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,5) -- (10,4.5) node[midway, above, sloped] {$m_i$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (10,4) -- (5,3.5) node[midway, above, sloped] {$c_i$};
+
+  \draw[->,draw=noticeColor,shorten >=5pt, shorten <=5pt] (5,2.5) -- (10,2) node[midway, above, sloped] {\notice{$c_j$}};
+  \draw[->,draw=noticeColor,shorten >=5pt, shorten <=5pt] (10,1.5) -- (5,1) node[midway, above, sloped] {\notice{$m_j$}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_0, m_1$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$c^*$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$b'$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $b = b'$ \textbf{und} $|m_0| = |m_1|$ \notice{\textbf{und} $c^* \neq c_j \forall j$}
+
+\subsection{Konstruktion eines IND-CCA2-sicheren SKE-Schemas}
+Wir wollen nun ein \hyperref[sec:ind-cca2]{IND-CCA2-sicheres} SKE-Schema aus einem IND-CPA-sicheren SKE-Schema konstruieren. Dazu verschlüsseln wir erst und wenden dann einen MAC an.
+
+\subsubsection{Konstruktion}
+Sei $SKE' = (Gen', Enc', Dec')$ ein IND-CPA-sicheres SKE-Schema und $\Pi = (Gen_\Pi, Sign, Vfy)$ ein EUF-CMA-sicherer MAC. Unser SKE-Schema $SKE$ ist wie folgt definiert:
+\begin{itemize}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & \kappa_1 \leftarrow Gen'(1^k)         \\
+                 & \kappa_2 \leftarrow Gen'(1^k)         \\
+                 & \kappa \coloneqq (\kappa_1, \kappa_2) \\
+              \end{flalign*} }
+  \item{$Enc(\kappa,m)$: \begin{flalign*}
+                 & c' \leftarrow Enc'(\kappa_1, m) \\
+                 & t \leftarrow Sign(\kappa_2, c') \\
+                 & c \coloneqq (c', t)
+              \end{flalign*} }
+  \item{$Dec(\kappa, c)$: \begin{flalign*}
+                 & \texttt{if } Vfy(\kappa_2, c', t) = 0, \texttt{ gib } \bot \texttt{ aus} \\
+                 & m \coloneqq Dec'(\kappa_1, c')
+              \end{flalign*}
+        }
+\end{itemize}\par
+Wenn $SKE'$ ein IND-CPA-sicheres SKE-Schema und $\Pi$ ein EUF-CMA-sicherer MAC mit \hyperref[sec:eindeutigeTags]{eindeutigen Tags} ist, dann ist $SKE$ IND-CCA2-sicher.
+
+\subsection{Authentifizierte Verschlüsselung}
+\hyperref[sec:MACs]{MACs} stellen die \textbf{Integrität} von Nachrichten sicher, während symmetrische Verschlüsselung die \textbf{Vertraulichkeit} von Nachrichten sicherstellt. \highlight{Authentifizierte Verschlüsselung} stellt beide Eigenschaften sicher.
+
+\subsubsection{Visualisierung: INT-CTXT-Sicherheitsexperiment für SKE}
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}_\text{INT-CTXT}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node[label={[align=center]below:$Dec(\kappa, c^*) \neq \bot$?\\ $\land$ \\ $c^* \notin \{c_1, \dots, c_q\}$?}] (C) at (0,0) {};
+  \node (D) at (5,0) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (D);
+
+  \node[label={left:$\kappa \leftarrow Gen(1^k)$}] at (0,5) {};
+  \node[label={left:$c_i \leftarrow Enc(\kappa, m_i)$}]  at (0,3) {};
+
+  \draw[decoration={calligraphic brace,amplitude=10pt}, decorate, line width=1.25pt] (5.2,4) -- (5.2,2)
+  node[midway, right=0pt, font=\footnotesize] {\begin{minipage}{5cm}\begin{itemize}
+        \item{Anfragen nacheinander}
+        \item{$q = q(k)$ Anfragen}
+        \item{$q$ Polynom}
+      \end{itemize}\end{minipage}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_i$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$c_i$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$c^*$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $Vfy(pk, m^*, \sigma^*) = 1$ \textbf{und} $m^* \notin \{m_1, \dots, m_q\}$
+
+\subsubsection{Definition: INT-CTXT für SKE}
+Ein SKE-Schema $\text{SKE} = (Gen, Enc, Dec)$ besitzt \textit{ciphertext integrity (INT-CTXT)}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt INT-CTXT-Experiment}]                                                                         \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}_\text{INT-CTXT}}(1^k) = c^*: Dec(\kappa, c^*) \neq \bot \land c^* \notin \{c_1, \dots, c_q\}] \\
+   & \leq negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Definition: Authentifizierte Verschlüsselung}
+Ein Verschlüsselungsschema $AE = (Gen, Enc, Dec)$ ist ein \highlight{authentifiziertes Verschlüsselungsschema} (bzw. \textit{AE-sicher}), falls es IND-CPA-sicher und INT-CTXT-sicher ist.
+
+\subsubsection{Ansätze zur Konstruktion eines Authentifiziertes Verschlüsselungsschemas}
+Als Bausteine für ein authentifiziertes Verschlüsselungsschema verwenden wir \textit{symmetrische Verschlüsselung} (IND-CPA-sicher) und \textit{MACs} (EUF-CMA-sicher mit eindeutigen Tags). Möglichkeiten zur Konstruktion:
+\begin{itemize}
+  \item{``Encrypt-and-Mac'' (verschlüsseln und authentifizieren): \textbf{Nicht immer sicher}, da ein MAC die Nachricht nicht geheim halten muss}
+  \item{``Mac-then-Encrypt'' (erst authentifizieren, dann verschlüsseln): \textbf{Nicht immer sicher}, da die Verschlüsselung ``außen'' ist und das Chiffrat verändert werden kann}
+  \item{``Encrypt-then-Mac''  (erst verschlüsseln, dann authentifizieren): \textbf{Beweisbar sicher}}
+\end{itemize}
+
+\subsubsection{Anmerkungen zu authentifizierter Verschlüsselung}
+\begin{itemize}
+  \item{\textbf{Sicherheitsziele} bei Authentifizierter Verschlüsselung und IND-CCA2-SKE sind \textbf{unterschiedlich}}
+  \item{es müssen \textbf{zwei verschiedene Schlüssel} für den MAC bzw. das SKE verwendet werden, sonst kann das Verfahren unsicher sein}
+  \item{jedes AE-Schema ist auch IND-CCA2-sicher}
+  \item{Encrypt-then-Mac hat in der Praxis Nachteile (langsamer als SKE, zwei Schlüssel nötig), daher werden meist Blockchiffren mit speziellen Betriebsmodi verwendet, die authentifizierte Verschlüsselung garantieren (z.B. der GCM-Betriebsmodus)}
+\end{itemize}
 
 \newpage
 \bibliographystyle{apalike}
