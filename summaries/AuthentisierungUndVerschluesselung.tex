@@ -1442,11 +1442,11 @@ Ein SKE-Schema $SKE$ ist ein Tupel $(Gen, Enc, Dec)$ von (P)PT-Algorithmen:
 \begin{itemize}
   \item{$Gen(1^k) \rightarrow \kappa$}
   \item{$Enc(\kappa, m) \rightarrow c$, $m \in \mathcal{M}$ \hspace{1cm} (meistens $\mathcal{M} \subseteq {\{0, 1\}}^*$)}
-  \item{$Dec(\kappa, m) \rightarrow  m$ \hspace{2.515cm} (oder $\bot$, falls $c$ kein gültiges Chiffrat)}
+  \item{$Dec(\kappa, c) \rightarrow  m$ \hspace{2.515cm} (oder $\bot$, falls $c$ kein gültiges Chiffrat)}
 \end{itemize}
 \textbf{Korrektheit:} $\forall \kappa \leftarrow Gen(1^k) \forall m \in \mathcal{M}: Dec(\kappa, Enc(\kappa, m)) = m$
 
-\subsection{Sicherheitsbegriffe}
+\subsection{Sicherheitsbegriffe}\label{sec:symmetrischeVerschluesselungSicherheitsbegriffe}
 Wie bei \hyperref[sec:signaturenSicherheitsdefinitionen]{Signaturen} bestehen unsere Sicherheitsdefinitionen aus einem \textbf{Angreiferziel} und einem \textbf{Angreifermodell}.
 Angreiferziele sind beispielsweise OW (\textit{One-way}), IND (\textit{Indistinguishability}), ROR (\textit{Real-Or-Random}) und NM (\textit{Non-Malleability}). Angreifermodelle sind CPA (\textit{chosen-plaintext attack}), CCA1 (\textit{non-adaptive chosen-ciphertext attack}) und CCA2 (\textit{adaptive chosen-ciphertext attack}).\par
 Wir betrachten \textbf{IND-CPA} und \textbf{IND-CCA2} (oft auch nur IND-CCA genannt).
@@ -1607,7 +1607,7 @@ für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 \subsubsection{Definition: Authentifizierte Verschlüsselung}
 Ein Verschlüsselungsschema $AE = (Gen, Enc, Dec)$ ist ein \highlight{authentifiziertes Verschlüsselungsschema} (bzw. \textit{AE-sicher}), falls es IND-CPA-sicher und INT-CTXT-sicher ist.
 
-\subsubsection{Ansätze zur Konstruktion eines Authentifiziertes Verschlüsselungsschemas}
+\subsubsection{Ansätze zur Konstruktion eines Authentifiziertes Verschlüsselungsschemas}\label{sec:symmetrischeVerschluesselungAuthentifizierteVerschluesselung}
 Als Bausteine für ein authentifiziertes Verschlüsselungsschema verwenden wir \textit{symmetrische Verschlüsselung} (IND-CPA-sicher) und \textit{MACs} (EUF-CMA-sicher mit eindeutigen Tags). Möglichkeiten zur Konstruktion:
 \begin{itemize}
   \item{``Encrypt-and-Mac'' (verschlüsseln und authentifizieren): \textbf{Nicht immer sicher}, da ein MAC die Nachricht nicht geheim halten muss}
@@ -1622,6 +1622,116 @@ Als Bausteine für ein authentifiziertes Verschlüsselungsschema verwenden wir \
   \item{jedes AE-Schema ist auch IND-CCA2-sicher}
   \item{Encrypt-then-Mac hat in der Praxis Nachteile (langsamer als SKE, zwei Schlüssel nötig), daher werden meist Blockchiffren mit speziellen Betriebsmodi verwendet, die authentifizierte Verschlüsselung garantieren (z.B. der GCM-Betriebsmodus)}
 \end{itemize}
+
+\section{Asymmetrische Verschlüsselung}
+\subsection{Grundlagen}
+\subsubsection{Asymmetrisches Primitiv}
+Im \textbf{asymmetrischen} Fall erzeugt ein Sender ein Schlüsselpaar $(pk, sk)$. $pk$ wird zum Verschlüsseln verwendet und kann öffentlich geteilt werden, während $sk$ zum Entschlüsseln verwendet wird. Die Verfahren werden \highlight{PKE-Schema} (``public-key encryption scheme'') genannt.
+
+\subsubsection{Ablauf}
+\begin{enumerate}
+  \item{Empfänger erzeugt ein Schlüsselpaar $(pk, sk)$ und teilt $pk$ mit dem Sender}
+  \item{Der Sender verschlüsselt die Nachricht $m$ mit $pk$}
+  \item{Der Sender schickt das Chiffrat $c$ an den Empfänger}
+  \item{Der Empfänger entschlüsselt das Chiffrat $c$ mit $sk$ und erhält wieder die Nachricht $m$}
+\end{enumerate}
+
+\subsubsection{Definition: PKE-Schema}
+Ein PKE-Schema $PKE$ ist ein Tupel $(Gen, Enc, Dec)$ von (P)PT-Algorithmen:
+\begin{itemize}
+  \item{$Gen(1^k) \rightarrow (pk, sk)$}
+  \item{$Enc(pk, m) \rightarrow c$, $m \in \mathcal{M}$}
+  \item{$Dec(sk, c) \rightarrow  m$}
+\end{itemize}
+\textbf{Korrektheit:} $\forall (pk, sk) \leftarrow Gen(1^k) \forall m \in \mathcal{M}: Dec(sk, Enc(pk, m)) = m$
+
+\subsection{Sicherheitsbegriffe}
+Für PKE werden dieselben Sicherheitsbegriffe wie bei \hyperref[sec:symmetrischeVerschluesselungSicherheitsbegriffe]{symmetrischer Verschlüsselung} verwendet (Unterscheidung z.B. durch Notation: \textit{SKE-IND-CPA} und \textit{PKE-IND-CPA}).
+Bei Sicherheitsexperimenten mit PKE erhält $\mathcal{A}$ $pk$, aber natürlich nicht $sk$. Damit kann er Chiffrate selbst berechnen und benötigt kein Orakel.
+
+\subsubsection{Definition: IND-CPA für PKE}
+Ein PKE-Schema $\text{PKE} = (Gen, Enc, Dec)$ ist \textit{IND-CPA-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt IND-CPA-Experiment}]                                                \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}^{\text{PKE}}_\text{IND-CPA}}(1^k) = b': b = b' \land |m_0| = |m_1|] \\
+   & \leq \frac{1}{2} + negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Visualisierung: IND-CPA-Sicherheitsexperiment}
+Bei dem IND-CPA-Sicherheitsexperiment wird das Verschlüsselungs-Orakel $\mathcal{O}$ ebenfalls vom Challenger implementiert und ist in der Visualisierung zur besseren Lesbarkeit getrennt. Der Angreifer $\mathcal{A}$ darf zu jedem Zeitpunkt Verschlüsselungs-Anfragen an das Orakel stellen.\par
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}^{\text{PKE}}_\text{IND-CPA}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node[label={[align=center]below:$b \stackrel{?}{=} b'$ $\land$ $|m_0| \stackrel{?}{=} |m_1|$}] (C) at (0,0.5) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (5,0.5);
+
+  \node[label={[align=right]left:$(pk, sk) \leftarrow Gen(1^k)$\\$b \stackrel{\$}{\leftarrow} \{0,1\}$}] at (0,5) {};
+  \node[label={left:$c^* \leftarrow Enc(pk, m_b)$}]  at (0,3) {};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,5) -- (5,4.5) node[midway, above, sloped] {$pk$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_0, m_1$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$c^*$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$b'$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $b = b'$ \textbf{und} $|m_0| = |m_1|$
+
+\subsubsection{Definition: IND-CCA2 für PKE}
+Ein PKE-Schema $\text{PKE} = (Gen, Enc, Dec)$ ist \textit{IND-CCA2-sicher}, wenn für alle PPT $\mathcal{A}$ gilt, dass
+\begin{flalign*}
+   & \Pr[\mathcal{A} \text{ gewinnt IND-CCA2-Experiment}]                                                                             \\
+   & = \Pr[\mathcal{A}^{\mathcal{C}^{\text{PKE}}_\text{IND-CCA2}}(1^k) = b': b = b' \land |m_0| = |m_1| \land c^* \neq c_j \forall j] \\
+   & \leq \frac{1}{2} + negl(k)
+\end{flalign*}
+für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
+
+\subsubsection{Visualisierung: IND-CCA2-Sicherheitsexperiment}
+Das Entschlüsselungs-Orakel $\mathcal{O}$ wird ebenfalls vom Challenger implementiert.\par
+\begin{tikzpicture}
+  \node (A) at (0,6) {$\mathcal{C}^{\text{PKE}}_\text{IND-CCA2}$};
+  \node (B) at (5,6) {$\mathcal{A}$};
+  \node (Orakel) at (10,6) {$\mathcal{O}$};
+  \node[label={[align=center]below:$b \stackrel{?}{=} b'$ $\land$  $|m_0| \stackrel{?}{=} |m_1|$ \notice{$\land$} \notice{$c^* \neq c_j \forall j$}}] (C) at (0,0.5) {};
+
+  \draw[dashed] (A) -- (C);
+  \draw[dashed] (B) -- (5,0.5);
+  \draw[dashed] (Orakel) -- (10,0.5);
+
+  \node[label={[align=right]left:$(pk, sk) \leftarrow Gen(1^k)$\\$b \stackrel{\$}{\leftarrow} \{0,1\}$}] at (0,5) {};
+  \node[label={left:$c^* \leftarrow Enc(pk, m_b)$}]  at (0,3) {};
+
+  \node[label={right:\notice{$m_j \leftarrow Dec(sk, c_j)$}}]  at (10,2.75) {};
+
+  \node at (7.5,1) {\small{(Anfragen immer erlaubt)}};
+
+  \draw[->,draw=noticeColor,shorten >=5pt, shorten <=5pt] (5,3.5) -- (10,3) node[midway, above, sloped] {\notice{$c_j$}};
+  \draw[->,draw=noticeColor,shorten >=5pt, shorten <=5pt] (10,2.5) -- (5,2) node[midway, above, sloped] {\notice{$m_j$}};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,5) -- (5,4.5) node[midway, above, sloped] {$pk$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,4) -- (0,3.5) node[midway, above, sloped] {$m_0, m_1$};
+
+  \draw[->,shorten >=5pt, shorten <=5pt] (0,2.5) -- (5,2) node[midway, above, sloped] {$c^*$};
+  \draw[->,shorten >=5pt, shorten <=5pt] (5,1.5) -- (0,1) node[midway, above, sloped] {$b'$};
+\end{tikzpicture}
+
+$\mathcal{A}$ gewinnt, falls $b = b'$ \textbf{und} $|m_0| = |m_1|$ \notice{\textbf{und} $c^* \neq c_j \forall j$}
+
+\subsection{Signcryption}
+\subsubsection{Problem bei der Konstruktion eines IND-CCA2-sicheren PKE-Schemas}
+Wir wollen auch für PKE ein IND-CCA2-sicheres Verfahren konstruieren. Bei SKE konnten wir dafür \hyperref[sec:symmetrischeVerschluesselungAuthentifizierteVerschluesselung]{Encrypt-then-Mac} verwenden.\par
+Das analoge Prinzip ``Encrypt-then-Sign'' (erst mit $pk$ des Empfängers verschlüsseln und dann mit $sk$ des Senders signieren) funktioniert für PKE allerdings nicht, da jeder, der den $pk$ des Empfängers kennt, eine Nachricht an ihn verschlüsseln kann.
+
+\subsubsection{Grundlagen der Signcryption}
+\highlight{Signcryption} ist der asymmetrische Variante von \hyperref[sec:symmetrischeVerschluesselungAuthentifizierteVerschluesselung]{authentifizierter Verschlüsselung}, die durch die Kombination eines PKE-Schemas und eines Signaturverfahrens erreicht wird.
+Dabei sollen \textbf{Vertraulichkeit} (IND-CCA2), \textbf{Integrität} (INT-CTXT) und \textbf{Authentizität} sichergestellt werden.
+
+\subsubsection{Authentizität bei Signcryption}
+Naive Ansätze der Signcryption (``Sign-then-Encrypt'' oder ``Encrypt-then-Sign'') sind anfällig für \textbf{Man-in-the-Middle-Angriffe}, da jeder die Nachricht abfangen, entschlüsseln und neu verschlüsseln kann.\par
 
 \newpage
 \bibliographystyle{apalike}
