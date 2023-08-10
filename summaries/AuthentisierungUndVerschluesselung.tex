@@ -1732,6 +1732,84 @@ Dabei sollen \textbf{Vertraulichkeit} (IND-CCA2), \textbf{Integrität} (INT-CTXT
 
 \subsubsection{Authentizität bei Signcryption}
 Naive Ansätze der Signcryption (``Sign-then-Encrypt'' oder ``Encrypt-then-Sign'') sind anfällig für \textbf{Man-in-the-Middle-Angriffe}, da jeder die Nachricht abfangen, entschlüsseln und neu verschlüsseln kann.\par
+Die Signatur und das Chiffrat muss also zusätzliche Informationen (wie \textit{Identitäten}) beinhalten.
+
+\subsubsection{Definition: PKE-Schema mit assoziierten Daten}
+Ein \textbf{PKE-Schema mit assoziierten Daten} $PKE_{AD}$ ist ein Tripel $(Gen, Enc, Dec)$ von PPT-Algorithmen:
+\begin{itemize}
+  \item{$Gen(1^k) \rightarrow (pk, sk)$}
+  \item{$Enc(pk, m, d) \rightarrow c$, $m \in \mathcal{M}, d \in \mathcal{D}$}
+  \item{$Dec(sk, c, d) \rightarrow  m$ (oder $\bot$, falls $c$ kein gültiges Chiffrat)}
+\end{itemize}
+\textbf{Korrektheit:} $\forall (pk, sk) \leftarrow Gen(1^k) \forall m \in \mathcal{M} \forall d \in \mathcal{D}: Dec(sk, Enc(pk, m, d), d) = m$\par
+$d$ ist hierbei das \textit{assoziierte Datum} und \textbf{bleibt nicht geheim} (z.B. Header oder Metadaten).
+
+\subsubsection{Definition: Signcryption-Schema}
+Ein \highlight{Signcryption-Schema} $SC$ ist ein Tripel $(Gen, Enc, Dec)$ von PPT-Algorithmen:
+\begin{itemize}
+  \item{$Gen(1^k) \rightarrow (pk, sk)$}
+  \item{$Enc(sk_S, id_S, pk_R, id_R, m) \rightarrow c$, $m \in \mathcal{M}, id_S, id_R \in \mathcal{ID}$}
+  \item{$Dec(pk_S, id_S, sk_R, id_R, c) \rightarrow  m$ (oder $\bot$, falls $c$ kein gültiges Chiffrat)}
+\end{itemize}
+\textbf{Korrektheit:}
+\begin{flalign*}
+   & \forall (pk_S, sk_S) \leftarrow Gen(1^k)                        \\
+   & \forall (pk_R, sk_R) \leftarrow Gen(1^k)                        \\
+   & \forall id_S, id_R \in \mathcal{ID}                             \\
+   & \forall m \in \mathcal{M}:                                      \\
+   & Dec(pk_S, id_S, sk_R, id_R, Enc(sk_S, id_S, pk_R, id_R, m)) = m
+\end{flalign*}
+\textit{INT-CTXT-Experiment für Signcryption ausgelassen.}
+
+\subsubsection{Definition: Ciphertext integrity für Signcryption}
+Ein Signcryption-Schema $SC = (Gen, Enc, Dec)$ ist INT-CTXT-sicher, wenn jeder PPT-Angreifer $\mathcal{A}$ das INT-CTXT-Experiment nur mit vernachlässigbarer Wahrscheinlichkeit gewinnt.
+
+\subsubsection{Definition: Sicheres Signcryption-Schema}
+Ein Signcryption-Schema $SC = (Gen, Enc, Dec)$ ist sicher, wenn es INT-CTXT-sicher und IND-CCA2-sicher ist.
+
+\subsubsection{Konstruktion von Signcryption}
+Zur Konstruktion eines Signcryption-Verfahrens kombinieren wir ein PKE-Schema mit assoziierten Daten und ein Signaturverfahren. Die Identität des Senders ist im Chiffrat gespeichert und die des Empfängers in der Signatur.\par
+Es kann entweder ``Encrypt-then-Sign'' oder ``Sign-then-Encrypt'' verwendet werden. Grundbausteine für das Signcryption-Schema $SC = (Gen, Enc, Dec)$:
+\begin{itemize}
+  \item{PKE-Schema  $PKE_{AD} = (Gen', Enc', Dec')$}
+  \item{Signaturverfahren $\Sigma = (Gen^*, Sign, Vfy)$}
+  \item{$Gen(1^k)$: \begin{flalign*}
+                 & (pk', sk') \leftarrow Gen'(1^k)    \\
+                 & (pk^*, sk^*) \leftarrow Gen^*(1^k) \\
+                 & pk \coloneqq (pk', pk^*)           \\
+                 & sk \coloneqq (sk', sk^*)           \\
+              \end{flalign*} }
+\end{itemize}
+
+\subsubsection{Signcryption: Encrypt-then-Sign}
+\begin{itemize}
+  \item{$Enc(sk_S, id_S, pk_R, id_R, m)$: \begin{flalign*}
+                 & c \leftarrow Enc'(pk'_R, m, id_S)         \\
+                 & \sigma \leftarrow Sign(sk^*_S, (c, id_R)) \\
+                 & \textbf{Chiffrat: } (c, \sigma)           \\
+              \end{flalign*} }
+  \item{$Dec(pk_S, id_S, sk_R, id_R, c)$: \begin{flalign*}
+                 & \texttt{if } Vfy(pk^*_S, (c, id_R), \sigma) = 0, \texttt{return } \bot \\
+                 & m \coloneqq Dec'(sk'_R, c, id_S)
+              \end{flalign*} }
+\end{itemize}
+$SC$ ist sicher, wenn $PKE_{AD}$ IND-CCA2-sicher und $\Sigma$ \textbf{\notice{s}}EUF-CMA-sicher ist.
+
+\subsubsection{Signcryption: Sign-then-Encrypt}
+\begin{itemize}
+  \item{$Enc(sk_S, id_S, pk_R, id_R, m)$: \begin{flalign*}
+                 & \sigma \leftarrow Sign(sk^*_S, (m, id_R))   \\
+                 & c \leftarrow Enc'(pk'_R, (m, \sigma), id_S) \\
+                 & \textbf{Chiffrat: } c                       \\
+              \end{flalign*} }
+  \item{$Dec(pk_S, id_S, sk_R, id_R, c)$: \begin{flalign*}
+                 & (m, \sigma) \coloneqq Dec'(sk*'_R, c, id_S)                            \\
+                 & \texttt{if } Vfy(pk^*_S, (m, id_R), \sigma) = 0, \texttt{return } \bot \\
+                 & \texttt{return } m
+              \end{flalign*} }
+\end{itemize}
+$SC$ ist sicher, wenn $PKE_{AD}$ IND-CCA2-sicher und $\Sigma$ EUF-CMA-sicher ist.
+
 
 \newpage
 \bibliographystyle{apalike}
