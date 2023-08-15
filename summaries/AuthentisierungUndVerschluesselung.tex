@@ -1810,6 +1810,80 @@ $SC$ ist sicher, wenn $PKE_{AD}$ IND-CCA2-sicher und $\Sigma$ \textbf{\notice{s}
 \end{itemize}
 $SC$ ist sicher, wenn $PKE_{AD}$ IND-CCA2-sicher und $\Sigma$ EUF-CMA-sicher ist.
 
+\subsection{Naor-Yung-Konstruktion}
+\textbf{Ziel:} IND-CCA2-sicheres PKE-Schema
+
+\subsubsection{Überblick der Naor-Yung-Konstruktion}
+\begin{itemize}
+  \item{Generische Konstruktion für ein IND-CCA2-sicheres PKE-Schema aus einem IND-CPA-sicheren PKE-Schema}
+  \item{Nutzt \textit{SS-NIZKs} als Baustein}
+  \item{Idee: \textbf{Doppelverschlüsselung}}
+\end{itemize}
+
+\subsubsection{Definition: NP-Sprache}
+Eine Sprache $L$ ist genau dann in NP, wenn es eine Relation $R_L \subseteq (L \times {\{0,1\}}^*)$ mit $R_L \in$ P gibt, wobei
+\begin{flalign*}
+  x \in L \Longleftrightarrow \exists w: (x, w) \in R_L
+\end{flalign*}
+Weiterhin muss $|w|$ beschränkt sein durch $p(|x|)$, wobei $p$ wiedere in beliebiges Polynum ist. $w$ heißt \textit{Zeuge} und $R_L$ \textit{Zeugenrelation}.
+
+\subsubsection{Definition: SS-NIZK}
+\textbf{Ziel:} Zeige mittels eines \textit{Beweissystems}, dass $x \in L$ gilt.\par
+Sei $L \in$ NP eine NP-Sprache mit PPT-Zeugenrelation $R_L$. Ein \textbf{S}imulation-\textbf{S}ound \textbf{N}on-\textbf{I}nteractive \textbf{Z}ero-\textbf{K}nowledge Proof System für $L$ besteht aus drei Algorithmen:
+\begin{itemize}
+  \item{$Setup(1^k)$: Generiert einen $CRS$ (common reference string)}
+  \item{$Prove(CRS, x, w)$: Gibt einen Beweis $\pi$ aus}
+  \item{$Verify(CRS, x, \pi)$: Gibt 0 oder 1 aus}
+\end{itemize}
+
+\subsubsection{Eigenschaften: SS-NIZK}
+\begin{itemize}
+  \item{\textbf{Vollständigkeit:} Für $x \in L$ generiert $Prove$ einen Beweis, der von $Verify$ akzeptiert wird}
+  \item{\textbf{Zero-Knowledge:} Der Verifizierer lernt außer $x \in L$ oder $x \notin L$ nichts (intuitiv)}
+  \item{\textbf{Soundness:} Es ist schwer einen korrekten (also von $Verify$ akzeptierten) Beweis $\pi$ für eine falsche Aussage $x \notin L$ zu finden}
+\end{itemize}
+
+\subsubsection{Bausteine für die Naor-Yung-Konstruktion}
+Der erste Baustein ist ein IND-CPA-sicheres PKE-Schema $PKE_{CPA} = (Gen_{CPA}, Enc_{CPA}, Dec_{CPA})$.\par
+Zudem wird die Sprache $L_{NY}$ benötigt:
+\begin{flalign*}
+  L_{NY} \coloneqq \{(pk_1, pk_2, c_1, c_2) | \exists m, r_1, r_2: c_1 = Enc(pk_1, m; r_1) \land c_2 = Enc(pk_2, m; r_2)\}
+\end{flalign*}
+Die Notation $Enc(pk_1, m; r_1)$ bedeutet, dass die Nachricht $m$ unter dem öffentlichen Schlüssel $pk_1$ verschlüsselt wird und dabei der Zufall $r_1$ verwendet wird.\par
+Die Elemente von $L_{NY}$ sind also Paare von Chiffraten derselben Nachricht, die zugehörigen Zeugen haben die Form $(m, r_1, r_2)$.
+
+\subsubsection{Naor-Yung-Konstruktion}
+Definiere $PKE_{NY} = (Gen_{NY}, Enc_{NY}, Dec_{NY})$ wir folgt:
+\begin{itemize}
+  \item{$Gen_{NY}(1^k)$: \begin{flalign*}
+                 & (pk_1, sk_1) \leftarrow Gen_{CPA}(1^k) \\
+                 & (pk_2, sk_2) \leftarrow Gen_{CPA}(1^k) \\
+                 & CRS \leftarrow Setup(1^k)              \\
+                 & pk \coloneqq (pk_1, pk_2, CRS)         \\
+                 & sk \coloneqq (pk, sk_1)
+              \end{flalign*}}
+  \item{$Enc_{NY}(pk, m)$: \begin{flalign*}
+                 & (pk_1, pk_2, CRS) \coloneqq pk         \\
+                 & c_1 \leftarrow Enc_{CPA}(pk_1, m; r_1) \\
+                 & c_2 \leftarrow Enc_{CPA}(pk_2, m; r_2) \\
+                 & x \coloneqq (pk_1, pk_2, c_1, c_2)     \\
+                 & w \coloneqq (m, r_1, r_2)              \\
+                 & \pi \leftarrow Prove(CRS, x, w)        \\
+                 & c \coloneqq (c_1, c_2, \pi)
+              \end{flalign*}}
+  \item{$Dec_{NY}(sk, c)$: \begin{flalign*}
+                 & (pk, sk_1) \coloneqq sk                                       \\
+                 & (pk_1, pk_2, CRS) \coloneqq pk                                \\
+                 & (c_1, c_2, \pi) \coloneqq c                                   \\
+                 & x \coloneqq (pk_1, pk_2, c_1, c_2)                            \\
+                 & m \leftarrow Dec_{CPA}(sk_1, c_1)                             \\
+                 & \texttt{if } Verify(CRS, x, \pi) = 0: \texttt{Gib $\bot$ aus} \\
+                 & \texttt{else: Gib $m$ aus}
+              \end{flalign*}}
+\end{itemize}
+Wenn das verwendete Beweissystem ein SS-NIZK ist und $PKE_{CPA}$ IND-CPA-sicher ist, dann ist $PKE_{NY}$ IND-CCA2-sicher.
+
+
 
 \newpage
 \bibliographystyle{apalike}
