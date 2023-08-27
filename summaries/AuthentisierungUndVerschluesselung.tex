@@ -1883,7 +1883,43 @@ Definiere $PKE_{NY} = (Gen_{NY}, Enc_{NY}, Dec_{NY})$ wir folgt:
 \end{itemize}
 Wenn das verwendete Beweissystem ein SS-NIZK ist und $PKE_{CPA}$ IND-CPA-sicher ist, dann ist $PKE_{NY}$ IND-CCA2-sicher.
 
+\newpage
+\section{Identitätsbasierte Verschlüsselung}
+\subsection{Grundlagen}
+\subsection{Motivation}
+\begin{itemize}
+  \item{Für SKE-Schemata wird ein geheimer Schlüssel benötigt, der vor der Kommunikation ausgetauscht werden muss}
+  \item{Für PKE-Schemata muss der Sender den $pk$ des Empfängers kennen}
+\end{itemize}
+\highlight{Identitätsbasierte Verschlüsselung} bzw. \textit{Identity-based encryption} (IBE) kommt komplett ohne Schlüsselaustausch aus.
 
+\subsubsection{Überblick}
+\begin{itemize}
+  \item{Man muss nur die \textit{Identität des Empfängers} kennen, um ihm eine \textbf{verschlüsselte} Nachricht zu senden}
+  \item{Identität kann z.B. eine Mailadresse sein}
+  \item{Der Empfänger kann sich zum Entschlüsseln einen \textit{user secret key} von einer vertrauenswürdigen Entität besorgen}
+  \item{Diese Entität kennt den \textit{master secret key}, mit dem \textit{user secret keys} generiert werden können}
+  \item{Ein \textit{master public key} wird zum Verschlüsseln verwendet}
+\end{itemize}
+
+\subsubsection{Definition: IBE-Schema}
+Ein IBE-Schema mit Nachrichtenraum $\mathcal{M}_k$ und Identitätsraum $\mathcal{ID}_k$ ist ein Tupel $IBE = (Gen, Ext, Enc, Dec)$ Tupel aus vier PPT-Algorithmen:
+\begin{itemize}
+  \item{$(mpk, msk) \leftarrow Gen(1^k)$: Generiert das Master-Schlüsselpaar}
+  \item{$usk_{id} \leftarrow Ext(msk, id)$ (\textit{Extraktionsalgorithmus}): Gibt \textit{user secret key} für Identität $id \in \mathcal{ID}_k$ aus}
+  \item{$c \leftarrow Enc(mpk, id, m)$ (\textit{Verschlüsselungsalgorithmus}): Verschlüsselt eine Nachricht an $id$}
+  \item{$m \leftarrow Dec(usk_{id}, c)$ (\textit{Entschlüsselungsalgorithmus}): Entschlüsselt eine Nachricht}
+\end{itemize}
+\textbf{Korrektheit:}
+\begin{flalign*}
+   & \forall k \in \mathbb{N}                 \\
+   & \forall m \in \mathcal{M}_k              \\
+   & \forall id \in \mathcal{ID}_k            \\
+   & \forall (mpk, msk) \leftarrow Gen(1^k)   \\
+   & \forall usk_{id} \leftarrow Ext(msk, id) \\
+   & \forall c \leftarrow Enc(mpk, id, m)     \\
+   & Dec(usk_{id}, c) = m
+\end{flalign*}
 
 \newpage
 \bibliographystyle{apalike}
