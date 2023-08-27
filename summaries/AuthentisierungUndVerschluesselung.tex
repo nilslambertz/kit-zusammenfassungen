@@ -361,7 +361,7 @@ Ein weiterer möglicher Ansatz ist die verwendung einer \hyperref[sec:hashfunkti
                  & \sigma    \leftarrow (\sigma_i, i, \notice{pk_1, \dots, pk_q}) \\
                  & st        \coloneqq st + 1                                     \\
               \end{flalign*} }
-  \item{$Vfy(pk, m, \sigma = (\sigma_i, i))$: \begin{flalign*}
+  \item{$Vfy(pk, m, \sigma)$: \begin{flalign*}
                 Vfy^{(1)}(pk_i, m, \sigma_i) \stackrel{?}{=} 1 \notice{\text{ und } H(pk_1, \dots, pk_q) \stackrel{?}{=} pk}
               \end{flalign*}
         }
@@ -562,12 +562,6 @@ für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 \subsubsection{Chamäleon-Hashfunktion basierend auf DLog}
 Wir konstruieren nun eine Chamäleon-Hashfunktion basierend auf DLog mit einer Gruppe $\mathbb{G}$, $|\mathbb{G}| = p$ prim und $g$ Erzeuger von $\mathbb{G}$:
 \begin{itemize}
-  \item{$ch$ beschreibt Funktion:
-              \begin{itemize}
-                \item{$ch: \mathbb{Z}_p \times \mathbb{Z}_p \rightarrow \mathbb{G}$}
-                \item{$ch(m, r) \coloneqq g^m \cdot h^r$}
-              \end{itemize}
-        }
   \item{$Gen(1^k)$:
               \begin{itemize}
                 \item{$x \stackrel{\$}{\leftarrow} \mathbb{Z}_p$}
@@ -575,10 +569,16 @@ Wir konstruieren nun eine Chamäleon-Hashfunktion basierend auf DLog mit einer G
                 \item{$ch \coloneqq (g,h)$}
                 \item{$\tau \coloneqq x$}
               \end{itemize}}
+  \item{$ch$ beschreibt Funktion:
+              \begin{itemize}
+                \item{$ch: \mathbb{Z}_p \times \mathbb{Z}_p \rightarrow \mathbb{G}$}
+                \item{$ch(m, r) \coloneqq g^m \cdot h^r$}
+              \end{itemize}
+        }
   \item{$TrapColl_{ch}(\tau, m, r, m')$: Berechnet $r^*$, sodass
               \begin{alignat*}{4}
-                 &                 & m + x \cdot r & \equiv m^* + x \cdot r^* & \mod p \\
-                 & \Leftrightarrow & r^*           & = \frac{m - m^*}{x} + r  & \mod p
+                 &                 & m + x \cdot r & \equiv m^* + x \cdot r^*     & \mod p \\
+                 & \Leftrightarrow & r^*           & \equiv \frac{m - m^*}{x} + r & \mod p
               \end{alignat*} }
 \end{itemize}
 Damit folgt
@@ -594,7 +594,7 @@ Damit folgt
 Gegeben sind
 \begin{itemize}
   \item{$CH = (Gen_{ch}, TrapColl_{ch})$, $ch: \mathcal{M} \times \mathcal{R} \rightarrow \mathcal{N}$}
-  \item{Signatur $\Sigma' = (Gen', Sign', Vfy')$}
+  \item{Signaturverfahren $\Sigma' = (Gen', Sign', Vfy')$}
 \end{itemize}
 Konstruiere nun ein Chamäleon-Signaturverfahren $\Sigma = (Gen, Sign, Vfy)$:
 \begin{itemize}
@@ -686,7 +686,7 @@ Mit einem EUF-CMA-sicheren Signaturverfahren und einer CH-Funktion kann ein sEUF
 \subsubsection{Definition}
 Seien $\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T$ zyklische Gruppen mit Ordnung $p$ prim. Ein \highlight{Pairing} ist eine \textbf{bilineare} Abbildung
 \begin{flalign*}
-  \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T
+  e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T
 \end{flalign*}
 mit den Eigenschaften
 \begin{itemize}
@@ -1113,7 +1113,7 @@ Bei \textbf{RSA-PSS} wird die Nachricht vorverarbeitet und dann signiert.
 \subsection{GHR-Signaturen}
 \subsubsection{Konstruktion}
 Gennaro-Halevi-Rabin-Signaturen (\textbf{GHR-Signaturen}) basieren auf der \hyperref[sec:strongRSAAnnahme]{Strong-RSA-Annahme} und benötigen (anders als die vorherigen Verfahren) kein ROM.\par
-Es sei $H \coloneqq {\{0, 1\}}^* \rightarrow \mathbb{P}$ eine Hashfunktion ($\mathbb{P} =$ Primzahlen).
+Es sei $h \coloneqq {\{0, 1\}}^* \rightarrow \mathbb{P}$ eine Hashfunktion ($\mathbb{P} =$ Primzahlen).
 \begin{itemize}
   \item{$Gen(1^k)$: \begin{flalign*}
                  & \text{Ziehe zufällige Primzahlen } P, Q                                              \\
@@ -1659,7 +1659,7 @@ Ein PKE-Schema $\text{PKE} = (Gen, Enc, Dec)$ ist \textit{IND-CPA-sicher}, wenn 
 für eine im Sicherheitsparameter $k$ vernachlässigbare Funktion $negl$.
 
 \subsubsection{Visualisierung: IND-CPA-Sicherheitsexperiment}
-Bei dem IND-CPA-Sicherheitsexperiment wird das Verschlüsselungs-Orakel $\mathcal{O}$ ebenfalls vom Challenger implementiert und ist in der Visualisierung zur besseren Lesbarkeit getrennt. Der Angreifer $\mathcal{A}$ darf zu jedem Zeitpunkt Verschlüsselungs-Anfragen an das Orakel stellen.\par
+Der Angreifer $\mathcal{A}$ kann mit $pk$ selbst jederzeit Nachrichten verschlüsseln.\par
 \begin{tikzpicture}
   \node (A) at (0,6) {$\mathcal{C}^{\text{PKE}}_\text{IND-CPA}$};
   \node (B) at (5,6) {$\mathcal{A}$};
@@ -1825,7 +1825,7 @@ Eine Sprache $L$ ist genau dann in NP, wenn es eine Relation $R_L \subseteq (L \
 \begin{flalign*}
   x \in L \Longleftrightarrow \exists w: (x, w) \in R_L
 \end{flalign*}
-Weiterhin muss $|w|$ beschränkt sein durch $p(|x|)$, wobei $p$ wiedere in beliebiges Polynum ist. $w$ heißt \textit{Zeuge} und $R_L$ \textit{Zeugenrelation}.
+Weiterhin muss $|w|$ beschränkt sein durch $p(|x|)$, wobei $p$ wieder ein beliebiges Polynom ist. $w$ heißt \textit{Zeuge} und $R_L$ \textit{Zeugenrelation}.
 
 \subsubsection{Definition: SS-NIZK}
 \textbf{Ziel:} Zeige mittels eines \textit{Beweissystems}, dass $x \in L$ gilt.\par
