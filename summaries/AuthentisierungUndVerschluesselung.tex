@@ -1548,7 +1548,7 @@ Sei $SKE' = (Gen', Enc', Dec')$ ein IND-CPA-sicheres SKE-Schema und $\Pi = (Gen_
 \begin{itemize}
   \item{$Gen(1^k)$: \begin{flalign*}
                  & \kappa_1 \leftarrow Gen'(1^k)         \\
-                 & \kappa_2 \leftarrow Gen'(1^k)         \\
+                 & \kappa_2 \leftarrow Gen_\Pi(1^k)      \\
                  & \kappa \coloneqq (\kappa_1, \kappa_2) \\
               \end{flalign*} }
   \item{$Enc(\kappa,m)$: \begin{flalign*}
