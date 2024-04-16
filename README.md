@@ -6,8 +6,8 @@
 
 ## Sommersemester 2023
 
-- [Authentisierung und Verschlüsselung [WIP]](./pdfs/AuthentisierungUndVerschluesselung.pdf)
-- [Symmetrische Verschlüsselungsverfahren [WIP]](./pdfs/SymmetrischeVerschluesselungsverfahren.pdf)
+- [Authentisierung und Verschlüsselung [unvollständig]](./pdfs/AuthentisierungUndVerschluesselung.pdf)
+- [Symmetrische Verschlüsselungsverfahren [unvollständig]](./pdfs/SymmetrischeVerschluesselungsverfahren.pdf)
 
 ## Wintersemester 2022/2023
 
