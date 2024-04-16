@@ -2,6 +2,7 @@
 
 ## Sommersemester 2024
 
+- [Access Control Systems [WIP]](./pdfs/AccessControlSystems.pdf)
 - [Decentralized Systems: Fundamentals, Modeling, and Applications [WIP]](./pdfs/DecentralizedSystems.pdf)
 
 ## Sommersemester 2023
