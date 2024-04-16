@@ -1,0 +1,66 @@
+\documentclass[12pt,A4]{extarticle}	
+\usepackage{filecontents}
+
+\begin{filecontents}{access-control-systems-bibfile.bib}
+  @phdthesis{nobi2022towards,
+  title={Towards Machine Learning Based Access Control},
+  author={Nobi, Mohammad Nur},
+  year={2022},
+  school={The University of Texas at San Antonio}
+}
+\end{filecontents}
+
+\newcommand{\lectureTitle}{Access Control Systems [WIP]}
+\newcommand{\lectureSubtitle}{Models and Technology}
+\newcommand{\semester}{Sommersemester 2024}
+
+\newcommand{\titleSize}{\LARGE}
+
+\input{../shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+
+\def\contentsname{\empty}
+
+\begin{document}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+\subsection{What is Access Control?}
+\subsubsection{Definition according to OSI Basic Reference Model (1989)}
+\begin{itemize}
+  \item{\textbf{Access Control}: ``The prevention of unauthorized use of a resource''}
+  \item{\textbf{Authorization}: ``The granting of rights, which includes the granting of access based on access rights''}
+  \item{Listed as a \textbf{security service}: ``This service provides protection against unauthorized use of resources''}
+  \item{Based on \textbf{policies}: ``The control of access will be in accordance with various security policies''}
+\end{itemize}
+
+\subsubsection{Aspects of Access Control}
+\begin{itemize}
+  \item{\textbf{Policy}: Focus on models, specification of security policies (What does it mean to be secure?)}
+  \item{\textbf{Enforcement}: Focus on technologies, design and implementation of systems (How do we make it secure?)}
+\end{itemize}
+
+\subsection{Creating and enforcing policies}
+Classification by \cite{nobi2022towards}:
+\begin{itemize}
+  \item{\textbf{Policy Authoring/Engineering}: Define a policy model and access control rules}
+  \item{\textbf{Policy Verification and Testing}: Test for leaks or contradictory privileges}
+  \item{\textbf{Policy Administration}: Maintain and update policies/configurations}
+  \item{\textbf{Policy Enforcement}}
+\end{itemize}
+
+
+\newpage
+\bibliographystyle{apalike}
+\bibliography{access-control-systems-bibfile}
+
+
+\end{document}
