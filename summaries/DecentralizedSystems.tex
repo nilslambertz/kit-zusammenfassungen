@@ -21,7 +21,7 @@
 
 \newcommand{\lectureTitle}{Decentralized Systems [WIP]}
 \newcommand{\lectureSubtitle}{Fundamentals, Modeling, and Applications}
-\newcommand{\semester}{Sommersemester 2023}
+\newcommand{\semester}{Sommersemester 2024}
 
 \newcommand{\titleSize}{\LARGE}
 
@@ -44,19 +44,19 @@
 \section{Introduction}
 \subsection{What is a distributed system?}
 \subsubsection{Characteristics by van Steen and Tanenbaum}
-``\textit{A distributed system is a collection of autonomous computing elements that appears to its users as a single coherent system.}'' (\cite{DBLP:journals/computing/SteenT16}), daraus gehen zwei Charakteristiken hervor:
+``\textit{A distributed system is a collection of autonomous computing elements that appears to its users as a single coherent system.}'' (\cite{DBLP:journals/computing/SteenT16}), this results in two characteristics:
 \begin{enumerate}
   \item{``\textbf{Collection of autonomous computing elements}'': ``\textit{In practice, nodes are programmed to achieve common goals, which are realized by exchanging messages with each other}'' \\(\cite{DBLP:journals/computing/SteenT16})}
   \item{``\textbf{Appears as a single coherent system}'': Appears as a single large system}
 \end{enumerate}
 
-\subsubsection{Consequences of characteristic 1}
+\subsubsection{Aspects of characteristic 1}
 \begin{itemize}
-  \item{``\textit{we cannot assume that there is something like a global clock}'' (\cite{DBLP:journals/computing/SteenT16}), therefore the synchronization and coordination between must be worked out}
+  \item{``\textit{we cannot assume that there is something like a global clock}'' (\cite{DBLP:journals/computing/SteenT16}), therefore the \textbf{synchronization and coordination} between participants must be worked out}
   \item{``\textit{The fact that we are dealing with a collection of nodes implies that we may also need to manage the membership and organization of that collection}'' (\cite{DBLP:journals/computing/SteenT16}), therefore we need to think about identities and possible access-restrictions}
 \end{itemize}
 
-\subsubsection{Consequences of characteristic 2}
+\subsubsection{Aspects of characteristic 2}
 \begin{itemize}
   \item{``\textit{To assist the development of distributed applications, distributed systems are often organized to have a separate layer of software that is logically placed on top of the respective operating systems of the computers that are part of the system [...] leading to what is known as middleware}'' (\cite{DBLP:journals/computing/SteenT16})}
 \end{itemize}
@@ -80,7 +80,7 @@ According to \textbf{ISO/TC 307}: ``\textit{distributed system wherein control i
 
 \subsubsection{Our definition of decentralized systems}
 \begin{itemize}
-  \item{A decentralized system has political decentralization, where multiples parties are making their own independent decisions}
+  \item{A decentralized system has political decentralization, where multiples parties are making their own independent decisions (they can still coordinate with each other)}
   \item{If a system is architecturally but not politically decentralized, we call it a distributed system}
   \item{Decentralized systems can be \textbf{logically decentralized or centralized}}
   \item{Decentralized systems can be open systems (anybody can participate) or closed systems}
@@ -89,32 +89,28 @@ According to \textbf{ISO/TC 307}: ``\textit{distributed system wherein control i
 \subsection{Reasons for decentralization}
 \subsubsection{Reasons for architectural decentralization}
 \begin{itemize}
-  \item{Reduce \textbf{latency}}
-  \item{\textbf{Scale} the number of machines running the system}
+  \item{\textbf{Latency}}
+  \item{\textbf{Scalability}: Scale number of machines running the system}
   \item{Increase \textbf{fault tolerance} and \textbf{availability}, remove single point of failures}
   \item{Increase \textbf{attack resistance}, because no central points exist}
 \end{itemize}
 
 \subsubsection{Reasons for political decentralization}
 \begin{itemize}
-  \item{Increate \textbf{collusion resistance}, it is harder to act in ways that benefit a small group at the expense of other participants}
-  \item{\textbf{Power} can be \textbf{distributed} ``equally''}
+  \item{\textbf{Collusion resistance}: It is harder for participants to collude in ways that benefit a small group at the expense of other participants}
+  \item{\textbf{Power} can be distributed ``equally''}
 \end{itemize}
 
 \subsubsection{Reasons for logical decentralization}
 Logical decentralization is not always possible or even wanted, especially in use cases we cover. An example are \textbf{Distributed Ledgers}, where the goal is to have one commonly agreed state of the system at any point in time.
 
-\subsection{Risks of decentralization}
+\subsection{Challenges of decentralization}
 Decentralized systems come with risks/challenges to avoid harm to the system or its participants:
 \begin{itemize}
-  \item{\textbf{Impersonation} or \textbf{Misrepresentation}}
-  \item{\textbf{Fraudulent actions}}
-  \item{\textbf{Collusion}}
-  \item{Denial-of-Service-attacks}
+  \item{\textbf{Time and synchrony}: Do we have a global clock? Is the communication synchronous or asynchronous?}
+  \item{\textbf{Behaviour} of nodes: Can we handle arbitrary behaviour? How many faulty nodes can we tolerate?}
+  \item{\textbf{Identity}: Do we have an open system? Are nodes (identities) known?}
 \end{itemize}
-
-\subsection{Two Generals' Problem}
-Cryptography can be used to ensure authenticity, integrity and confidentiality of a message sent over an (unreliable) channel. But it's not possible to ensure \textbf{availability} (that a message has been delivered), we can only reduce the probability of these events by using heuristics like \textit{sequence numbers} or \textit{retransmissions}.
 
 \newpage
 \bibliographystyle{apalike}
