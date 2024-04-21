@@ -1,13 +1,33 @@
 \documentclass[12pt,A4]{extarticle}	
 \usepackage{filecontents}
 
-\begin{filecontents}{access-control-systems-bibfile.bib}
+\begin{filecontents}{\jobname.bib}
   @phdthesis{nobi2022towards,
   title={Towards Machine Learning Based Access Control},
   author={Nobi, Mohammad Nur},
   year={2022},
   school={The University of Texas at San Antonio}
 }
+@ARTICLE{salzer1975protection,
+  author={Saltzer, J.H. and Schroeder, M.D.},
+  journal={Proceedings of the IEEE}, 
+  title={The protection of information in computer systems}, 
+  year={1975},
+  volume={63},
+  number={9},
+  pages={1278-1308},
+  keywords={Protection;Authorization;Permission;Access control;Terminology;Data security;Information security;Computer architecture;Modems},
+  doi={10.1109/PROC.1975.9939}}
+@ARTICLE{AContemporaryLookAtSaltzerAndSchroeders1975DesignPrinciples,
+  author={Smith, Richard E.},
+  journal={IEEE Security and Privacy}, 
+  title={A Contemporary Look at Saltzer and Schroeder's 1975 Design Principles}, 
+  year={2012},
+  volume={10},
+  number={6},
+  pages={20-25},
+  keywords={Information security;Standards;Cryptography;Design methodology;Privacy;Computer security;security;protection mechanisms;Saltzer;Schroeder},
+  doi={10.1109/MSP.2012.85}}
 \end{filecontents}
 
 \newcommand{\lectureTitle}{Access Control Systems [WIP]}
@@ -20,6 +40,7 @@
 \cfoot{\thepage\ $/$ \pageref*{LastPage}}
 
 
+\definecolor{purple}{RGB}{153,71,155}
 \definecolor{highlightColor}{RGB}{66, 135, 245}
 \newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
 
@@ -27,7 +48,7 @@
 
 \begin{document}
 
-\disclaimer
+\disclaimer{}
 
 \tableofcontents
 \clearpage
@@ -57,10 +78,102 @@ Classification by \cite{nobi2022towards}:
   \item{\textbf{Policy Enforcement}}
 \end{itemize}
 
+\section{Foundations}
+\subsection{Design Principles}
+\subsubsection{Design Principles of Saltzer and Schroeder (1975)}
+Saltzer and Schroeder \cite{salzer1975protection} proposed the following design principles for secure systems:
+\begin{itemize}
+  \item{\textbf{Economy of mechanism}: Keep the design as simple and small as possible}
+  \item{\textbf{Fail-safe defaults}: Base access decisions on permission, not exclusion (default is lack of access)}
+  \item{\textbf{Complete mediation}: Every access to every object must be checked}
+  \item{\textbf{Open design}: Security through obscurity is not a good idea}
+  \item{\textbf{Separation of privilege}: Divide access rights into multiple parts}
+  \item{\textbf{Least privilege}: Give programs and users only the permissions they need for the job}
+  \item{\textbf{Least common mechanism}: Minimize shared mechanisms}
+  \item{\textbf{Psychological acceptability}: Make security mechanisms easy to use and understand}
+\end{itemize}
+
+\subsubsection{A Contemporary Look at Saltzer and Schroeder's 1975 Design Principles}
+Richard Smith \cite{AContemporaryLookAtSaltzerAndSchroeders1975DesignPrinciples} took a contemporary look at the design principles and found that most of them are still relevant today. He listed the following principles:
+\begin{itemize}
+  \item{\textbf{Continuous improvement}: Security is a process, not a product}
+  \item{\textbf{Least privilege}}
+  \item{\textbf{Defense in depth}: Use multiple layers of security}
+  \item{\textbf{Open design}}
+  \item{\textbf{Chain of control}: Ensure that trustworhy software is being executed}
+  \item{\textbf{Deny by default}: Default should be lack of access}
+  \item{\textbf{Transitive trust}: Trust should be transitive}
+  \item{\textbf{Separation of duty}: Critical tasks should be divided among multiple individuals or entities}
+\end{itemize}
+
+\subsection{Policy Administration: Who is in charge of setting policies?}
+\subsubsection{Discretionary Access Control (DAC)}
+In \highlight{Discretionary Access Control (DAC)} each resource is assigned an owner. The owner can decide who has access to the resource.
+
+\subsubsection{Mandatory Access Control (MAC)}
+In \highlight{Mandatory Access Control (MAC)} access is controlled by the system, not the owner. The system enforces access control based on a system-wide policy.
+
+\subsection{Access Control Matrix (ACM)}
+The \textbf{Protection State} of a system consists of all components and their privileges over each other. The \highlight{Access Control Matrix (ACM)} encodes the protection state.
+
+\begin{center}
+  \begin{tabular}{c|c|c|c|c|c|c|c|}
+    \multicolumn{1}{c}{} & \multicolumn{1}{c}{$s_1$} & \multicolumn{1}{c}{$\dots$} & \multicolumn{1}{c}{$s_n$} & \multicolumn{1}{c}{$o_1$} & \multicolumn{1}{c}{\dots} & \multicolumn{1}{c}{$o_m$} \\
+    \cline{2-7}
+    $s_1$                &                           &                             &                           &                           &                           &                           \\
+    \cline{2-7}
+    $\vdots$             &                           &                             &                           &                           &                           &                           \\
+    \cline{2-7}
+    $s_n$                &                           &                             &                           &                           &                           &                           \\
+    \cline{2-7}
+  \end{tabular}
+\end{center}
+
+\begin{itemize}
+  \item{Subjects $S = \{s_1, \dots, s_n\}$}
+  \item{Objects $O = S \cup \{o_1, \dots, o_m\}$}
+  \item{Rights $R = \{r_1, \dots, r_k\}$}
+  \item{Entries $A[s_i, o_j] \subseteq R$}
+\end{itemize}
+
+\subsubsection{Primitive Operations}
+\begin{itemize}
+  \item{\textbf{create subject $s$; create object} $o$ (Creates new column/row)}
+  \item{\textbf{destroy subject $s$; destroy object} $o$ (Removes column/row)}
+  \item{\textbf{enter $r$ into $A[s,o]$} (Adds right $r$ for subject $s$ over object $o$)}
+  \item{\textbf{delete $r$ from $A[s,o]$} (Removes right $r$ for subject $s$ over object $o$)}
+\end{itemize}
+Modification of the ACM usually requires executing a sequence of operations.
+
+\subsubsection{Commands}
+\textbf{command} \textcolor{purple}{\textless name\textgreater}(\textcolor{green}{\textless parameters\textgreater}) \\
+\textbf{if}\\
+\hspace*{10mm}{\textcolor{blue}{\textless conditions\textgreater}}\\
+\textbf{then}\\
+\hspace*{10mm}{\textcolor{red}{\textless operations\textgreater}}\\
+\textbf{end}\par
+If all \textcolor{blue}{conditions} are met, all \textcolor{red}{operations} (conjunction $\land$) are executed, otherwise nothing happens.
+
+\subsubsection{Commands: Example}
+\textbf{command} \textcolor{purple}{make.file}(\textcolor{green}{p, f}) \\
+\textbf{
+  \hspace*{10mm}{\textcolor{blue}{create object $f$;}}\\
+  \hspace*{10mm}{\textcolor{blue}{center $own$ into $A[p, f]$;}}\\
+  \hspace*{10mm}{\textcolor{blue}{enter $r$ into $A[p, f]$;}}\\
+  \hspace*{10mm}{\textcolor{blue}{enter $w$ into $A[p, f]$;}}\\
+  end}
+
+\subsubsection{Leak, Safety, Safety Question}
+\begin{itemize}
+  \item{\textbf{Leak}: Addings a right $r$ where there was not one before is called \textit{leaking}}
+  \item{\textbf{Safety}: If a system $S$, beginning in initial state $s_0$ cannot leak right $r$, it is safe with respect to the right $r$}
+  \item{\textbf{Safety Question}: Does there exist \textbf{one} algorithm whether an \textbf{arbitrary} protection system $S$ with initial state $s_0$ is safe with respect to a generic right $r$?}
+\end{itemize}
+The Safety Question is decicable for \textbf{mono-operational} commands. In general, the Safety Question is undecidable.
 
 \newpage
 \bibliographystyle{apalike}
-\bibliography{access-control-systems-bibfile}
+\bibliography{\jobname}
 
 
 \end{document}
