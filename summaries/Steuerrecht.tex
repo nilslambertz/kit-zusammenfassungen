@@ -1,0 +1,127 @@
+\documentclass[12pt,A4]{extarticle}	
+\usepackage[table]{xcolor}
+
+\newcommand{\lectureTitle}{Steuerrecht}
+\newcommand{\semester}{Sommersemester 2024}
+
+\input{../shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+\definecolor{gesetzLink}{RGB}{194, 74, 14}
+\newcommand{\estG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/estg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }EStG}}}}
+\newcommand{\estGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/estg/__#2.html}{§§ #1 EStG}}}}
+\newcommand{\abgabenordnung}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/ao_1977/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }AO}}}}
+\newcommand{\bgb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
+
+\def\contentsname{\empty}
+
+\begin{document}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Grundlagen}
+\subsection{Grundlegendende Begriffe}
+\subsubsection{Direkte und indirekte Steuern}
+\begin{itemize}
+  \item{\textbf{Direkte Steuern}: Belastet Person, Unternehmen, usw. unmittelbar}
+  \item{\textbf{Indirekte Steuern}: Belastet Güter und Vorgänge und erreicht damit mittelbar einzelne Personen}
+\end{itemize}
+
+\subsubsection{Unternehmensteuerrecht}
+Die Unternehmenssteuer ist keine eigene Steuerart, sondern durch den Dualismus von Einkommen- und Körperschaftsteuer geprägt. Die Einkommensteuer betrifft z.B. Einzelunternehmen, die Körperschaftsteuer betrifft Kapitalgesellschaften.
+
+\subsubsection{Leistungsfähigkeitsprinzip}
+Das Leistungsfähigkeitsprinzip ist (vereinfacht gesagt) die Fähigkeit, Steuern zu bezahlen und damit zum Steueraufkommen beizutragen. Es gibt \textbf{drei Leistungsfähigkeitsindikatoren}:
+\begin{itemize}
+  \item{\textbf{Einkommen} (Vermögenszugang, z.B. EStG, KStG, GewStG)}
+  \item{\textbf{Vermögen} (Konsum- und Investitionsfonds, z.B. GrStG, GrErwStG, ErbStG)}
+  \item{\textbf{Konsum} (Güterverbrauch, z.B. UStG)}
+\end{itemize}
+Bei der Einkommensermittlung gilt das \textbf{Nettoprinzip} zur Bemessung der Leistungsfähigkeit. Es wird also nur der Gewinn besteuert statt die kompletten Einnahmen (\highlight{objektives Nettoprinzip}).\par
+Das \highlight{private/subjektive Nettoprinzip} verlangt zudem die Abzugsfähigkeit (für die Lebensführung) unvermeidbarer Ausgaben (daher z.B. Grundfreibetrag).
+
+\subsubsection{Der Steuerbegriff}
+Der Steuerbegriff ist in \abgabenordnung[Abs. 1]{3} definiert, wichtige Details:
+\begin{itemize}
+  \item{Steuern sind \textbf{Geldleistungen}}
+  \item{keine Gegenleistung für eine \textbf{besondere Leistung} (\textit{also keine konkrete Gegenleistung})}
+  \item{werden von einem öffentlich-rechtlichen \textbf{Gemeinwesen} (Gemeinden, Länder, Bund) zur \textbf{Erzielung von Einnahmen} erhoben}
+  \item{sind \textbf{allen auferlegt}, bei denen der Tatbestand der Leistungspflicht zutrifft}
+\end{itemize}
+
+\section{Einkommenssteuer}
+\subsection{Tatbestandsmerkmale}
+Gemäß \estG[Abs. 1]{1} sind
+\begin{itemize}
+  \item{\textbf{natürliche} Personen, die}
+  \item{im Inland}
+  \item{einen Wohnsitz oder ihren gewöhnlichen Aufenthalt haben}
+\end{itemize}
+\textbf{unbeschränkt einkommensteuerpflichtig}.
+
+\subsection{Begriffe}
+
+\subsubsection{Natürliche Personen}
+\textbf{Natürliche Personen} sind Menschen (also keine Unternehmen etc.). Die Rechtsfähigkeit beginnt gemäß \bgb{1} mit der Vollendung der Geburt.
+
+\subsubsection{Inland}
+Das Inland i.S.d. \estG[Abs. 1]{1} ist das Staatsgebiet der Bundesrepublik Deutschland (inklusive der 12-Meilen-Zone). Zudem gehören deutsche Flugzeuge, Handelsschiffe unter deutscher Flagge und Kriegsschiffe zum Inland.
+
+\subsubsection{Wohnsitz}
+Nach \abgabenordnung{8} hat jemand einen Wohnsitz dort, wo er eine Wohnung unter Umständen innehat, die darauf schließen lassen, dass er die Wohnung beibehalten und benutzen wird. Die Absicht einen Wohnsitz zu begründen oder aufzugeben bzw. die An- und Abmeldung der Wohnung sind für die steuerliche Wirkung nicht entscheidend.
+
+\subsubsection{Gewöhnlicher Aufenthalt}
+Auch ohne Wohnsitz kann gemäß \abgabenordnung{9} die unbeschränkte Steuerpflicht bestehen, wenn jemand seinen \textbf{gewöhnlichen Aufenthalt} in Deutschland hat. Hier kommt es auf die subjektiven Absichten des Steuerpflichtigen an (183-Tage-Regelung).
+
+\subsubsection{Welteinkommensprinzip}
+Das \highlight{Welteinkommensprinzip} besagt, dass für die Steuerpflicht das gesamte Welteinkommen herangezogen wird, unabhängig davon wo es erwirtschaftet wurde. Ohne Doppelbesteuerungsabkommen kann es zu einer Doppelbesteuerung kommen.
+
+\subsubsection{Markteinkommensprinzip}
+Das \textbf{Markteinkommensprinzip} umschreibt die \textbf{sieben Einkunftsarten}, die einkommenssteuerbar sind. Erträge ohne Markt (Schenkung, Erbschaft) sind nicht einkomensteuerbar.
+
+\subsection{Sachliche Steuerpflicht}
+Die \textbf{sachliche Steuerpflicht} beschreibt, was besteuert wird und ist in \estG{2} definiert. Es wird zwischen sieben Einkunftsarten und zwei Gruppen (Gewinneinkünfte und Überschusseinkünfte) unterschieden.
+
+\subsubsection{Gewinneinkünfte}
+\textbf{Gewinneinkünfte} sind gemäß \estG[Abs. 2 Nr. 1]{2} der \textbf{Gewinn} aus
+\begin{itemize}
+  \item{Land- und Forstwirtschaft (\estG{13})}
+  \item{Gewerbebetrieb (\estG{15})}
+  \item{selbständiger Arbeit (\estG{18})}
+\end{itemize}
+
+\subsubsection{Überschusseinkünfte}
+\textbf{Überschusseinkünfte} sind gemäß \estG[Abs. 2 Nr. 2]{2} \textbf{Überschuss der Einnahmen über die Werbungskosten} aus
+\begin{itemize}
+  \item{nichtselbstständiger Arbeit (\estG{19})}
+  \item{Kapitalvermögen (\estG{20})}
+  \item{Vermietung und Verpachtung (\estG{21})}
+  \item{sonstigen Einkünften (\estG{22})}
+\end{itemize}
+
+\subsubsection{Ermittlung des Einkommens}
+\estG{2} beschreibt die Schritte zur Berechnung des Einkommens:\par
+\begin{enumerate}
+  \item{\textbf{Einkünfte} (\estG[Abs. 1]{2})}
+  \item{\textbf{Summe der Einkünfte} (\estG[Abs. 2]{2})}
+  \item{\textbf{Gesamtbetrag der Einkünfte} (\estG[Abs. 3]{2}): Summe der Einkünfte abzüglich ggf. eines Altersentlastungsbetrag (\estG{24a}), Land- und Forstwirte erhalten ebenefalls nach \estG[Abs. 3]{13} einen Abzugsbetrag}
+  \item{\textbf{Einkommen} (\estG[Abs. 4]{2}): Gesamtbetrag der Einkünfte abzüglich Sonderausgaben und außergewöhnlichen Belastungen}
+  \item{\textbf{zu versteuerndes Einkommen} (\estG[Abs. 5]{2}): Einkommen abzüglich (z.B. Kinder-)Freibeträgen}
+\end{enumerate}
+
+\subsection{Gewinnermittlung bei Gewinneinkünften}
+\subsubsection{Gewinn}
+Der Gewinn ist die \highlight{Betriebsvermögensdifferenz}, also der Überschuss der Betriebseinahmen über die Betriebsausgaben.
+
+\subsubsection{Objektives Nettoprinzip}
+Prinzipiell sind alle Aufwendungen als Betriebsausgaben oder Werbungskosten abziehbar. Die Einkommenssteuer besteuert gemäß \estG[Abs. 2]{2} nur den Gewinn bzw. den Überschuss der Einnahmen über die Werbungskosten.
+
+\subsubsection{Gewinnermittlung}
+Die Gewinnermittlung erfolgt im wesentlichen durch den Betriebgsvermögensvergleich nach \estG{5} in Verbindung mit \estG[Abs. 1]{4}. Bei Steuerpflichtigen, die keine Bilanz aufstellen müssen, erfolgt die Gewinnermittlung nach \estG[Abs. 3]{4}.
+
+\end{document}
