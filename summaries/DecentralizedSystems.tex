@@ -1,7 +1,7 @@
 \documentclass[12pt,A4]{extarticle}	
 \usepackage{filecontents}
 
-\begin{filecontents}{bibfile.bib}
+\begin{filecontents}{\jobname.bib}
   @article{DistributedSystemVanSteenTanenbaum,
   author       = {Maarten van Steen and
                   Andrew S. Tanenbaum},
@@ -16,6 +16,25 @@
   timestamp    = {Thu, 14 Oct 2021 09:12:09 +0200},
   biburl       = {https://dblp.org/rec/journals/computing/SteenT16.bib},
   bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+@article{lamportTimeClocks,
+author = {Lamport, Leslie},
+title = {Time, clocks, and the ordering of events in a distributed system},
+year = {1978},
+issue_date = {July 1978},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {21},
+number = {7},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/359545.359563},
+doi = {10.1145/359545.359563},
+abstract = {The concept of one event happening before another in a distributed system is examined, and is shown to define a partial ordering of the events. A distributed algorithm is given for synchronizing a system of logical clocks which can be used to totally order the events. The use of the total ordering is illustrated with a method for solving synchronization problems. The algorithm is then specialized for synchronizing physical clocks, and a bound is derived on how far out of synchrony the clocks can become.},
+journal = {Commun. ACM},
+month = {jul},
+pages = {558–565},
+numpages = {8},
+keywords = {clock synchronization, computer networks, distributed systems, multiprocess systems}
 }
 \end{filecontents}
 
@@ -44,21 +63,21 @@
 \section{Introduction}
 \subsection{What is a distributed system?}
 \subsubsection{Characteristics by van Steen and Tanenbaum}
-``\textit{A distributed system is a collection of autonomous computing elements that appears to its users as a single coherent system.}'' (\cite{DBLP:journals/computing/SteenT16}), this results in two characteristics:
+``\textit{A distributed system is a collection of autonomous computing elements that appears to its users as a single coherent system.}'' (\cite{DistributedSystemVanSteenTanenbaum}), this results in two characteristics:
 \begin{enumerate}
-  \item{``\textbf{Collection of autonomous computing elements}'': ``\textit{In practice, nodes are programmed to achieve common goals, which are realized by exchanging messages with each other}'' \\(\cite{DBLP:journals/computing/SteenT16})}
+  \item{``\textbf{Collection of autonomous computing elements}'': ``\textit{In practice, nodes are programmed to achieve common goals, which are realized by exchanging messages with each other}'' \\(\cite{DistributedSystemVanSteenTanenbaum})}
   \item{``\textbf{Appears as a single coherent system}'': Appears as a single large system}
 \end{enumerate}
 
 \subsubsection{Aspects of characteristic 1}
 \begin{itemize}
-  \item{``\textit{we cannot assume that there is something like a global clock}'' (\cite{DBLP:journals/computing/SteenT16}), therefore the \textbf{synchronization and coordination} between participants must be worked out}
-  \item{``\textit{The fact that we are dealing with a collection of nodes implies that we may also need to manage the membership and organization of that collection}'' (\cite{DBLP:journals/computing/SteenT16}), therefore we need to think about identities and possible access-restrictions}
+  \item{``\textit{we cannot assume that there is something like a global clock}'' (\cite{DistributedSystemVanSteenTanenbaum}), therefore the \textbf{synchronization and coordination} between participants must be worked out}
+  \item{``\textit{The fact that we are dealing with a collection of nodes implies that we may also need to manage the membership and organization of that collection}'' (\cite{DistributedSystemVanSteenTanenbaum}), therefore we need to think about identities and possible access-restrictions}
 \end{itemize}
 
 \subsubsection{Aspects of characteristic 2}
 \begin{itemize}
-  \item{``\textit{To assist the development of distributed applications, distributed systems are often organized to have a separate layer of software that is logically placed on top of the respective operating systems of the computers that are part of the system [...] leading to what is known as middleware}'' (\cite{DBLP:journals/computing/SteenT16})}
+  \item{``\textit{To assist the development of distributed applications, distributed systems are often organized to have a separate layer of software that is logically placed on top of the respective operating systems of the computers that are part of the system [...] leading to what is known as middleware}'' (\cite{DistributedSystemVanSteenTanenbaum})}
 \end{itemize}
 
 \subsubsection{Observations}
@@ -102,19 +121,196 @@ According to \textbf{ISO/TC 307}: ``\textit{distributed system wherein control i
 \end{itemize}
 
 \subsubsection{Reasons for logical decentralization}
-Logical decentralization is not always possible or even wanted, especially in use cases we cover. An example are \textbf{Distributed Ledgers}, where the goal is to have one commonly agreed state of the system at any point in time.
+Logical decentralization is not always possible or even wanted, especially in use cases we cover. Example: \textbf{Distributed Ledgers}, where the goal is to have one commonly agreed system state at any point in time.
 
 \subsection{Challenges of decentralization}
 Decentralized systems come with risks/challenges to avoid harm to the system or its participants:
 \begin{itemize}
   \item{\textbf{Time and synchrony}: Do we have a global clock? Is the communication synchronous or asynchronous?}
-  \item{\textbf{Behaviour} of nodes: Can we handle arbitrary behaviour? How many faulty nodes can we tolerate?}
+  \item{\textbf{behavior} of nodes: Can we handle arbitrary behavior? How many faulty nodes can we tolerate?}
   \item{\textbf{Identity}: Do we have an open system? Are nodes (identities) known?}
 \end{itemize}
 
+\section{Fundamentals}
+\subsection{How to model a distributed system?}
+We define a \textbf{distributed system} as a set of identical processes (or processors) that execute a program. Coordination between the processors is needed. The combination of processes form an application.
+
+\subsubsection{Processes (Processors) and Messages}
+A distributed system or algorithm consists of $n$ \highlight{processors} (called nodes/agents/participants) $p_0, \dots, p_{n-1}$.\par
+Each process runs a local process and the processors cooperate on some \underline{common} task. They can communicate with each other.\par
+\highlight{Messages} are uniquely identified by the sender using a sequence number of a logical clock.
+
+\subsubsection{Links}
+A \highlight{link} (channel) $\{p_i, p_j\}$ connects processors $i$ and $j$. Links are always considered \textbf{bidirectional}.\par
+The network is a collection of all channels, the tolopogy is a pattern of channels (e.g. mesh, star).
+
+\subsubsection{Inter-Process Communication}
+Processors are communicating by \textbf{passing messages} to \textbf{in-} and \textbf{outboxes}. The address is a set of processes. Processors have access to \highlight{shared memory}.
+
+\subsubsection{Automata and Steps}
+We can model a distributed algorithm as a distributed collection of \highlight{automata} (one per process). Each automata is a state machine with defined states (\textbf{configurations}) and state transitions (\textbf{step}) that are triggered by an \textbf{event}.
+
+\subsubsection{Safety and Liveness}
+\begin{itemize}
+  \item{\highlight{Safety}: ``\textit{Nothing bad has happened, yet}'': If a safety property is violated, we can point to a specific point in time where the violation occurred, \textbf{the violation cannot be undone}.}
+  \item{\highlight{Liveness}: ``\textit{Eventually something good happend}'': At any time, there is the chance that the property will be satisfied at a later point in time.}
+\end{itemize}
+
+\subsection{Assumptions}
+\subsubsection{Why do distributed algorithms need assumptions?}
+Distributed algorithms deal with a lot of uncertainty, therefore we need assumptions to describe the \textbf{uncertainty} and \textbf{guarantees} of the system. Typical are
+\begin{itemize}
+  \item{\textbf{Process assumptions}: Crash behavior, adherance to the protocol}
+  \item{\textbf{Communication assumptions}: Topology, reliability, attackers}
+  \item{\textbf{Timing assumptions}: Latency, synchrony}
+  \item{\textbf{Cryptographic assumptions}: Cryptographic primitives (e.g. encryption, signatures)}
+  \item{\textbf{Setup assumptions}: What information is available to the participants at the start}
+\end{itemize}
+
+\subsubsection{Uniform/Nonuniform}
+\begin{itemize}
+  \item{\textbf{Uniform}: Total number of processors $n$ is not known to the algorithm}
+  \item{\textbf{Nonuniform}: Each processor knows the total number of processors $n$}
+\end{itemize}
+
+\subsubsection{Fault model}\label{sec:faultModel}
+The \highlight{Fault model} abstracts faults in the processors and channels.
+\begin{itemize}
+  \item{\highlight{Crash fault}: Processor works correctly until it crashes and never recovers}
+  \item{\highlight{Omission fault}: Processor fails to send/receive messages it is supposed to send/receive (e.g. due to buffer overflow)}
+  \item{\highlight{Crashes with recoveries}: Either the process crashes and never recovers or the process keeps crashing and recovering infinitely often}
+  \item{\highlight{Byzantine fault}: Arbitrary behavior, the process can deviate from the protocol in any way}
+\end{itemize}
+
+\subsubsection{Fault tolerance}
+The \highlight{Fault tolerance} of a system is the number of faulty processes $f$ out of $n$ processes that the system can tolerate while still operating correctly.
+
+\subsubsection{Communication: Fair-loss links}
+\textbf{Fair-loss links} are defined by three properties:
+\begin{enumerate}
+  \item{\textit{Fair-loss}: If a correct process $p$ infinitely often sends a message $m$ to a correct process $q$, then $q$ delivers $m$ an infinite number of times}
+  \item{\textit{Finite duplication}: If a correct process $p$ sends a message $m$ a finite number of times to a process $q$, then $m$ cannot be delivered an infinite number of times by $q$}
+  \item{\textit{No creation}: If some process $q$ delivers a message $m$ with sender $p$, then $m$ was previously sent to $q$ by $p$}
+\end{enumerate}
+
+\subsubsection{Communication: Perfect links}\label{sec:perfectLinks}
+\textbf{Perfect links} are also defined by three properties:
+\begin{enumerate}
+  \item{\textit{Reliable delivery}: If a correct process $p$ sends a message $m$ to a correct process $q$, then $q$ eventually delivers $m$}
+  \item{\textit{No duplication}: No message is delivered by a process more than once}
+  \item{\textit{No creation}: If some process $q$ delivers a message $m$ with sender $p$, then $m$ was previously sent to $q$ by $p$}
+\end{enumerate}
+\textbf{Authenticated perfect links} are an extension of perfect links.
+
+\subsubsection{Timing Models}
+The \highlight{Timing model} describes the timing assumptions of the communication and execution behavior:
+\begin{itemize}
+  \item{\highlight{Synchronous model}: There is a \textbf{known upper bound} on processing delays and on message transmission delays}
+  \item{\highlight{Asynchronous model}: There is \textbf{no timing assumption at all}. The execution and message delivery happens at an arbitrary speed, \textbf{but messages arrive eventually}}
+\end{itemize}
+
+\subsection{Time in Asynchronous Systems}
+\subsubsection{Logical clocks: Lamport Clocks}
+\highlight{Lamport clocks} are used to \textbf{measure passage of time} in \textbf{asynchronous systems}.
+\begin{itemize}
+  \item{Each process $p_i$ has a \textbf{logical clock} $l_i$, initially set to $0$}
+  \item{Upon an event (sending or receiving a message), $l_i$ is incremented by $1$}
+  \item{When sending a message $m$, process $p_i$ adds a timestamp $t_m = l_i$ to the message}
+  \item{When receiving a message $m$, process $p_j$ increases its timestamp to $\max(l_j, t_m) + 1$}
+\end{itemize}
+With this, a \textbf{happened-before relationship} between events is established. For any two events $e_1, e_2$: $e_1 \rightarrow e_2 \Rightarrow t(e_1) < t(e_2)$.\par
+This defines a \textbf{partial order} on the events.
+
+\subsubsection{Hybrid: Partial Synchrony}
+A hybrid between synchrony and asynchrony is \textbf{partial synchrony}, which comes in two variants:
+\begin{itemize}
+  \item{\textbf{Eventually synchronous}/Global Stabilization Time (GST): An event GST occurs after some finite time, afterwards time bound $\Lambda$ holds}
+  \item{\textbf{Unknown Latency (UL)}: The system is always synchronous, but the delay bound $\Lambda$ is unknown}
+\end{itemize}
+Algorithms for these models typically increment their estimation of the delay bound dynamically.
+
+\subsection{Combining Abstractions for Assumptions}
+\subsubsection{Fail-stop}
+\begin{itemize}
+  \item{\hyperref[sec:faultModel]{Crash faults}}
+  \item{\hyperref[sec:perfectLinks]{Perfect links}}
+  \item{Perfect failure detector}
+\end{itemize}
+
+\subsubsection{Fail-silent}
+\begin{itemize}
+  \item{\hyperref[sec:faultModel]{Crash faults}}
+  \item{\hyperref[sec:perfectLinks]{Perfect links}}
+  \item{No failure detector}
+\end{itemize}
+
+\subsubsection{Fail-arbitrary}
+\begin{itemize}
+  \item{\hyperref[sec:faultModel]{Byzantine faults}}
+  \item{\hyperref[sec:perfectLinks]{Authenticated perfect links}}
+\end{itemize}
+
+\subsection{Problem Statement: Leader Election}
+\subsubsection{Problem definition}
+\begin{itemize}
+  \item{Group of processors has to elect one of them as leader}
+  \item{Exactly one processor enters an elected state, all others enter a non-elected state}
+\end{itemize}
+
+\subsubsection{Anonymous rings}
+\begin{itemize}
+  \item{Processors have no identifiers}
+  \item{Each processor has the same deterministic state machine}
+  \item{Each processor is connected to two other processors}
+\end{itemize}
+
+\subsubsection{Leader Election in Anonymous Rings}
+``\textit{There is no nonuniform anonymous algorithm for leader election in synchronous rings.}''\par
+So, even with these strong assumptions, \textbf{leader election is not possible with anonymous participants}.
+
+\subsubsection{Leader Election in Asynchronous Rings}
+Setup assumptions:
+\begin{itemize}
+  \item{Assign each processor $p_i$ a unique identifier $id_i$}
+  \item{Label the two connected processors of $p_i$ as \textit{left} and \textit{right neighbor}}
+\end{itemize}
+
+\begin{algorithm}
+  \caption{Algorithm for Leader Election in Asynchronous Rings}
+  \begin{algorithmic}
+    \State \textbf{Each processor sends its identifier to its left neighbour.}
+    \State \textbf{When a processor receives a termination message, it forwards it to the left neighbour and terminates as non-leader.}\\
+    \State \textbf{Upon receiving message $m$ from right neighbour}
+    \State \hspace{\algorithmicindent} \textbf{if $m < id_i$ then}
+    \State  \hspace{\algorithmicindent}\hspace{\algorithmicindent} \textbf{drop message}
+    \State \hspace{\algorithmicindent} \textbf{else if $m > id_i$ then}
+    \State  \hspace{\algorithmicindent}\hspace{\algorithmicindent} \textbf{forward $m$ to left neighbour}
+    \State \hspace{\algorithmicindent} \textbf{else if $m == id_i$ then}
+    \State  \hspace{\algorithmicindent}\hspace{\algorithmicindent} \textbf{Send termination message to left neighbour}
+    \State  \hspace{\algorithmicindent}\hspace{\algorithmicindent} \textbf{Terminate as leader}
+    \State \hspace{\algorithmicindent} \textbf{end if}
+  \end{algorithmic}
+\end{algorithm}
+
+The algorithm sends not more than $O(n^2)$ messages. Nonuniforms algorithms for synchronous rings also exist.
+
+\subsection{Problem Statement: Mutual Exclusion}
+\subsubsection{Problem definition}
+\textbf{Mutual exclusion} is a known problem from concurrent computing. We need to ensure than critical sections are only accessible by one processor at a time. The desired sequence is Entry $\Rightarrow$ Critical section $\Rightarrow$ Exit.\par
+The following three objectives should be satisfied:
+\begin{itemize}
+  \item{\textbf{Mutual exclusion}: At most one process can be in the critical section at any time (\textbf{Safety})}
+  \item{\textbf{No Deadlock}: If some processor enters an entry section, some processor will later enter a critical section.}
+  \item{\textbf{No lockout (starvation)}: If some processor enters an entry section, \textbf{that same processor} will later enter a critical section.}
+\end{itemize}
+
+\subsubsection{Lamport Mutual Exclusion}
+Lamport defined a mutual exclusion algorithm based on \textbf{logical clocks} \cite{lamportTimeClocks}, the algorithm is not covered in this summary.
+
+
 \newpage
 \bibliographystyle{apalike}
-\bibliography{bibfile}
+\bibliography{\jobname}
 
 
 \end{document}
