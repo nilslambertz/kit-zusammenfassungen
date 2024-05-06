@@ -307,6 +307,73 @@ The following three objectives should be satisfied:
 \subsubsection{Lamport Mutual Exclusion}
 Lamport defined a mutual exclusion algorithm based on \textbf{logical clocks} \cite{lamportTimeClocks}, the algorithm is not covered in this summary.
 
+\subsection{Formalization via Modules}
+We can now combine abstractions using \highlight{Modules}. A module has a \textbf{name}, \textbf{events} and \textbf{safety \& liveness properties}.\par
+An algorithm \textit{implements} a module (and can build on other modules).
+
+\newpage
+\subsubsection{Perfect Failure Detector}
+\textbf{Events}:
+\begin{itemize}
+  \item{\textbf{Indication}: $\langle \mathcal{P}, \textit{Crash} \mid p \rangle$: Detects that process $p$ has crashed}
+\end{itemize}
+\textbf{Properties}:
+\begin{itemize}
+  \item{\textbf{PFD1:} \textit{Strong completeness}: Eventually, every process that crashes is permanently detected by every correct process}
+  \item{\textbf{PFD2:} \textit{Strong accuracy}: If a process $p$ is detected by any process, then $p$ has crashed}
+\end{itemize}
+Perfect Failure Detector is implemented by ``Exclude on Timeout'' (not covered in this summary).
+
+\subsubsection{Eventually Perfect Failure Detector}
+\textbf{Events}:
+\begin{itemize}
+  \item{\textbf{Indication}: $\langle \diamond \mathcal{P}, \textit{Suspect} \mid p \rangle$: Notifies that process $p$ is suspected to have crashed}
+  \item {\textbf{Indication}: $\langle \diamond \mathcal{P}, \textit{Restore} \mid p \rangle$: Notifies that process $p$ is not suspected anymore}
+\end{itemize}
+
+\textbf{Properties}:
+\begin{itemize}
+  \item{\textbf{EPFD1:} \textit{Strong completeness}: Eventually, every process that crashes is permanently suspected by every correct process}
+  \item{\textbf{EPFD2:} \textit{Eventual strong accuracy}: Eventually, no correct process is suspected by any correct process}
+\end{itemize}
+Eventually Perfect Failure Detector is implemented by ``Increasing Timeout'' (not covered in this summary).
+
+\subsubsection{Leader Election}
+\textbf{Events}:
+\begin{itemize}
+  \item{\textbf{Indication}: $\langle le, \textit{Leader} \mid p \rangle$: Indicates that process $p$ is elected as leader}
+\end{itemize}
+
+\textbf{Properties}:
+\begin{itemize}
+  \item{\textbf{LE1:} \textit{Eventual detection}: Either there is no correct process, or some correct process is eventually elected as the leader}
+  \item{\textbf{LE2:} \textit{Accuracy}: If a process is leader, then all previously elected leaders have crashed}
+\end{itemize}
+Leader Election is implemented by ``Monarchical Leader Election'' (not covered in this summary).
+
+\subsubsection{Eventual Leader Detector}
+\textbf{Events}:
+\begin{itemize}
+  \item{\textbf{Indication}: $\langle \Omega, \textit{Trust} \mid p \rangle$: Indicates that process $p$ is trusted to be leader}
+\end{itemize}
+
+\textbf{Properties}:
+\begin{itemize}
+  \item{\textbf{ELD1:} \textit{Eventual accuracy}: There is a time after which every correct process trusts some correct process}
+  \item{\textbf{ELD2:} \textit{Eventual agreement}: There is a time after which no two correct processes trust different processes}
+\end{itemize}
+Eventual Leader Detector is implemented by ``Monarchical Eventual Leader Detection'' (not covered in this summary).
+
+\subsection{Quorums}
+A \highlight{Quorum} is a set of processes with special properties. They are used for fault-tolerant algorithms. Dealing with $N$ crash-fault processes, \textbf{a quorum is any majority of processes}.\par
+Assumption: There is a quorum of non-faulty processes (number of faulty processes $f < N/2$).\par
+\textbf{Properties}:
+\begin{itemize}
+  \item{Two quorums intersect in at least one process}
+  \item{In every quorum is at least one correct (non-faulty) process}
+\end{itemize}
+Dealing with $N$ arbitrary-fault processes (byzantine): To maintaing the second property, a quorum needs to be a set of more than $\frac{N+f}{2}$ processes. We call a set of more than $\frac{N+f}{2}$ a \highlight{byzantine quorum}.\par
+When the required property is that there exists a Byzantine quorum of correct processes, $3f < N$ needs to hold.
 
 \newpage
 \bibliographystyle{apalike}
