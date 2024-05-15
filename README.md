@@ -4,7 +4,6 @@
 
 - [Access Control Systems [WIP]](./pdfs/AccessControlSystems.pdf)
 - [Decentralized Systems: Fundamentals, Modeling, and Applications [WIP]](./pdfs/DecentralizedSystems.pdf)
-- [Parallelrechner und Parallelprogrammierung [WIP]](./pdfs/ParallelrechnerUndParallelprogrammierung.pdf)
 - [Steuerrecht [WIP]](./pdfs/Steuerrecht.pdf)
 
 ## Sommersemester 2023
