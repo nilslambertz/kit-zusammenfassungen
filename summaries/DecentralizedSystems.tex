@@ -36,6 +36,19 @@ pages = {558–565},
 numpages = {8},
 keywords = {clock synchronization, computer networks, distributed systems, multiprocess systems}
 }
+@article{BRACHA1987130,
+title = {Asynchronous Byzantine agreement protocols},
+journal = {Information and Computation},
+volume = {75},
+number = {2},
+pages = {130-143},
+year = {1987},
+issn = {0890-5401},
+doi = {https://doi.org/10.1016/0890-5401(87)90054-X},
+url = {https://www.sciencedirect.com/science/article/pii/089054018790054X},
+author = {Gabriel Bracha},
+abstract = {A consensus protocol enables a system of n asynchronous processes, some of them faulty, to reach agreement. Both the processes and the message system are capable of cooperating to prevent the correct processes from reaching decision. A protocol is t-resilient if in the presence of up to t faulty processes it reaches agreement with probability 1. Byzantine processes are faulty processes that can deviate arbitrarily from the protocol; Fail-Stop processes can just stop participating in it. In a recent paper, t-resilient randomized consensus protocols were presented for t<n5. We improve this to t < n3, thus matching the known lower bound on the number of correct processes necessary for consensus. The protocol uses a general technique in which the behavior of the Byzantine processes is restricted by the use of a broadcast protocol that filters some of the messages. The apparent behavior of the Byzantine processes, filtered by the broadcast protocol, is similar to that of Fail-Stop processes. Plugging the broadcast protocol as a communicating primitive into an agreement protocol for Fail-Stop processes gives the result. This technique, of using broadcast protocols to reduce the power of the faulty processes and then using them as communication primitives in algorithms designed for weaker failure models, was used succesfully in other contexts.}
+}
 \end{filecontents}
 
 \newcommand{\lectureTitle}{Decentralized Systems [WIP]}
@@ -312,7 +325,7 @@ We can now combine abstractions using \highlight{Modules}. A module has a \textb
 An algorithm \textit{implements} a module (and can build on other modules).
 
 \newpage
-\subsubsection{Perfect Failure Detector}
+\subsubsection{Module: Perfect Failure Detector}
 \textbf{Events}:
 \begin{itemize}
   \item{\textbf{Indication}: $\langle \mathcal{P}, \textit{Crash} \mid p \rangle$: Detects that process $p$ has crashed}
@@ -324,7 +337,7 @@ An algorithm \textit{implements} a module (and can build on other modules).
 \end{itemize}
 Perfect Failure Detector is implemented by ``Exclude on Timeout'' (not covered in this summary).
 
-\subsubsection{Eventually Perfect Failure Detector}
+\subsubsection{Module: Eventually Perfect Failure Detector}
 \textbf{Events}:
 \begin{itemize}
   \item{\textbf{Indication}: $\langle \diamond \mathcal{P}, \textit{Suspect} \mid p \rangle$: Notifies that process $p$ is suspected to have crashed}
@@ -338,7 +351,7 @@ Perfect Failure Detector is implemented by ``Exclude on Timeout'' (not covered i
 \end{itemize}
 Eventually Perfect Failure Detector is implemented by ``Increasing Timeout'' (not covered in this summary).
 
-\subsubsection{Leader Election}
+\subsubsection{Module: Leader Election}
 \textbf{Events}:
 \begin{itemize}
   \item{\textbf{Indication}: $\langle le, \textit{Leader} \mid p \rangle$: Indicates that process $p$ is elected as leader}
@@ -351,7 +364,7 @@ Eventually Perfect Failure Detector is implemented by ``Increasing Timeout'' (no
 \end{itemize}
 Leader Election is implemented by ``Monarchical Leader Election'' (not covered in this summary).
 
-\subsubsection{Eventual Leader Detector}
+\subsubsection{Module: Eventual Leader Detector}
 \textbf{Events}:
 \begin{itemize}
   \item{\textbf{Indication}: $\langle \Omega, \textit{Trust} \mid p \rangle$: Indicates that process $p$ is trusted to be leader}
@@ -374,6 +387,95 @@ Assumption: There is a quorum of non-faulty processes (number of faulty processe
 \end{itemize}
 Dealing with $N$ arbitrary-fault processes (byzantine): To maintaing the second property, a quorum needs to be a set of more than $\frac{N+f}{2}$ processes. We call a set of more than $\frac{N+f}{2}$ a \highlight{byzantine quorum}.\par
 When the required property is that there exists a Byzantine quorum of correct processes, $3f < N$ needs to hold.
+
+\section{Reliable Broadcast}
+Reliable broadcast is used to \textbf{share information} among processors withous losses, duplicates, etc.
+\subsection{Module: Best Effort Broadcast}
+\textbf{Events}:
+\begin{itemize}
+  \item{\textbf{Request}: $\langle beb, \textit{Broadcast} \mid m \rangle$: Broadcast a message $m$ to all processes}
+  \item{\textbf{Indication}: $\langle beb, \textit{Deliver} \mid p, m \rangle$: Deliver a message $m$ broadcast by process $p$}
+\end{itemize}
+
+\textbf{Properties}:
+\begin{itemize}
+  \item{\textbf{Liveness:}
+              \begin{itemize}
+                \item{\textit{Validity}: If a correct process $p$ broadcasts $m$, then every correct process eventually delivers $m$}
+              \end{itemize}
+        }
+  \item{\textbf{Safety:}
+              \begin{itemize}
+                \item{\textit{No duplication}: No message is delivered more than once}
+                \item{\textit{No creation}: If a process delivers a message $m$ with sender $s$, then $m$ was prev. broadcast by $s$}
+              \end{itemize}}
+\end{itemize}
+Best Effort Broadcast is implemented by ``Best Effort Broadcast Algorithm'' (not covered in this summary).
+
+\subsection{Module: Reliable Broadcast}
+\textbf{Events}:
+\begin{itemize}
+  \item{\textbf{Request}: $\langle rb, \textit{Broadcast} \mid m \rangle$: Broadcast a message $m$ to all processors}
+  \item{\textbf{Indication}: $\langle rb, \textit{Deliver} \mid p, m \rangle$: Deliver a message $m$ broadcast by processor $p$}
+\end{itemize}
+
+\textbf{Properties}:
+\begin{itemize}
+  \item{\textbf{Validity}: If a correct processor $p$ broadcasts $m$, then $p$ eventually delivers $m$}
+  \item{\textbf{No duplication}: No message is delivered more than once}
+  \item{\textbf{No creation}: If a processor delivers $m$ from sender $s$, then $m$ was previously broadcast by $s$}
+  \item{\textbf{Agreement}: If a message $m$ is delivered by some correct processor, then $m$ is eventually delivered by every correct processor}
+\end{itemize}
+Reliable Broadcast is implemented by ``Reliable Broadcast Algorithm'' (not covered in this summary).
+
+\subsection{Byzantine Reliable Broadcast: Synchronous Case}
+\textbf{Problem}: Components in a distributed system don't always fail ``orderly'' (crash-fault), but they can fail in arbitrary and potentially malicious ways. Therefore we need to focus on \highlight{Byzantine failures}.
+
+\subsubsection{Interactive Consistency}
+There are $i = 1, \dots, n$ independent processors, at most $f$ of which exhibit \textbf{arbitrary faults}. Non-faulty processors have a private value $v_i$.\par
+\textbf{Assumptions}:
+\begin{itemize}
+  \item{\textbf{A1: Reliability}: Sent messages are delivered correctly}
+  \item{\textbf{A2: Authenticity}: The receiver of a message knows the sender}
+  \item{\textbf{A3: Synchrony}: Absence of a message is detectable}
+\end{itemize}
+The goal is \highlight{Interactive Consistency}: Processors compute a vector such that
+\begin{itemize}
+  \item{Non-faulty processors compute a $n$-dimensional vector}
+  \item{Non-faulty processors compute exactly the same vector}
+  \item{The values corresponding to non-faulty processors are their private value}
+  \item{The values of faulty processors can be arbitrary, but must be consistent}
+\end{itemize}
+
+\subsubsection{Challenges}
+Faulty processors can lie about themselves and others:
+\begin{itemize}
+  \item{\highlight{Equivocation}: A processor sends different/contradicting information to different processors}
+  \item{\highlight{Relay Forgery}: A processor passes on different information than received}
+\end{itemize}
+
+\subsubsection{Impossibility Result}
+It can be shown that $3f$ processors are insufficient to overcome $f$ faults. \textbf{Interactive consistency} between $n$ processors can be achieve if and only if $n > 3f$ with $f$ faults.\par
+\textbf{Oral Messages Algorithms} (not covered in this summary) achive interactive consistency.
+
+\subsubsection{Authenticators}
+The results seen rely on the assumptions of byzantine processors and the timing model.\par
+\highlight{Authenticators} are metadata that ensure the \textbf{authenticity} and \textbf{integrity} of data (by using cryptography). They can be used to improve the results.
+
+\subsection{Byzantine Reliable Broadcast: Asynchronous Case}
+\subsubsection{Bracha's Reliable Broadcast}
+\highlight{Bracha's Reliable Broadcast} \cite{BRACHA1987130} is an efficient reliable broadcast algorithm for \textbf{asynchronous} systems.\par
+\textbf{Assumptions}:
+\begin{itemize}
+  \item{System consists of $n$ processes communicating via a \textit{reliable message system}}
+  \item{The system requires $n \geq 3f + 1$ processes to tolerate $f$ byzantine faults}
+\end{itemize}
+\textbf{Objectives:} One sender $p$ wants to broadcast a value $v$. The algorithms satisfies the following properties:
+\begin{itemize}
+  \item{If $p$ is correct, then all correct processes agree on $v$}
+  \item{If $p$ is faulty, then either all correct processes agree on the same value or none of them accepts any value from $p$}
+\end{itemize}
+Bracha's Reliable Broadcas has a message complexity of $O(n^2)$. The algoritm is not covered in this summary.
 
 \newpage
 \bibliographystyle{apalike}
