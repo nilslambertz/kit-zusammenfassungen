@@ -1,7 +1,7 @@
 \documentclass[12pt,A4]{extarticle}	
 \usepackage{filecontents}
 
-\begin{filecontents}{\jobname.bib}
+\begin{filecontents*}{\jobname.bib}
   @article{DistributedSystemVanSteenTanenbaum,
   author       = {Maarten van Steen and
                   Andrew S. Tanenbaum},
@@ -49,7 +49,52 @@ url = {https://www.sciencedirect.com/science/article/pii/089054018790054X},
 author = {Gabriel Bracha},
 abstract = {A consensus protocol enables a system of n asynchronous processes, some of them faulty, to reach agreement. Both the processes and the message system are capable of cooperating to prevent the correct processes from reaching decision. A protocol is t-resilient if in the presence of up to t faulty processes it reaches agreement with probability 1. Byzantine processes are faulty processes that can deviate arbitrarily from the protocol; Fail-Stop processes can just stop participating in it. In a recent paper, t-resilient randomized consensus protocols were presented for t<n5. We improve this to t < n3, thus matching the known lower bound on the number of correct processes necessary for consensus. The protocol uses a general technique in which the behavior of the Byzantine processes is restricted by the use of a broadcast protocol that filters some of the messages. The apparent behavior of the Byzantine processes, filtered by the broadcast protocol, is similar to that of Fail-Stop processes. Plugging the broadcast protocol as a communicating primitive into an agreement protocol for Fail-Stop processes gives the result. This technique, of using broadcast protocols to reduce the power of the faulty processes and then using them as communication primitives in algorithms designed for weaker failure models, was used succesfully in other contexts.}
 }
-\end{filecontents}
+@article{impossibilityDistributedConsensus,
+author = {Fischer, Michael J. and Lynch, Nancy A. and Paterson, Michael S.},
+title = {Impossibility of distributed consensus with one faulty process},
+year = {1985},
+issue_date = {April 1985},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {32},
+number = {2},
+issn = {0004-5411},
+url = {https://doi.org/10.1145/3149.214121},
+doi = {10.1145/3149.214121},
+abstract = {The consensus problem involves an asynchronous system of processes, some of which may be unreliable. The problem is for the reliable processes to agree on a binary value. In this paper, it is shown that every protocol for this problem has the possibility of nontermination, even with only one faulty process. By way of contrast, solutions are known for the synchronous case, the “Byzantine Generals” problem.},
+journal = {J. ACM},
+month = {apr},
+pages = {374–382},
+numpages = {9}
+}
+@inproceedings {PBFT,
+author = {Miguel Castro and Barbara Liskov},
+title = {Practical Byzantine Fault Tolerance},
+booktitle = {3rd Symposium on Operating Systems Design and Implementation (OSDI 99)},
+year = {1999},
+address = {New Orleans, LA},
+url = {https://www.usenix.org/conference/osdi-99/practical-byzantine-fault-tolerance},
+publisher = {USENIX Association},
+month = feb
+}
+@inproceedings{dagRider,
+author = {Keidar, Idit and Kokoris-Kogias, Eleftherios and Naor, Oded and Spiegelman, Alexander},
+title = {All You Need is DAG},
+year = {2021},
+isbn = {9781450385480},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3465084.3467905},
+doi = {10.1145/3465084.3467905},
+abstract = {We present DAG-Rider, the first asynchronous Byzantine Atomic Broadcast protocol that achieves optimal resilience, optimal amortized communication complexity, and optimal time complexity. DAG-Rider is post-quantum safe and ensures that all values proposed by correct processes eventually get delivered. We construct DAG-Rider in two layers: In the first layer, processes reliably broadcast their proposals and build a structured Directed Acyclic Graph (DAG) of the communication among them. In the second layer, processes locally observe their DAGs and totally order all proposals with no extra communication.},
+booktitle = {Proceedings of the 2021 ACM Symposium on Principles of Distributed Computing},
+pages = {165–175},
+numpages = {11},
+keywords = {asynchrony, atomic broadcast, byzantine smr, quantum safe},
+location = {Virtual Event, Italy},
+series = {PODC'21}
+}
+\end{filecontents*}
 
 \newcommand{\lectureTitle}{Decentralized Systems [WIP]}
 \newcommand{\lectureSubtitle}{Fundamentals, Modeling, and Applications}
@@ -456,7 +501,7 @@ Faulty processors can lie about themselves and others:
 
 \subsubsection{Impossibility Result}
 It can be shown that $3f$ processors are insufficient to overcome $f$ faults. \textbf{Interactive consistency} between $n$ processors can be achieve if and only if $n > 3f$ with $f$ faults.\par
-\textbf{Oral Messages Algorithms} (not covered in this summary) achive interactive consistency.
+\textbf{Oral Messages Algorithms}\label{oralMessagesAlgorithm} (not covered in this summary) achive interactive consistency.
 
 \subsubsection{Authenticators}
 The results seen rely on the assumptions of byzantine processors and the timing model.\par
@@ -476,6 +521,133 @@ The results seen rely on the assumptions of byzantine processors and the timing 
   \item{If $p$ is faulty, then either all correct processes agree on the same value or none of them accepts any value from $p$}
 \end{itemize}
 Bracha's Reliable Broadcas has a message complexity of $O(n^2)$. The algoritm is not covered in this summary.
+
+\section{Consensus and Variants}
+In distributed systems, achieving \highlight{consensus} is crucial for coordinating and ensuring consistent states across multiple nodes.
+
+\subsection{Definitions}
+Each node $i$ proposes a value $v_i$.
+\begin{itemize}
+  \item \highlight{Termination}: Every correct process eventually decides some value.
+  \item \highlight{Weak Validity}: If all processes are correct and propose the same value $v$, then no correct process decides a value different from $v$. If all processes are correct and some process decides $v$ then $v$ was previously proposed by some process
+  \item \highlight{Strong Validity}: If all correct processes propose the same value $v$, then no correct process decides a value different from $v$. Otherwise, a correct process may only decide a value that was proposed by some correct process or special value
+  \item \highlight{Integrity}: No process decides twice.
+  \item \highlight{Agreement}: No two correct processes decide differently.
+\end{itemize}
+
+\subsection{Consensus in Synchronous Systems}
+With consensus, state machine replication can be realized. To tolerate faults, we need two requirements:
+\begin{itemize}
+  \item{\highlight{Agreement}: Every nonfaulty replica (= state machine) receives every request}
+  \item{\highlight{Order}: Every nonfaulty replica processes the requests it receives in the same relative order}
+\end{itemize}
+
+\subsection{Consensus in Asynchronous Systems}
+\subsubsection{Impossibility of Deterministic Consensus}
+Deterministic consensus is \textbf{impossible} in asynchronous systems with even \textbf{one faulty} (crash-fault) process \cite{impossibilityDistributedConsensus}.
+
+\subsubsection{Asynchronous Consensus without Faults}
+There are $N$ processes with unique IDs, at least a simple majority of which are \textbf{active}, the rest remain \textbf{inactive forever}. Active processes \textbf{never crash or behave arbitrarily}. Assumptions for the asynchronous communication:
+\begin{itemize}
+  \item{Sent messages are \textbf{delivered eventually}}
+  \item{Received messages were \textbf{sent by an active process}}
+  \item{Messages can be delayed or reordered}
+\end{itemize}
+The goal is to reach \highlight{consensus} between active processes: Each active process stars with an \textbf{initial value} and terminates with a \textbf{decision value} that was \textbf{proposed by some active process}.
+\begin{itemize}
+  \item{\highlight{Safety}: Active processes terminate}
+  \item{\highlight{Liveness}: Terminating processes must agree on the decision value}
+\end{itemize}
+Problems:
+\begin{itemize}
+  \item{Finding other active processes}
+  \item{Finding all active processes}
+  \item{Finding agreement between active processes}
+\end{itemize}
+
+\subsubsection{Bracha's Consensus}
+\textbf{Bracha's consensus protocol} is conducted in phases that are executed by all processes. The focus is on \textbf{binary input values}. There are up to $f$ byzanine nodes out of $n > 3f$ nodes. The protocol satisfies the following properties:
+\begin{itemize}
+  \item \highlight{Validity}: If all correct processes start with the same value $v$, then all correct processes decide on $v$.
+  \item \highlight{Agreement}: All correct processes decide on the same value.
+  \item \highlight{Probabilistic Termination}: The probability that a correct process is undecided after $r$ rounds approaches zero as $r$ approaches infinity.
+\end{itemize}
+Bracha's consensus protocol is not covered in this summary.
+
+\subsection{Total Order Broadcast}
+\highlight{Total order broadcast} (or \textbf{atomic broadcast}) ensures a total order of transmitted messages, maintaining:
+\begin{itemize}
+  \item \highlight{Validity}: If a correct process broadcasts a message $m$, then it eventually delivers $m$.
+  \item \highlight{Agreement}: If a correct process delivers a message $m$, then all correct processes eventually deliver $m$.
+  \item \highlight{Integrity}: For any message $m$, every correct process delivers $m$ at most once, and only if $m$ was previously broadcast.
+  \item \highlight{Total order}: If correct processes $p$ and $q$ both deliver messages $m$ and $m'$, then $p$ delivers $m$ before $m'$ if and only if $q$ delivers $m$ before $m'$.
+\end{itemize}
+
+\subsection{Practical Byzantine Fault Tolerance (PBFT)}
+The Oral Messaging Algorithm in inefficient in number of rounds and messages. The \highlight{Practical Byzantine Fault Tolerance (PBFT)} \cite{PBFT} algorithm is based on Bracha's Reliable Broadcast.\par
+It provides \textbf{State machine replication}, one \textbf{deterministic} state machine is replicated across multiple processors (called \textbf{replicas} or \textbf{backups}). High-level overview:
+\begin{enumerate}
+  \item{Clients issue requests that should be executed by the state machine}
+  \item{A request is issued to the current \textit{primary} (leader)}
+  \item{The primary sends the request to all backups}
+  \item{The backups process the request and send their reply to the client}
+  \item{The client accepts the result when it gets at least $f+1$ replies with the same result}
+\end{enumerate}
+At most $f$ processors are faulty. The requests issued by the clients are executed \textbf{in the same order} on all replicas. Before executing a request, a \textbf{total order} is established.
+
+\subsubsection{From Bracha's Reliable Broadcast to PBFT}
+\begin{itemize}
+  \item \textbf{Agreement Protocol}: PBFT executes \textbf{Bracha's Reliable Broadcast} for each client request
+  \item \textbf{View Change}: PBFT uses \textbf{timer} and \textbf{view changes} to guarantee termination
+  \item \textbf{Garbage Collection}: PBFT uses \textbf{checkpoints} to clear up storage
+\end{itemize}
+
+\subsubsection{PBFT System Model}
+\begin{itemize}
+  \item Partially (weakly) synchronous system: Delay $\Delta(t)$ doesn't grow faster than $t$ indefinitely
+  \item Set of replicas $R = \{0, \dots, n-1\}$, $|R| = n$
+  \item $n = 3f + 1$ with $f$ number of faults that must be tolarated without losing safety or liveness
+  \item Crypto assumptions: Public key signatures and Message authentication codes
+\end{itemize}
+
+\subsubsection{PBFT Views}
+A \textbf{view} is a period during operation which has one replica designated as the \textbf{primary} (leader).
+\begin{itemize}
+  \item The primary receives requests from clients, assigns them a unique sequence number and initiates the consensus protocol
+  \item If the primary becomes unresponsive, another replica will initiate a \textbf{view change} to select a new primary
+  \item The primary of a view is replica $p$ such that $p = v \mod |R|$ with $v$ being the view number
+\end{itemize}
+A \textbf{View change} is triggered by \textbf{timeouts}. The View Change protocol is not covered in this summary.
+
+\subsubsection{PBFT Phases}
+In view $v$ with primary $p = v \mod |R|$, every client request goes through three phases:
+\begin{enumerate}
+  \item \textbf{Pre-prepare}: On receiving a client request $r$, the primary assigns a sequence number $n$ and broadcasts a \textbf{pre-prepare} message $(r, n, v)$ to all replicas
+  \item \textbf{Prepare}: On receiving a consistent and non-conflicting \textbf{pre-prepare} message with sequence number $h < n < H$ (sliding window of accepted sequence numbers), a backup broadcasts a \textbf{prepare} message $(r, n, v)$ to all replicas
+  \item \textbf{Commit}: Once a replica has received $2f$ \textbf{prepare} messages from \textbf{different backups} that are consistent with the \textbf{pre-prepare}, it broadcasts a \textbf{commit} message $(r, n, v)$ to all replicas
+\end{enumerate}
+Once a replica received $2f + 1$ consistent \textbf{commit} messages (possibly including its own), it performs the requested operation and \textbf{replies} to the client.\par
+The client accepts the result after it received $f + 1$ consistent \textbf{replies}.
+
+\subsubsection{PBFT Garbage Collection: Checkpoints}
+Messages related to a request have to be kept in a replica's log until it knows that the request has been executed by at least $f+1$ correct replicas.\par
+\textbf{Checkpoints} are a collection of proofs that requests have been executed and the state has changed. The \textbf{checkpoint protocol} is executed periodically and represents the state that results from executing the requests covered by this checkpoint.
+
+\subsubsection{PBFT Safety and Liveness}
+\begin{itemize}
+  \item \highlight{Safety}: The 3-phase structure ensures that all replicas execute the same operations in exactly the same order
+  \item \highlight{Liveness}: View-change ensures liveness in case of a faulty primary
+\end{itemize}
+
+\subsection{DAG-Rider}
+\textbf{DAG-Rider} \cite{dagRider} has been proposed as an asynchronous total order broadcase based on a \textbf{directed acyclic graph (DAG)} structure.
+\begin{itemize}
+  \item In each asynchronous round, each correct process \textbf{bundles client requests into a DAG-vertex} with at least $2f + 1$ edges to verticies of the preceding round it knows about before \textbf{reliably broadcasting} this new vertex to other processes
+  \item When receiving a vertex, a correct process checks wheter it also knows its \textbf{causal history} and holds new vertices back until it does
+  \item \textbf{Four rounds are grouped into a wave}. Once a wave is finished for a process, a vertex in its first round is designated as a \textbf{leader vertex} through a mechanism called \textbf{common coin}
+  \item Through leader vertices, all vertices and contained requests in a wave are then \textbf{totally ordered}
+\end{itemize}
+DAG-Rider doesn't need view-changes, checkpoints or garbage collection and is described in 57 lines of pseudo code.
 
 \newpage
 \bibliographystyle{apalike}
