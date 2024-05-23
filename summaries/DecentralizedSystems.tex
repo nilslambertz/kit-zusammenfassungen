@@ -1,5 +1,8 @@
 \documentclass[12pt,A4]{extarticle}	
 \usepackage{filecontents}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 \begin{filecontents*}{\jobname.bib}
   @article{DistributedSystemVanSteenTanenbaum,
@@ -648,6 +651,83 @@ Messages related to a request have to be kept in a replica's log until it knows 
   \item Through leader vertices, all vertices and contained requests in a wave are then \textbf{totally ordered}
 \end{itemize}
 DAG-Rider doesn't need view-changes, checkpoints or garbage collection and is described in 57 lines of pseudo code.
+
+\section{Current Research}
+
+\subsection{State Machine Replication}
+\subsubsection{Recap: State Machine Replication}
+\begin{itemize}
+  \item Implements fault-tolerant service by replicating servers and coordinating client requests
+  \item All replicas need to receive and process the same sequence of requests
+  \item Replicas need to keep their states consistent
+\end{itemize}
+
+\subsubsection{State Machine Replication Issues}
+\begin{itemize}
+  \item Replication is expensive
+  \item Scalability is difficult
+\end{itemize}
+Instead of Byzantine fault tolerance, we could make use of \textbf{Trusted Execution Environments (TEEs)} and only handle crash-fault.
+
+\subsection{Trusted Execution Environments (TEEs)}
+The objective of a \highlight{Trusted Execution Environment (TEE)} is to provide a secure and isolated environment for processing data.
+
+\subsubsection{Properties of TEEs}
+\begin{itemize}
+  \item{\highlight{Confidential computation}
+              \begin{itemize}
+                \item Isolated process execution
+                \item Main memory protection
+                \item Persistent secured storage
+              \end{itemize}}
+  \item{\highlight{Attestation} of hard-, software and developer identity}
+\end{itemize}
+A TEE may \textbf{only fail by crashing}. Assumption: Byzantine attackers cannot break the TEEs.
+
+
+\subsection{TEE-based Reliable Broadcast}
+\subsubsection{Definition: Byzantine Broadcast Channel}
+A sender $p_s \in P$, $n := |P|$ can call $\textit{broadcast}(c, m)$. Correct processes deliver tuples $(c, m)$ where $c \in \mathbb{N}$ and $m$ an arbitrary message, satisfying the following properties:
+
+\begin{itemize}
+  \item \textbf{RB-Agreement:} If a correct process delivers $(c, m)$, then every other correct process eventually delivers $(c, m)$.
+  \item \textbf{RB-Integrity:} For each $c \in \mathbb{N}$, each correct process delivers $(c, m)$ at most once.
+  \item \textbf{RB-Validity:} If a correct sender calls $\textit{broadcast}(c, m)$, then every other correct process eventually delivers $(c, m)$.
+\end{itemize}
+
+\subsubsection{TEE-based Reliable Broadcast: Setting}
+\begin{itemize}
+  \item \textbf{Byzantine faults}: $n > f$ processes, where at most $f$ processes may behave arbitrarily
+  \item \textbf{Asynchrony}: No upper bound on computation and communication delays
+  \item \textbf{Eventual delivery}: Each message sent by a correct process will eventually be delivered
+  \item \textbf{Trusted Execution Environment}: The sender is equipped with a TEE that may only fail by crashing
+\end{itemize}
+The TEE-based Reliable Broadcast: Algorithm is not covered in this summary.
+
+
+\subsection{TEE-Rider}
+
+\subsubsection{TEE-Rider: Goal}
+Implement asynchronous Byzantine fault tolerant Total Order Broadcast with $n \geq 2f + 1$ processes
+
+\subsubsection{TEE-Rider: Setting}
+\begin{itemize}
+  \item \textbf{Asynchrony}: No upper bound on computation and communication delays
+  \item \textbf{Eventual delivery}: Each message sent by a correct process will eventually be delivered
+  \item \textbf{Authenticated Full Mesh Network}: Every process has an authenticated point-to-point link to every other process
+  \item \textbf{Infinite stream of client requests}: Each correct process receives an infinite stream of client requests
+  \item \textbf{Trusted Execution Environment}: The sender is equipped with a TEE that may only fail by crashing
+  \item \textbf{Synchronous Setup Phase}: Before ``normal'' operations, building blocks are initialized in a phase that requires synchrous communication
+\end{itemize}
+
+\subsubsection{TEE-Rider in a Nutshell}
+
+\begin{itemize}
+  \item \textbf{Round-based}: Progress in asynchronous logical rounds
+  \item \textbf{Leaderless protocol}: Every process has the exact same task
+  \item \textbf{DAG-based}: Processes maintain a grow-only DAG that encodes the causal order of messages
+\end{itemize}
+The exact TEE-Rider protocol is not covered in this summary.
 
 \newpage
 \bibliographystyle{apalike}
