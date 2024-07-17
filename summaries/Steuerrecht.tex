@@ -14,6 +14,8 @@
 \newcommand{\estGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/estg/__#2.html}{§§ #1 EStG}}}}
 \newcommand{\abgabenordnung}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/ao_1977/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }AO}}}}
 \newcommand{\bgb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
+\newcommand{\hgb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/hgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }HGB}}}}
+\newcommand{\hgbb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/hgb/__#2.html}{§§ #1 HGB}}}}
 
 \def\contentsname{\empty}
 
@@ -25,7 +27,7 @@
 \clearpage
 
 \section{Grundlagen}
-\subsection{Grundlegendende Begriffe}
+\subsection{Grundlegende Begriffe}
 \subsubsection{Direkte und indirekte Steuern}
 \begin{itemize}
   \item{\textbf{Direkte Steuern}: Belastet Person, Unternehmen, usw. unmittelbar}
@@ -82,7 +84,7 @@ Auch ohne Wohnsitz kann gemäß \abgabenordnung{9} die unbeschränkte Steuerpfli
 Das \highlight{Welteinkommensprinzip} besagt, dass für die Steuerpflicht das gesamte Welteinkommen herangezogen wird, unabhängig davon wo es erwirtschaftet wurde. Ohne Doppelbesteuerungsabkommen kann es zu einer Doppelbesteuerung kommen.
 
 \subsubsection{Markteinkommensprinzip}
-Das \textbf{Markteinkommensprinzip} umschreibt die \textbf{sieben Einkunftsarten}, die einkommenssteuerbar sind. Erträge ohne Markt (Schenkung, Erbschaft) sind nicht einkomensteuerbar.
+Das \textbf{Markteinkommensprinzip} umschreibt die \textbf{sieben Einkunftsarten}, die einkommenssteuerbar sind. Erträge ohne Markt (Schenkung, Erbschaft) sind nicht einkommensteuerbar.
 
 \subsection{Sachliche Steuerpflicht}
 Die \textbf{sachliche Steuerpflicht} beschreibt, was besteuert wird und ist in \estG{2} definiert. Es wird zwischen sieben Einkunftsarten und zwei Gruppen (Gewinneinkünfte und Überschusseinkünfte) unterschieden.
@@ -116,12 +118,94 @@ Die \textbf{sachliche Steuerpflicht} beschreibt, was besteuert wird und ist in \
 
 \subsection{Gewinnermittlung bei Gewinneinkünften}
 \subsubsection{Gewinn}
-Der Gewinn ist die \highlight{Betriebsvermögensdifferenz}, also der Überschuss der Betriebseinahmen über die Betriebsausgaben.
+Der \highlight{Gewinn} eines Unternehmens ist gem. \estG[Abs. 1, 5]{4} der \textbf{Unterschiedsbetrag} zwischen dem \textbf{Betriebsvermögen am Schluss des Wirtschaftsjahres} und dem \textbf{Betriebsvermögen am Schluss des vorhergehenden Wirtschaftsjahres, vermehrt} um den Wert der Entnahmen und \textbf{vermindert} um den Wert der Einlagen.
 
 \subsubsection{Objektives Nettoprinzip}
 Prinzipiell sind alle Aufwendungen als Betriebsausgaben oder Werbungskosten abziehbar. Die Einkommenssteuer besteuert gemäß \estG[Abs. 2]{2} nur den Gewinn bzw. den Überschuss der Einnahmen über die Werbungskosten.
 
-\subsubsection{Gewinnermittlung}
-Die Gewinnermittlung erfolgt im wesentlichen durch den Betriebgsvermögensvergleich nach \estG{5} in Verbindung mit \estG[Abs. 1]{4}. Bei Steuerpflichtigen, die keine Bilanz aufstellen müssen, erfolgt die Gewinnermittlung nach \estG[Abs. 3]{4}.
+\subsubsection{Buchführungspflicht und Gewinnermittlung}
+Die steuerliche \highlight{Buchführungspflicht} ergibt sich \textbf{derivativ} (abgeleitet aus anderen Gesetzen, z.B. \hgb{238}) aus \abgabenordnung{140} und \textbf{originär} aus \abgabenordnung{141}.\par
+Die Gewinnermittlung erfolgt bei Buchführungspflichtigen und denen, die freiwillig Buch führen durch den Betriebsvermögensvergleich nach \estG{5} in Verbindung mit \estG[Abs. 1]{4}.\par
+Bei Steuerpflichtigen, die keine Bilanz aufstellen müssen, erfolgt die Gewinnermittlung nach \estG[Abs. 3]{4}.
+
+\subsubsection{Formel zur Gewinnermittlung}
+Die Gewinnermittlung erfolgt gemäß \estG[Abs. 1 S. 1]{4} durch die Formel:
+\begin{align*}
+    & \hspace{0.5cm} \text{Betriebsvermögen am Schluss des Wirtschaftsjahres}                 \\
+  - & \hspace{0.5cm} \text{Betriebsvermögen am Schluss des vorangegangenen Wirtschaftsjahres} \\
+  = & \hspace{0.5cm} \textbf{Unterschiedsbetrag}                                              \\
+  + & \hspace{0.5cm} \text{Entnahmen}                                                         \\
+  - & \hspace{0.5cm} \text{Einlagen}                                                          \\
+  = & \hspace{0.5cm} \textbf{Gewinn}
+\end{align*}
+
+\subsubsection{Betriebsvermögen}
+Das \highlight{Betriebsvermögen} setzt sich zusammen aus allen aktiven Wirtschaftsgütern, die ein Betrieb zur Gewinnerzielung einsetzt, und allen Verbindlichkeiten, die betrieblich veranlasst sind.
+
+\subsubsection{Entnahmen}
+\highlight{Entnahmen} sind gem. \estG[Abs. 1 S. 2]{4} alle Wirtschaftsgüter, die der Steuerpflichtige dem Betrieb für sich, für seinen Haushalt oder für andere betriebsfremde Zwecke im Laufe des Wirtschaftsjahres entnimmt.\par
+Dazu zählen neben Barentnahmen auch Waren, Erzeugnisse, Nutzungen und Leistungen.
+
+\subsubsection{Einlagen}
+\highlight{Einlagen} sind gem. \estG[Abs. 1 S. 8]{4}  alle Wirtschaftsgüter, die der Steuerpflichtige dem Betrieb im Laufe des Wirtschaftsjahres zugeführt hat. Hierzu zählen insbesondere Bareinzahlungen und Sacheinlagen.
+
+\subsubsection{Betriebsausgaben}
+\highlight{Betriebsausgaben} sind gem. \estG[Abs. 4]{4} die \textbf{Aufwendungen, die durch den Betrieb veranlasst sind}.\par
+Dabei kommt es nicht darauf an, ob die Aufwendungen für den Betrieb des Steuerpflichtigen notwendig, zweckmäßig oder üblich sind.
+
+\subsubsection{Betriebseinnahmen}
+Betriebseinnahmen sind im Gesetz nicht definiert, die Rechtsprechung definiert mithilfe von \estG{8} die \highlight{Betriebseinnahmen} als \textbf{Zugänge von Wirtschaftsgütern} (in Form von Geld oder Geldeswert), die durch den Betrieb veranlasst sind.
+
+\subsubsection{Dreiteilung der Kosten}
+Das Einkommensteuerrecht wird beherrscht von einer \textbf{Dreiteilung der Kosten}. Danach ist zu unterscheiden, ob es sich bei den Kosten des Steuerpflichtigen um \textbf{Betriebsausgaben}, \textbf{Werbungskosten} oder \textbf{Kosten der Lebensführung} handelt.\par
+Betrieblich veranlasste Kosten stellen nach \estG[Abs. 4]{4} Betriebsausgaben dar. Ausschließlich privat veranlasste Kosten dürfen den Gewinn demnach nicht mildern, was in \estG[Nr. 1]{12} nochmal ausdrücklich klargestellt ist.
+
+\subsubsection{Werbungskosten}
+Werbungskosten sind gemäß \estG[Abs. 1]{9} ``Aufwendungen zur Erwerbung, Sicherung und Erhaltung der Einnahmen''. Zwischen Aufwendungen und Einnahmen muss demnach ein \textbf{kausaler Zusammenhang} bestehen.
+
+\subsection{Bewertungsgrundsätze}
+Zwei grundsätzliche Fragen sind zu beantworten:
+\begin{enumerate}
+  \item{Welche Wirtschaftsgüter müssen in der Bilanz (Betriebsvermögensvergleich) erfasst werden?}
+  \item{Mit welchem Wert sind diese Wirtschaftsgüter anzusetzen?}
+\end{enumerate}
+Allgemeine Bewertungsgrundsätze sind in \hgb[Abs. 1]{252} festgeschrieben. Von ihnen ist gemäß \hgb[Abs. 2]{252} nur in begründeten Ausnahmefällen abzuweichen.
+
+\subsubsection{Bilanzidentitätsprinzip}
+\highlight{Bilanzidentitätsprinzip} (\hgb[Abs. 1 Nr. 1]{252}): Die Wertansätze in einer Bilanz zum Jahresbeginn müssen identisch mit denen der Schlussbilanz des vorherigen Geschäftsjahres sein.
+
+\subsubsection{Fortführungsprinzip}
+\highlight{Fortführungsprinzip} (\hgb[Abs. 1 Nr. 2]{252}): Es ist grundsätzlich von der Fortführung der Unternehmenstätigkeit auszugehen, sofern nicht \textbf{tatsächliche} (z.B. massive wirtschaftliche Schwierigkeiten) oder \textbf{rechtliche} Gegebenheiten (z.B. ein gestellter Insolvenzantrag) dagegen sprechen.\par
+Ist eine Fortführung nicht zu unterstellen, sind Liquidationswerte anzusetzen. Ansonsten richtet sich die Bewertung nach den Vorschriften der \hgbb[253 - 256a]{253}.
+
+\subsubsection{Stichtagsprinzip}
+\highlight{Stichtagsprinzip} (\hgb[Abs. 1 Nr. 3]{252}): Die Bewertung aller Vermögensgegenstände und Schulden erfolgt zu einem bestimmten Stichtag.
+
+\subsubsection{Einzelbewertungsprinzip}
+\highlight{Einzelbewertungsprinzip} (\hgb[Abs. 1 Nr. 3]{252}, \estG[Abs. 1 S. 1]{6}): Jedes Wirtschaftsgut ist einzeln zu bewerten, Synergieeffekte zwischen den Vermögensgegenständen werden nicht berücksichtigt.
+
+\subsubsection{Vorsichtsprinzip}
+\highlight{Vorsichtsprinzip} (\hgb[Abs. 1 Nr. 4]{252}): Vermögensgegenstände und Schulden sind vorsichtig zu bewerten, insbesondere sind alle vorhersehbaren Risiken und Verluste, die bis zum Abschlussstichtag entstanden sind, zu berücksichtigen.\par
+Liegen keine Erwartungswerte vor, ist für Vermögensgegenstände der niedrigste, für Schulden der höchste Wert anzusetzen.
+
+\subsubsection{Realisationsprinzip}
+\highlight{Realisationsprinzip} (\hgb[Abs. 1 Nr. 4]{252}) und0 \highlight{Periodisierungsprinzip} (\hgb[Abs. 1 Nr. 5]{252}): Gewinne werden nur berücksichtigt, wenn sie am Abschlussstichtag realisiert sind.\par
+Aufwendungen und Erträge sind unabhängig von den Zeitpunkten der tatsächlichen Zahlung anzusetzen. Der Realisationszeitpunkt wird im Allgemeinen an den Zeitpunkt der Lieferung/Leistung geknüpft.
+
+\subsubsection{Stetigkeitsprinzip}
+\highlight{Stetigkeitsprinzip} (\hgb[Abs. 1 Nr. 6]{252}): In den Folgejahren sind die auf den vorhergehenden Jahresabschluss angewandten Bewertungsmethoden beizubehalten, sofern nicht begründete Ausnahmefälle i.S.d. \hgb[Abs. 1 Nr. 2]{252} vorliegen.
+
+\subsubsection{Historische bzw. fortgeführte Anschaffungs- oder Herstellungskosten}
+\highlight{Anschaffungskosten} bilden den Bewertungsmaßstab für alle von Dritten erworbenen Vermögensgegenstände und sind gleichzeitig gemäß \hgb[Abs. 1]{253} die Wertobergrenze.\par
+\highlight{Herstellungskosten} sind Aufwendungen, die im Rahmen des ursprünglichen oder nachträglichen (Wiederherstellung, Veränderung, Erweiterung, etc.) Herstellungsvorgangs eines Vermögensgegenstands anfallen (z.B. durch den Verbrauch von Gütern oder die Inanspruchnahme von Dienstleistungen für die Herstellung).
+
+\subsubsection{Börsen- oder Marktpreis}
+\hgb[Abs. 4]{253} definiert eine Hierarchie der möglichen Bewertungsmaßstäbe zur Bestimmung potenzieller außerplanmäßiger Abschreibungen für das Umlaufvermögen.\par
+Vorrangig ist zu prüfen, ob der Börsen- oder Marktpreis am Abschlussstichtag unter den Anschaffungs- oder Herstellungskosten liegt. Der \highlight{Börsenpreis} ist der an einer amtlich anerkannten Börse im In- oder Ausland amtlich oder im Freiverkehr festgestellter Kurs\par
+\highlight{Marktpreise} liegen vor, wenn Güter einer bestimmten Gattung und von durchschnittlicher Art und Güte an anderen Handelsplätzen regelmäßig umgesetzt werden.\par
+Lässt sich weder ein Börsen- noch ein Marktpreis feststellen, stellt der Wert, der den Vermögensgegenständen am Abschlussstichtag beizulegen ist, den relevanten Vergleichswert dar.
+
+\subsubsection{Erfüllungsbetrag}
+Der \highlight{Erfüllungsbetrag} stellt den grundsätzlichen Wertansatz für Verbindlichkeiten dar. Es ist der Betrag, der für eine normale Abwicklung des Geschäfts notwendig ist, um die Verpflichtungen zu erfüllen.
 
 \end{document}
