@@ -20,6 +20,7 @@
 \newcommand{\kstGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/kstg_1977/__#2.html}{§§ #1 KStG}}}}
 \newcommand{\gewstG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/gewstg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }GewStG}}}}
 \newcommand{\gewstGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/gewstg/__#2.html}{§§ #1 GewStG}}}}
+\newcommand{\ustG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/ustg_1980/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }UStG}}}}
 
 \def\contentsname{\empty}
 
@@ -439,7 +440,8 @@ Die Gewerbesteuer unterliegt der sog. \textbf{objektive Gewerbeertrag}. Dies ist
 Es handelt sich ebenfalls um eine \textbf{direkte Steuer}.
 
 \subsubsection{Steuerberechtigung}
-Gemäß \gewstG{1} sind die \textbf{Gemeinden} steuerberechtigt.
+Gemäß \gewstG{1} sind die \textbf{Gemeinden} steuerberechtigt. Wenn Betriebsstätten in mehreren Gemeinden liegen, werden diese gemäß \gewstG{28} zerlegt.
+
 
 \subsection{Steuergegenstand}
 Steuergegenstand ist \gewstG[Abs. 1 Satz 1]{2} der \textbf{stehende Gewerbebetrieb}, soweit er im Inland betrieben wird.\par
@@ -491,5 +493,71 @@ Die Ermittlung der Gewerbesteuer erfolgt nach folgender Formel:
 Bei Bezügen aus Einkünften aus Gewerbebetrieb, die der Besteuerung nach dem GewStG unterliegen, kommt eine Steuerermäßigung nach \estG{35} in Betracht.\par
 Dieser sieht eine pauschale Anrechung der Gewerbesteuer auf die Einkommensteuer vor.\par
 Sie gilt für unbeschränkt und beschränkt steuerpflichtige natürliche Personen mit Einkünften aus Gewerbebetrieb als Einzelunternehmer, Mitunternehmen und persönlich haftender Gesellschafter einer KGaA.
+
+\newpage
+\section{Umsatzsteuer}
+\subsection{Grundlagen}
+Die Umsatzsteuer ist eine \highlight{Konsumsteuer} (oder Verbrauchsteuer, \ustG[Abs. 1]{21}).\par
+
+\subsubsection{Steuerschuldner}
+Die Umsatzsteuer belastet grundsätzlich den gesamten privaten und öffentlichen Endverbrauch und wird damit von den \textbf{Endverbrauchern} getragen.\par
+Steuerschuldner ist jedoch gemäß \ustG[Abs. 1 Nr. 1]{13a} im Grundsatz der \textbf{leistende Unternehmer}. Da der Steuerschuldner (Unternehmer) und Steuerträger (Endverbraucher) verschiedene Personen sind, zählt sie zu den \textbf{indirekten Steuern}.\par
+In den Fällen des \ustG{13b} (\textbf{Reverse-Charge-Verfahren}) wird die Steuerschuld zur Vereinfachung und zur Bekämpfung von Steuerbetrug auf den Leistungsempfänger verlagert (im B2B-Bereich).
+
+\subsubsection{Umsatzsteuer als Sach- und Objektsteuer}
+Im Gegensatz zur ESt berücksichtigt die USt weder persönliche Verhältnisse (Familienstand, Kinder, etc.) noch die individuelle Leistungsfähigkeit des Steuerschuldners.\par
+Sie knüpft also nicht an das Steuersubjekt (Person) sondern die Leistungsabgabe bzw. den Steuergegenstand (Objekt) an. Daher gehört sie nicht zu den Personensteuern sondern zu den \textbf{Sach- oder Objektsteuern}.
+
+\subsection{Wirkungsweise der Umsatzsteuer}
+Die USt ist so gestaltet, dass bei gleichem Steuersatz alle Waren und Dienstleistungen, die beim Endverbraucher ankommen, in gleicher Höhe mit USt belastet sind, \textbf{unabhängig von der Anzahl der Wirtschaftsstufen} (Zwischenschritte), die eine Ware oder Dienstleistung durchlaufen hat.
+
+\subsubsection{Vorsteuerabzug}
+Eine Erhebung der Steuer von der Steuer ist jedoch grundsätzlich ausgeschlossen. Dies wird durch den \highlight{Vorsteuerabzug} gemäß \ustG{15} erreicht.\par
+Die Umsatzsteuer wird auf jeder Wirtschaftsstufe einer Leistungskette (z.B. Produzent - Großhändler - Zwischenhändler - Einzelhändler) erhoben und belastet zunächst jeden Erwerber. Die Steuer wird jedoch in Form des \textbf{Vorsteuerabzugs} wieder vom Finanzamt erstattet, sofern \textbf{kein Endverbrauch} vorliegt.
+
+\subsection{Umsatzart}
+Es werden gemäß \ustG[Abs. 1 Nr. 1, Nr. 4 und Nr. 5]{1} drei Umsatzarten unterschieden:
+\begin{itemize}
+  \item{Lieferungen und sonstige Leistungen}
+  \item{Einfuhr (Einfuhrumsatzsteuer)}
+  \item{innergemeinschaftliche Erwerbe}
+\end{itemize}
+Je nach Umsatzart müssen unterschiedliche Tatbestandsmerkmale erfüllt sein, damit der Umsatz steuerbar ist.
+
+\subsection{Steuerbarkeit bei Lieferungen und sonstige Leistungen}
+\subsubsection{Tatbestandsmerkmale}
+Gemäß \ustG[Abs. 1 Nr. 1]{1} müssen folgende Tatbestandsmerkmale erfüllt sein, damit eine Lieferung oder sonstige Leistung steuerbar ist:
+\begin{itemize}
+  \item{Unternehmer}
+  \item{im Rahmen seines Unternehmens}
+  \item{im Inland}
+  \item{gegen Entgelt}
+\end{itemize}
+Es muss also ein \textbf{Leistungsaustausch} stattfinden (Leistung und Gegenleistung).\par
+Gemäß \ustG[Abs. 9 Satz 1]{3} sind sonstige Leistungen solche, die keine Lieferungen sind (z.B. Dienstleistungen, Vermietung, Übertragung von Markenrechten, usw.).
+
+\subsubsection{Unternehmerbegriff}
+Der Unternehmerbegriff ist in \ustG[Abs. 1]{2} geregelt. Danach ist \textbf{Unternehmer}, wer eine \textbf{gewerbliche oder berufliche Tätigkeit selbständig ausübt}.\par
+Gemäß \ustG[Abs. 1 Satz 3]{2} ist gewerblich oder beruflich jede
+\begin{itemize}
+  \item{nachhaltige Tätigkeit}
+  \item{zur Erzielung von Einnahmen}
+  \item{auch wenn die Absicht, Gewinn zu erzielen, fehlt}
+\end{itemize}
+Unternehmer kann jede natürliche und juristische Person und jede Personenvereinigung sein.
+
+\subsubsection{Inlandsbegriff}
+Der Begriff \textbf{Inland} ist in \ustG[Abs. 2 Satz 1]{1} definiert.\par
+Das Inland i.S.d. Umsatzsteuerrechts stimmt nicht mit dem Gebiet der Bundesrepublik Deutschland überein, weil bestimmte Gebiete ausgenommen sind (z.B. Häfen und Schiffe). Umsätze in diesen Gebieten sind (vorbehaltlich \ustG[Abs. 3]{1}) nicht steuerbar und lösen somit keine deutsche Umsatzsteuer aus.
+
+\subsubsection{Entgelt}
+Gemäß \ustG[Abs. 1 Satz 2]{10} ist \textbf{Entgelt} alles, was den Wert der Gegenleistung bildet, die der leistende Unternehmer vom Leistungsempfänger \dots für die Leistung erhält oder erhalten soll, \dots, jedoch abzüglich der für diese Leistung gesetzlich geschuldeten Umsatzsteuer.
+
+\subsubsection{Steuerbefreiungen}
+\ustG{4} definiert Steuerbefreiungen, z.B. für Ausfuhrlieferungen (\ustG[Nr. 1 a]{4}), Grundstücksveräußerungen (\ustG[Nr. 9 a]{4}) oder Vermietung und Verpachtung von Grundstücken (\ustG[Nr. 12 a]{4}).
+
+\subsection{Steuersatz}
+Der \textbf{Regelsteuersatz} beträgt gemäß \ustG[Abs. 1]{12} 19 \% der Bemessungsgrundlage.\par
+In Fällen des \ustG[Abs. 2]{12} ist der ermäßigte Steuersatz von 7 \% anzuwenden.
 
 \end{document}
