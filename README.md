@@ -2,9 +2,9 @@
 
 ## Sommersemester 2024
 
-- [Access Control Systems [WIP]](./pdfs/AccessControlSystems.pdf)
-- [Decentralized Systems: Fundamentals, Modeling, and Applications [WIP]](./pdfs/DecentralizedSystems.pdf)
-- [Steuerrecht [WIP]](./pdfs/Steuerrecht.pdf)
+- [Access Control Systems [unvollständig]](./pdfs/AccessControlSystems.pdf)
+- [Decentralized Systems: Fundamentals, Modeling, and Applications [unvollständig]](./pdfs/DecentralizedSystems.pdf)
+- [Steuerrecht](./pdfs/Steuerrecht.pdf)
 
 ## Sommersemester 2023
 
