@@ -1,0 +1,100 @@
+\documentclass[12pt,A4]{extarticle}	
+\usepackage[table]{xcolor}
+
+\newcommand{\lectureTitle}{Arbeitsrecht [WIP]}
+\newcommand{\semester}{Sommersemester 2024}
+
+\input{../shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+\definecolor{gesetzLink}{RGB}{194, 74, 14}
+\newcommand{\bgb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
+\newcommand{\agG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/agg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }AGG}}}}
+\newcommand{\agGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/agg/__#2.html}{§§ #1 AGG}}}}
+
+\def\contentsname{\empty}
+
+\begin{document}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Grundlagen}
+\subsection{Arbeitsvertrag vs. Dienstvertrag}
+Bei \textbf{Arbeitsverträgen} (oder Dienstverträgen) steht der \textbf{Dienst} im Vordergrund. Der Arbeiternehmer muss den Dienst leisten, wird jedoch bezahlt, auch wenn der gewünschte Erfolg nicht eintritt.\par
+Bei \textbf{Werkverträgen} steht der \textbf{Erfolg} im Vordergrund. Wenn das ``Werk'' nicht erbracht wird, muss der Auftragnehmer nicht bezahlt werden (z.B. Handwerker).
+
+\subsection{Pflichten vor Beginn des Arbeitsvertrags}
+Auch schon während der Bewerbungsphase existieren vorvertragliche Pflichten, auch wenn noch keine Verträge geschlossen wurden. \bgb[Abs. 2]{311} definiert gegenseitige Rücksichts- und Geheimhaltungspflichten.
+
+\section{Allgemeines Gleichbehandlungsgesetz (Antidiskriminierungsgesetz)}
+\subsection{Grundlagen}
+\subsubsection{Ziel}\label{sec:aggZiel}
+Das Ziel des Allgemeines Gleichbehandlungsgesetzes (auch \highlight{Antidiskriminierungsgesetz} genannt) ist in \agG{1} definiert. Es soll Benachteiligungen aufgrund bestimmter (aufgezählter) Merkmale verhindern.
+
+\subsubsection{Benachteiligungsverbot}
+Das \textbf{Benachteiligungsverbot} ist in \agG{7} definiert. Demnach dürften Beschäftigte nicht wegen der \hyperref[sec:aggZiel]{genannten Merkmale} benachteiligt werden.\par
+Dies gilt auch, wenn das Merkmal gar nicht auf die Person zutrifft, sondern nur angenommen wird.
+
+\subsubsection{Ausschreibungen}
+Gemäß \agG{11} dürfen Arbeitsplätze nicht unter Verstoß gegen \agG[Abs. 1]{7} ausgeschrieben werden.
+
+\subsection{Arten der Benachteiligung}
+Die Arten der Benachteiligung sind in \agG{3} definiert.
+
+\subsubsection{Unmittelbare Benachteiligung}
+Eine \highlight{unmittelbare Benachteiligung} liegt gemäß \agG[Abs. 1]{3} vor, wenn eine Person aufgrund der \hyperref[sec:aggZiel]{genannten Merkmale} eine weniger günstige Behandlung erfährt als andere Personen.\par
+Dies gilt ebenfalls für Frauen, die aufgrund einer Schwangerschaft oder Mutterschaft benachteiligt werden.
+
+\subsubsection{Mittelbare Benachteiligung}
+Eine \highlight{mittelbare Benachteiligung} liegt gemäß \agG[Abs. 2]{3} vor, wenn dem Anschein nach neutrale Vorschriften oder Verfahren Personen wegen der \hyperref[sec:aggZiel]{genannten Merkmale} benachteiligen, wenn sie nicht sachlich gerechtfertigt, angemessen und erforderlich sind.\par
+Hierbei erfolgt keine direkte Diskriminierung wegen der Merkmale, sondern über Faktoren, die überproportional von dieser Gruppe erfüllt werden.\par
+Ein Beispiel ist die Verweigerung von Teilzeitstellen (benachteiligt Frauen überproportional).
+
+\subsubsection{Belästigung}
+Eine \highlight{Belästigung} ist gemäß \agG[Abs. 3]{3} eine \textbf{unerwünschte Verhaltensweise}, die mit den \hyperref[sec:aggZiel]{genannten Merkmale} in Verbindung steht, die Würde der Person verletzt und das Arbeitsumfeld negativ beeinflussen.\par
+
+\subsubsection{Sexuelle Belästigung}
+Eine \highlight{sexuelle Belästigung} (\agG[Abs. 4]{3}) ist analog für sexuelle Verhaltensweisen definiert.\par
+Darunter fallen sexuelle Handlungen, Aufforderungen, körperliche Berührungen, Bemerkungen sowie unerwünschtes Zeigen von pornographischen Darstellungen.
+
+\subsection{Zulässige unterschiedliche Behandlung}
+In \agGG[8-10]{8} sind Ausnahmen definiert, in denen unterschiedliche Behandlungen zulässig sind.
+
+\subsubsection{Berufliche Anforderungen}
+Wenn die Art der Tätigkeit oder die Bedingungen eine wesentliche und entscheidende berufliche Anforderung darstellt, ist gemäß \agG{8} eine unterschiedliche Behandlung zulässig.
+
+\subsubsection{Religion oder Weltanschauung}
+Für Religionsgemeinschaften und ihnen zugeordneten Einrichtungen ist gemäß \agG{9} eine Benachteiligung zulässig, wenn die Religion oder Weltanschauung eine gerechtfertigte berufliche Anforderung darstellt.\par
+Eine Religionsgemeinschaft kann z.B. fordern, dass ein Pastor ihrer Religion angehört.
+
+\subsubsection{Alter}
+Gemäß \agG{10} ist eine unterschiedliche Behandlung wegen des Alters zulässig, wenn sie objektiv angemessen und durch ein legitimes Ziel gerechtfertigt ist.\par
+Das können z.B. Mindest- oder Höchstalter für bestimmte Tätigkeiten sein.
+
+\subsubsection{Unterschiedliche Behandlung wegen mehrerer Gründe}
+Wenn die unterschiedliche Behandlung wegen mehrerer Gründe erfolgt, kann diese gemäß \agG{4} nur durch \agGG[8 bis 10 und 20]{8} nur gerechtfertigt sein, wenn die Rechtfertigung sich auf \textbf{alle diese Gründe erstreckt}.
+
+\subsection{Folgen einer Benachteiligung}
+\subsubsection{Pflichten des Arbeitgebers}
+Gemäß \agG{12} verpflichtet, (auch vorbeugende) Maßnahmen zum Schutz vor Benachteiligungen zu treffen. Während der Aus- und Fortbildung muss er gemäß \agG[Abs. 2]{12} auf die Unzulässigkeit solcher Benachteiligungen hinweisen.\par
+Bei Verstößen gegen das Benachteiligungsverbot muss der Arbeitgeber gemäß \agG[Abs. 3]{12} geeignete Maßnahmen zur Unterbindung ergreifen (z.B. Abmahnung, Versetzung oder Kündigung).\par
+Auch wenn die Benachteiligung bei der Ausübung der Tätigkeit \textbf{durch Dritte} (z.B. Kunden) erfolgt, muss der Arbeitgeber gemäß \agG[Abs. 4]{12} geeignete Maßnahmen ergreifen.
+
+\subsubsection{Leistungsverweigerungsrecht}
+Falls der Arbeitgeber keine oder offensichtlich ungeeignete Maßnahmen zur Unterbindung einer (sexuellen) Belästigung am Arbeitsplatz, sind die Betroffenen gemäß \agG{14} berechtigt, ihre Tätigkeit einzustellen.\par
+Sie verlieren dabei nicht den Anspruch auf das Arbeitsentgelt.
+
+\subsubsection{Entschädigung und Schadensersatz}
+Wenn der Arbeitgeber das Verstoß gegen das Benachteiligungsverbot zu vertreten hat, ist er gemäß \agG[Abs. 1]{15} zu Schadensersatz verpflichtet (selten, da meist kein finanzieller Schaden vorliegt).\par
+Gemäß \agG[Abs. 2]{15} entsteht Anspruch auf Schadensersatz auch für Schäden, die nicht Vermögensschäden sind.\par
+\textbf{Frist}: Gemäß \agG[Abs. 4]{15} muss ein Anspruch innerhalb von \textbf{zwei Monaten} \textbf{schriftlich} geltend gemacht werden. Die Frist beginnt bei einer Bewerbung mit dem Zugang der Ablehnung und sonst zu dem Zeitpunkt, in dem der Arbeitnehmer von der Benachteiligung Kenntnis erlangt.
+
+\subsubsection{Beweislast}
+Gemäß \agG{22} wird die \textbf{Beweislast umgekehrt}, wenn der Arbeitnehmer Indizien für eine Benachteiligung ``beweist''.
+
+\end{document}

@@ -3,6 +3,7 @@
 ## Sommersemester 2024
 
 - [Access Control Systems [unvollständig]](./pdfs/AccessControlSystems.pdf)
+- [Arbeitsrecht](./pdfs/Arbeitsrecht.pdf)
 - [Decentralized Systems: Fundamentals, Modeling, and Applications [unvollständig]](./pdfs/DecentralizedSystems.pdf)
 - [Steuerrecht](./pdfs/Steuerrecht.pdf)
 
