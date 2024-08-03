@@ -13,6 +13,8 @@
 \newcommand{\bgb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
 \newcommand{\agG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/agg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }AGG}}}}
 \newcommand{\agGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/agg/__#2.html}{§§ #1 AGG}}}}
+\newcommand{\nachwG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/nachwg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }NachwG}}}}
+\newcommand{\tzbfG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/tzbfg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }TzBfG}}}}
 
 \def\contentsname{\empty}
 
@@ -96,5 +98,85 @@ Gemäß \agG[Abs. 2]{15} entsteht Anspruch auf Schadensersatz auch für Schäden
 
 \subsubsection{Beweislast}
 Gemäß \agG{22} wird die \textbf{Beweislast umgekehrt}, wenn der Arbeitnehmer Indizien für eine Benachteiligung ``beweist''.
+
+\section{Arbeitsvertrag}
+\subsection{Form}
+Grundsätzlich ist ein Arbeitsvertrag \highlight{formfrei}. Aufgrund des hohen Missbrauchspotentials existiert jedoch ein Nachweisgesetz, das den Arbeitgeber zur Verschriftlichung wichtiger Vertragsbedingungen verpflichtet.
+
+\subsubsection{Nachweisgesetz}
+Gemäß \nachwG{2} muss der Arbeitgeber dem Arbeitnehmer die \textbf{wesentlichen Vertragsbedingungen} unterschreiben und aushändigen, dazu gehören:
+\begin{itemize}
+  \item{Namen und Anschrift der Vertragsparteien}
+  \item{Beginn (und ggf. Ende) des Arbeitsverhältnisses}
+  \item{Beschreibung der vom Arbeitnehmer zu leistenden Tätigkeit}
+  \item{Dauer der Probezeit}
+  \item{Zusammensetzung und Höhe des Entgelts (inklusive Regelungen für Überstunden, Prämien, etc.)}
+  \item{Dauer des Urlaubs}
+\end{itemize}
+Der Nachweis muss \textbf{schriftlich} spätestens \textbf{einen Monat} nach vereinbartem Beginn des Arbeitsverhältnisses erfolgen.
+
+\subsection{Was regelt der Arbeitsvertrag?}
+Im Arbeitsvertrag sind die Vertragsbedingungen des Arbeitsverhältnisses geregelt, dazu gehören:
+\begin{itemize}
+  \item{Entgelt (und Extras wie Boni, Firmenwagen etc.)}
+  \item{Urlaub}
+  \item{Probezeit}
+  \item{Arbeitszeit (und Überstunden)}
+  \item{Arbeitesplatzbeschreibung (Ort und Tätigkeit)}
+  \item{Arbeitgeber}
+  \item{Regelungen zum Home-Office}
+  \item{Betriebliche Extras}
+  \item{Datenschutzpflichten, Geheimhaltungsklauseln, Urheberrechte}
+  \item{Regeln im Krankheitsfall/Verhinderung (Mutterschutz, Elternzeit)}
+\end{itemize}
+
+\subsubsection{Synallagma im Arbeitsvertrag}\label{sec:arbeitsvertragSynallagma}
+Die \textbf{Tätigkeitsbeschreibung} und das \textbf{Entgelt} prägen den Arbeitsvertrag und stellen ein \highlight{Synallagma} (Vertrag mit gegenseitigen Verpflichtungen) dar.\par
+Der Arbeitnehmer ist zur Arbeitsleistung verpflichtet, der Arbeitgeber zur Entgeltzahlung. Leistet eine Partei nicht, ist die andere Partei ebenfalls nicht zur Leistung verpflichtet.
+
+\subsubsection{Boni}
+\textbf{Boni} gehören ebenfalls zum Entgelt. Diese können entweder \textbf{individuell} (Bonus für abgeschlossene Verträge) oder z.B. \textbf{abteilungsweise} (bei Erhöhung des Umsatzes) vereinbart werden.
+
+\subsubsection{Urlaubs- und Weihnachtsgeld}
+\textbf{Urlaubs- und Weihnachtsgeld} sind nicht zwingend Teil des Entgelts (und somit des \hyperref[sec:arbeitsvertragSynallagma]{Synallagmas}).\par
+Im Streitfall kommt es auf die Auslegung des Arbeitsvertrags an, ob z.B. das Urlaubs- und Weihnachtsgeld noch anteilig für das laufende Jahr ausbezahlt werden muss. Falls es im Arbeitsvertrag im Kapitel ``Vergütung'' steht, deutet die \textit{systematische Auslegung} auf eine Einbeziehung ins Synallagma hin.
+
+\section{Teilzeit und befristete Arbeitsverträge}
+Teilzeit und befristete Arbeitsverträge sind im \textbf{Gesetz über Teilzeitarbeit und befristete Arbeitsverträge} (TzBfG) geregelt.
+
+\subsection{Befristete Arbeitsverträge}
+\subsubsection{Zulässigkeit}\label{sec:befristeteArbeitsvertraegeZulaessigkeit}
+Die Befristung ist gemäß \tzbfG[Abs. 1]{14} zulässig, wenn sie durch einen sachlichen Grund gerechtfertigt ist, darunter fallen:
+\begin{enumerate}
+  \item{nur vorübergehender betrieblicher Bedarf an der Arbeitsleistung}
+  \item{im Anschluss an Ausbildung oder Studium}
+  \item{Vertretung}
+  \item{Eigenart der Arbeit (z.B. Skilehrer, Bademeister, usw.)}
+  \item{Befristung zur Erprobung (\textbf{keine Probezeit!})}
+  \item{Wunsch des Arbeitnehmers}
+  \item{bei Vergütung aus befristeten Haushaltsmitteln (z.B. durch den Staat)}
+  \item{gerichtlicher Vergleich}
+\end{enumerate}
+
+\subsubsection{Dauer}
+Gemäß \tzbfG[Abs. 2]{14} ist die Befristung \textbf{ohne Vorliegen} eines \hyperref[sec:befristeteArbeitsvertraegeZulaessigkeit]{sachlichen Grundes} ist möglich, wenn die Befristung \textbf{maximal dreimal verlängert} wird und die Gesamtdauer \textbf{zwei Jahre} nicht überschreitet. Wenn zuvor ein Arbeitsverhältnis bestanden hat, ist die Befristung nicht zulässig (\tzbfG[Abs. 2 Satz 2]{14}).\par
+Gemäß \tzbfG[Abs. 2a]{14} ist bei der Neugründung eines Unternehmens die Befristung innerhalb der \textbf{ersten vier Jahre} zulässig.\par
+Gemäß \tzbfG[Abs. 3]{14} ist die Befristung \textbf{ohne Vorliegen} eines \hyperref[sec:befristeteArbeitsvertraegeZulaessigkeit]{sachlichen Grundes} auch zulässig, wenn der Arbeitnehmer \textbf{älter als 52} ist und unmittelbar vor Beginn des Arbeitsverhältnisses \textbf{mindestens vier Monat arbeitslos} war.
+
+\subsubsection{Form}
+Gemäß \tzbfG[Abs. 4]{14} muss die Befristung \textbf{schriftlich} erfolgen, um wirksam zu sein.
+
+\subsubsection{Folgen unwirksamer Befristung}
+Ist die Befristung unwirksam, dann gilt gemäß \tzbfG{16} der Vertrag als auf unbestimmte Zeit geschlossen. Die ordentliche Kündigung ist dann i. d. R. frühstens zum vereinbarten Ende möglich.
+
+\subsubsection{Fristen für Klage bei unwirksamer Befristung}
+Der Arbeitnehmer muss gemäß \tzbfG{17} innerhalb von \textbf{drei Wochen nach vereinbartem Ende} des befristeten Arbeitsvertrags Klage auf Feststellung erheben, dass das Arbeitsverhältnis auf Grund der Befristung nicht beendet ist.
+
+\subsubsection{Ende des befristeten Arbeitsvertrages}
+Ein kalendermäßig befristeter Arbeitsvertrag endet gemäß \tzbfG[Abs. 1]{15} mit Ablauf der vereinbarten Zeit.\par
+Ein zweckbefristeter Arbeitsvertrag endet gemäß \tzbfG[Abs. 2]{15} mit Erreichen des Zwecks, der Arbeitnehmer muss jedoch \textbf{mindestens zwei Wochen} vorher \textbf{schriftlich} informiert werden.
+
+\subsubsection{Information über unbefristete Arbeitsplätze}
+Der Arbeitgeber muss gemäß \tzbfG[Abs. 1]{18} unbefristet beschäftigte Arbeitnehmer über unbefristete Arbeitsplätze zu informieren.
 
 \end{document}
