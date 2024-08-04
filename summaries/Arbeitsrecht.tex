@@ -15,6 +15,12 @@
 \newcommand{\agGG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/agg/__#2.html}{§§ #1 AGG}}}}
 \newcommand{\nachwG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/nachwg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }NachwG}}}}
 \newcommand{\tzbfG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/tzbfg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }TzBfG}}}}
+\newcommand{\kschG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/kschg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }KSchG}}}}
+\newcommand{\muschG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/muschg_2018/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }MuSchG}}}}
+\newcommand{\beeG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/beeg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BEEG}}}}
+\newcommand{\bdsG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bdsg_2018/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BDSG}}}}
+\newcommand{\sgbIX}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/sgb_9_2018/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }SGB IX}}}}
+\newcommand{\betrvG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/betrvg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BetrVG}}}}
 
 \def\contentsname{\empty}
 
@@ -235,5 +241,87 @@ In Tarifverträgen (\bgb[Abs. 4]{622}) und in bestimmten Fällen (\bgb[Abs. 5]{6
 \subsubsection{Fristlose Kündigung}
 Bei vorliegen eines \textbf{wichtigen Grundes}, unter dem die Fortsetzung des Arbeitsverhältnisses unzumutbar ist, kann gemäß \bgb[Abs. 1]{626} fristlos gekündigt werden.\par
 Gemäß \bgb[Abs. 2]{626} kann die Kündigung nur \textbf{innerhalb von zwei Wochen nach Kenntnis} über die für die Kündigung maßgebende Tatsachen erfolgen.
+
+\subsection{Kündigungsschutzgesetz}
+\subsubsection{Anwendungsbereich}
+Gemäß \kschG[Abs. 1]{1} gilt das Kündigungsschutzgesetz nur für Arbeitnehmer, dessen Arbeitsverhältnis in dem Betrieb \textbf{länger als sechs Monate} bestanden hat.\par
+\kschG{23} definiert weitere Ausnahmen, so sind z.B. Betriebe mit \textbf{weniger als zehn Arbeitnehmern} (Auszubildende werden nicht mitgezählt) von den meisten Regelungen ausgenommen.
+
+\subsubsection{Zulässige Kündigungsgründe}
+Gemäß \kschG[Abs. 2]{1} ist eine Kündigung \highlight{sozial ungerechtfertigt}, wenn der Grund nicht in einem der drei folgenden liegt:
+\begin{itemize}
+  \item{in dem Verhalten des Arbeitnehmers (\highlight{verhaltensbedingt})}
+  \item{in der Person des Arbeitnehmers (\highlight{personenbedingt})}
+  \item{durch dringende betriebliche Erfordernisse (\highlight{betriebsbedingt})}
+\end{itemize}
+
+\subsubsection{Verhaltensbedingte Kündigung}
+Bei einer \highlight{verhaltensbedingte Kündigung} liegt der Grund in dem Verhalten des Arbeitnehmers, das es dem Arbeitgeber unzumutbar macht, das Arbeitsverhältnis fortzusetzen.\par
+Zu den Gründen gehören beispielsweise:
+\begin{itemize}
+  \item{Straftaten gegen Arbeitnehmer oder Kollegen}
+  \item{Schwerwiegende Verstöße gegen den Arbeitsvertrag (z.B. wiederholte Unpünktlichkeit nach Abmahnung)}
+\end{itemize}
+
+\subsubsection{Personenbedingte Kündigung}
+Bei einer \highlight{personenbedingten Kündigung} liegt der Grund in der Person des Arbeitnehmers.\par
+Zu den Gründen gehören beispielsweise:
+\begin{itemize}
+  \item{Langzeit-Krankheit}
+  \item{Personenbedingte Schlechtleistung (Arbeitnehmer arbeitet nur noch langsam/schlecht)}
+  \item{Verdacht von grobem Fehlverhalten (z.B. Diebstahl, Unregelmäßigkeiten in Büchern)}
+\end{itemize}
+
+\subsubsection{Betriebsbedingte Kündigung}\label{sec:betriebsbedingteKuendigung}
+Eine \highlight{betriebsbedingte Kündigung} kann entweder wegen \textbf{äußerer betrieblicher Gründe} oder \textbf{innerbetrieblicher Gründe} erfolgen.\par
+Beispiele für äußere betrieblicher Gründe:
+\begin{itemize}
+  \item{Schlechte Wirtschaftslage}
+  \item{Teure Rohstoffe}
+  \item{Rückgang der Aufträge}
+\end{itemize}
+Beispiele für innerbetrieblicher Gründe:
+\begin{itemize}
+  \item{Umstrukturierung des Betriebs}
+  \item{Digitalisierung von Prozessen}
+  \item{Outsourcing von Tätigkeiten}
+\end{itemize}
+
+\subsubsection{Sozialauswahl bei betriebsbedingter Kündigung}
+Bei einer \hyperref[sec:betriebsbedingteKuendigung]{betriebsbedingten Kündigung} kann der Arbeitgeber nicht beliebige Arbeitnehmer kündigen, sondern muss gemäß \kschG[Abs. 3]{1} eine \highlight{Sozialauswahl} treffen.\par
+Dabei wird den \textbf{vier Kriterien} Alter, Betriebszugehörigkeit, Unterhaltspflichten und Behinderung eine Gewichtung (Punkte) zugewiesen und alle in Frage kommenden Arbeitnehmer nach dieser Gewichtung bewertet. Eine Entlassung ist nur bei den Arbeitnehmern mit den wenigsten Punkten zulässig.\par
+In einem Tarifvertrag oder durch den Betriebsrat kann gemäß \kschG[Abs. 4]{1} diese Gewichtung festgelegt werden, die gerichtlich nur auf grobe Fehlerhaftigkeit überprüft werden kann und ansonsten gilt.\par
+Falls der Arbeitgeber die Gewichtung alleine vornimmt, kann diese vor Gericht überprüft und für unwirksam erklärt werden.
+
+\subsubsection{Ausnahmen von der Sozialauswahl}
+Gemäß \kschG[Abs. 3 Satz 2]{1} sind bestimmte Arbeitnehmer von der Sozialauswahl ausgenommen, z.B. aufgrund ihrer Erfahrung, Weiterbildung oder der Datenschutzbeauftragte.
+
+\subsubsection{Folgen einer Kündigung}
+Der Arbeitnehmer muss gemäß \kschG{4} \textbf{drei Wochen} nach Zugang der \textbf{schriftlichen} Kündigung Klage auf Feststellung erheben, dass das Arbeitsverhältnis durch die Kündigung nicht aufgelöst ist.\par
+Ansonsten gilt die Kündigung gemäß \kschG{7} (mit Ausnahmen in \kschG{5} und \kschG{6}) als \textbf{von Anfang an wirksam}.
+
+\subsection{Sonstige Kündigungsschutzregeln}
+\subsubsection{Kündigungsverbot von Schwangeren und Müttern}
+Gemäß \muschG{17} ist eine Kündigung von Schwangeren und Müttern für eine gewisse Zeit nach der Geburt des Kindes unzulässig.
+
+\subsubsection{Kündigungsschutz während der Elternzeit}
+Gemäß \beeG{18} können Eltern in Elternzeit (und kurz davor) nicht gekündigt werden.
+
+\subsubsection{Kündigungsverbot für Datenschutzbeauftragten}
+Gemäß \bdsG[Abs. 2]{38} können Datenschutzbeauftragte in nichtöffentlicher Stellen (Unternehmen) nicht gekündigt werden, wenn die Benennung eines Datenschutzbeauftragten verpflichtend ist.
+
+\subsubsection{Unzulässigkeit der Kündigung des Betriebsrats und Vertretungen}
+Gemäß \kschG{15} ist die Kündigung eines Mitglieds eines Betriebsrats, einer Jugend- und Auszubildendenvertretung usw. unzulässig (außer bei außerordentlichen Kündigungen).
+
+\subsubsection{Erfordernis der Zustimmung bei Kündigung von Schwerbehinderten}
+Gemäß \sgbIX{168} ist bei der Kündigung eines schwerbehinderten Arbeitnehmers die Zustimmung des Integrationsamts erforderlich.
+
+\subsubsection{Anzeigepflicht bei Massenentlassungen}
+Gemäß \kschG[Abs. 1]{17} muss der Arbeitgeber der Agentur für Arbeit mitteilen, wenn er eine größere Anzahl von Arbeitnehmern entlassen will (Staffelungen im Gesetz).
+
+\subsubsection{Mitbestimmung des Betriebsrats bei Kündigungen}
+Gemäß \betrvG{102} hat der Betriebsrat ein Mitbestimmungsrecht bei Kündigungen.\par
+Eine ohne Anhörung des Betriebsrats ausgesprochene Kündigung ist gemäß \betrvG[Abs. 1]{102} unwirksam.\par
+Widerspricht der Betriebsrat der Kündigung, kann der Arbeitgeber trotzdem kündigen, muss aber gemäß \betrvG[Abs. 4]{102} die Stellungnahme des Betriebsrats beilegen.
 
 \end{document}
