@@ -1,0 +1,164 @@
+\documentclass[12pt,A4]{extarticle}	
+\usepackage[table]{xcolor}
+
+\newcommand{\lectureTitle}{Vertragsgestaltung im IT-Bereich [WIP]}
+\newcommand{\semester}{Wintersemester 2024/25}
+
+\input{../shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+\definecolor{gesetzLink}{RGB}{194, 74, 14}
+\newcommand{\bgb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }BGB}}}}
+\newcommand{\bgbb}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/bgb/__#2.html}{§§ #1 BGB}}}}
+\newcommand{\prodHaftG}[2][]{\textbf{\textcolor{gesetzLink}{\href{https://www.gesetze-im-internet.de/prodhaftg/__#2.html}{§ #2 \ifthenelse{\equal{#1}{}}{}{#1 }ProdHaftG}}}}
+
+\def\contentsname{\empty}
+
+\begin{document}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Vertragsschluss und Vertragstypen}
+\subsection{Vertragstypen}
+Um den Vertragstyp eines Vertrages zu bestimmen, muss folgendes geprüft werden:
+
+\begin{enumerate}
+  \item{Was sind die \textit{essentialia negotii} (wesentlichen Vertragsbestandteile)}
+  \item{Welche Form muss der Vertrag haben?}
+  \item{Wie endet der Vertrag?}
+\end{enumerate}
+
+\subsubsection{Kaufvertrag}
+Bei einem \highlight{Kaufvertrag} gemäß \bgbb[433 ff.]{433} einigen sich die Parteien über die Übereignung eines Kaufgegenstandes und die Höhe eines Kaufpreises. 
+Bei einer Leistungsstörung (z.B. Mangelhafte Leistung gemäß \bgb{437}) hat der Käufer gewisse Rechte.
+
+\subsubsection{Werkvertrag}
+Der \highlight{Werkvertrag} gemäß \bgbb[631 ff.]{631} wird für die \textbf{Herstellung eines Werkes} geschlossen, hierbei \textbf{ist der Erfolg geschuldet}. 
+Bei mangelhafter Leistung hat der Besteller ebenfalls gemäß \bgb{634} gewisse Rechte.
+
+\subsubsection{Dienstvertrag}
+Bei einem \highlight{Dienstvertrag} gemäß \bgbb[611 ff.]{611} verpflichtet sich eine Partei zur Leistung von Diensten gegen Vergütung. Hierbei ist \textbf{kein Erfolg geschuldet}.
+Es gibt keine besonderen Regelungen bei Leistungsstörungen.
+
+\subsubsection{Mietvertrag}
+Der \highlight{Mietvertrag} gemäß \bgbb[535 ff.]{535} regelt die entgeltliche Überlassung von Sachen. 
+Bei mangelhafter Leistung hat der Mieter gemäß \bgb{536} gewisse Rechte.
+
+\subsubsection{Werklieferungsvertrag}
+Der \highlight{Werklieferungsvertrag} gemäß \bgb{650} wird zur Lieferung herzustellender oder zu erzeugender beweglicher Sachen geschlossen. Gemäß \bgb[Abs. 1]{650} wird das \textbf{Kaufvertragsrecht} angewendet.
+
+\subsection{Vertragstypen im IT-Recht}
+IT-Verträge können unter anderem über Standardsoftware, Individualsoftware, Pflege von Hard- und Software, Software as a Service, Open Source Software und Lizenzen geschlossen werden.
+Für die unterschiedlichen Vertragstypen ergeben sich Unterschiede, z.B. im Hinblick auf Gewährleistungsansprüche. Daher stellt sich die Frage nach der Einordnung in die existierenden Vertragstypen.
+
+\subsubsection{Grundfrage: Was ist Software?}
+Bei \highlight{Software} handelt es sich nach geltender Rechtssprechung um das \textbf{Programm} sowie die zugehörige \textbf{Dokumentation}.
+Für die verschiedenen Vertragsverhältnisse kommen folgende Vertragstypen in Betracht:
+
+\begin{itemize}
+  \item{\textbf{Standartsoftware} (Software, die nicht speziell für die Bedürfnisse des Kunden hergestellt wurde, kann aber für ihn angepasst worden sein):
+    \begin{itemize}
+      \item{typischerweise: \textbf{Kaufvertrag} (bei Überlassung auf Dauer gegen Entgelt)}
+      \item{wenn weitere Anpassungsleistungen vereinbart wurden, kann es sich um einen \textbf{Werkvertrag} handeln}
+    \end{itemize}
+  }
+  \item{\textbf{Individualsoftware} (Speziell auf die Bedürfnisse des Kunden zugeschnittene Software):
+    \begin{itemize}
+      \item{typischerweise: \textbf{Werkvertrag} (Schwerpunkt liegt auf dem individuell vereinbarten Werk)}
+    \end{itemize}
+  }
+  \item{\textbf{Pflegeverträge} (Anpassung und Fehlerbeseitigung an einer Software):
+    \begin{itemize}
+      \item{typischerweise: \textbf{Dienstvertrag} (kein Erfolg geschuldet)}
+      \item{für Updates und Upgrades: \textbf{Kaufvertrag}}
+      \item{bei Instandsetzung: \textbf{Werkvertrag}}
+    \end{itemize}
+  }
+  \item{\textbf{Software as a Service} (Software wird online auf Zeit bereitgestellt):
+    \begin{itemize}
+      \item{typischerweise: \textbf{Mietvertrag}}
+    \end{itemize}
+  }
+  \item{\textbf{Open Source Software} (Software, die kostenfrei unter einer Open Source Lizenz veröffentlicht wurde):
+    \begin{itemize}
+      \item{typischerweise: \textbf{Schenkungsvertrag} (die meisten Gewährleistungsansprüche entfallen)}
+      \item{bei Einbindung in kostenpflichtiges Gesamtprodukt: \textbf{Kaufvertrag}}
+    \end{itemize}
+  }
+\end{itemize}
+
+\section{Leistungsstörungsrecht, Haftung}
+
+\subsection{Leistungsstörungen}
+
+\subsubsection{Mangel}
+Ein \highlight{Mangel} (\bgb{434}) liegt vor, wenn die Ist-Beschaffenheit von der Soll-Beschaffenheit abweicht:
+
+\begin{itemize}
+  \item{\textbf{Subjektiv} (\bgb[Abs. 2]{434}): Wenn sie sich für die \textbf{im Vertrag vorausgesetzte Verwendung} eignet}
+  \item{\textbf{Objektiv} (\bgb[Abs. 3]{434}): Wenn sie sich für die \textbf{gewöhnliche Verwendung} eignet}
+\end{itemize}
+
+\subsubsection{Verzug}
+Ein \highlight{Verzug} (\bgb{286}) liegt vor, wenn eine Leistung trotz Fälligkeit nicht erbracht wird.
+Der Gläubiger hat Anspruch auf Schadensersatz, der durch den Verzug entstanden ist.
+
+\subsubsection{Unmöglichkeit}
+Eine \highlight{Unmöglichkeit} (\bgb{275}) liegt vor, wenn für den Schuldner die Leistungserbringung tatsächlich, praktisch oder persönlich unmöglich ist:
+
+\begin{itemize}
+  \item{Tatsächliche Unmöglichkeit (\bgb[Abs. 1]{275})}
+  \item{Praktische (faktische) Unmöglichkeit (\bgb[Abs. 2]{275}): Aufwand im groben Missverhältnis zur Leistung}
+  \item{Persönliche Unmöglichkeit (\bgb[Abs. 3]{275}): Bei Unzumutbarkeit}
+\end{itemize}
+
+\subsection{Haftung, Gewährleistung und Garantie}
+\subsubsection{Produzentenhaftung}
+Die Verpflichtung, ein Produkt so zu produzieren, dass fremde Rechtsgüter dadurch nicht verletzt werden, ergibt sich aus \bgb{823}. Bei Verletzung entsteht ein Schadensersatzanspruch.
+
+\subsubsection{Produkthaftung}
+Die Haftung für ein Produkt, das nicht die Sicherheit bietet, die unter Berücksichtigung aller Umstände erwartet werden kann, ist im \textbf{Produkthaftungsgesetz} geregelt. Folgende Anspruchsvoraussetzungen sind zu beachten:
+
+\begin{enumerate}
+  \item{Es muss ein Fehler gemäß \prodHaftG{3} vorliegen}
+  \item{Die Verletzungshandlung muss gemäß \prodHaftG[Abs. 1]{1} in Form einer Tötung, einer Körper-/Gesundheitsverletzung oder einer Sachbeschädigung \textbf{an einer anderen Sache} erfolgt sein (Vermögensschäden zählen nicht!)}
+  \item{Der Schaden muss auf den Produktfehler zurückzuführen sein}
+\end{enumerate}
+
+\section{Allgemeine Geschäftsbedingungen}
+\highlight{Allgemeine Geschäftsbedingungen} (AGB) sind gemäß \bgbb[305 ff.]{305} alle
+
+\begin{itemize}
+  \item{für eine Vielzahl von Verträgen}
+  \item{vorformulierte Vertragsbedingungen}
+  \item{die eine Vertragspartei der anderen Vertragspartei bei Abschluss eines Vertrags stellt}
+\end{itemize}
+
+\subsection{Einbeziehung von AGB in den Vertrag}
+AGB werden gemäß \bgb[Abs. 2]{305} nur dann Teil des Vertrags, wenn bei Vertragsschluss
+
+\begin{itemize}
+  \item{ausdrücklich auf sie hingewiesen wurde}
+  \item{eine zumutbare Möglichkeit zur Kenntnisnahme bestand}
+  \item{die andere Partei (ausdrücklich oder konkludent) einverstanden ist}
+\end{itemize}
+
+\subsection{Unwirksamkeit von AGB-Klauseln}
+\subsubsection{Inhaltskontrolle}
+Gemäß \bgb[Abs. 1]{307} (\textbf{Generalklausel}) sind AGB-Klauseln unwirksam, wenn sie einen Vertragspartner \textbf{unangemessen benachteiligen}. Dies gilt auch, wenn die Bestimmungen \textbf{nicht klar und verständlich} sind.
+
+\subsubsection{Klauselverbote}
+\bgb{309} beschreibt \textbf{Klauselverbote ohne Wertungsmöglichkeit}, diese sind immer unwirksam. Bei \textbf{Klauselverboten mit Wertungsmöglichkeit} (\bgb{308}) ist eine Interessenabwägung notwendig.
+
+\subsubsection{Überraschende Klauseln}
+Überraschende Klauseln werden gemäß \bgb{305c} nicht Vertragsbestandteil.
+
+\subsection{Besonderheiten zwischen Unternehmern}
+Für Verträge zwischen Unternehmern ergeben sich besondere Regelungen. Gemäß \bgb[Abs. 1]{310} gelten die Klauselverbote nur eingeschränkt, auch die Regelungen für die Einbeziehung von AGB in den Vertrag finden keine Anwendung.
+
+\end{document}
