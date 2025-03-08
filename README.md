@@ -1,5 +1,9 @@
 # Zusammenfassungen von Vorlesungen am KIT
 
+## Wintersemester 2024/2025
+
+- [Vertragsgestaltung im IT-Bereich [WIP]](./pdfs/VertragsgestaltungImITBereich.pdf)
+
 ## Sommersemester 2024
 
 - [Access Control Systems [unvollständig]](./pdfs/AccessControlSystems.pdf)
