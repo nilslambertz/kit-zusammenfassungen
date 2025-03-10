@@ -1,7 +1,7 @@
 \documentclass[12pt,A4]{extarticle}	
 \usepackage[table]{xcolor}
 
-\newcommand{\lectureTitle}{Vertragsgestaltung im IT-Bereich [WIP]}
+\newcommand{\lectureTitle}{Vertragsgestaltung im IT-Bereich}
 \newcommand{\semester}{Wintersemester 2024/25}
 
 \input{../shared/summary-boilerplate.tex}
@@ -284,5 +284,126 @@ OSS-Lizenzen gelten als \textbf{AGB}. Die Rechte und Pflichten werden jedem Nutz
 
 \subsubsection{Rechtsfolgen bei Verstößen}
 Bei Verstößen gegen die Lizenzbedingungen besteht ein \textbf{Unterlassungsanspruch}, \textbf{Auskunftsanspruch} und \textbf{Schadensersatzanspruch}.
+
+\section{Projektvertrag}
+Es gibt keinen einheitlichen ``IT-Vertrag'', sondern meist eine Mischung aus Werk-, Dienst-, Miet- und Kaufvertrag.
+
+\subsection{Vertragsgegenstand und Vertragsgrundlagen}
+Zur Definition der Anforderungen (also was geschuldet wird), kann ein Lasten- und Pflichtenheft erstellt werden:
+
+\begin{itemize}
+  \item{\highlight{Lastenheft}: Die vom \textbf{Auftraggeber} festgelegte Gesamtheit der Forderungen an die Lieferungen und Leistungen des Auftragnehmers}
+  \item {\highlight{Pflichtenheft}: Die vom \textbf{Auftragnehmer} erarbeiteten Realisierungsvorhaben aufgrund der Umsetzung des vom Auftraggeber vorgegebenen Lastenhefts}
+\end{itemize}
+
+\subsection{Einräumung urheberrechtlicher Nutzungsbefugnisse}
+Urheberrechtliche Fragen müssen geklärt werden, darunter
+
+\begin{itemize}
+  \item{(nicht) ausschließliche Nutzungsbefugnis des Auftraggebers}
+  \item{(zeitlich/räumlich) (un)begrenzte Nutzungsbefugnis}
+  \item{Begrenzung nach Nutzungsumfang möglich (z.B. Anzahl der Benutzer, Lizenzen)}
+  \item{Regeln zu Sicherheitskopien, Weitergabe, Dekompilierung}
+\end{itemize}
+
+\subsection{Vergütung}
+
+\begin{itemize}
+  \item{Aufwandsentschädigung (z.B. pro Tag)}
+  \item{Pauschalvergütung}
+  \item{Kombination aus beidem}
+\end{itemize}
+
+\subsection{Service-Level-Agreement (SLA)}
+SLAs regeln die Qualität der Leistungen gegenüber dem Servicenehmer, z.B. Verfügbarkeit, Reporting, etc. Es gibt keine gesetzliche Qualitätsdefinition, geschuldet wird gemäß \bgb[Abs. 1]{243} ``Leistung mittlerer Art und Güte''. Dazu kann geregelt werden:
+
+\begin{itemize}
+  \item{Genaue Definition der Service Level (z.B. ``98\% Verfügbarkeit 24h/7 Tage pro Woche'')}
+  \item{Zielwerte, Messmethoden, Messpunkte}
+  \item{Art des Berichts, automatisches Reporting}
+  \item{Prozedur bei Support und Service Desk}
+\end{itemize}
+
+Rechtsfolgen bei Nichteinhaltung können Minderung der Vergütung, Vertragsstrafen, Schadenersatz, Kündigung beinhalten.
+
+\subsection{Change-Request}
+\textbf{Change Request}-Klauseln regeln das Vorgehen bei Änderungs- und Erweiterungswünschen, z.B. das Formale Vorgehen, Aufstellung der Kosten, Änderung des Zeitplans, etc.
+
+\subsection{Regelungen zur Abnahme/Abnahmeverfahren}
+Für die Abnahme können geregelt werden:
+
+\begin{itemize}
+  \item{Testphase, Fehlerkategorien, Teilnehmer}
+  \item{Förmliche/Konkludente Abnahme}
+  \item{Teilabnahme, Abnahmefiktion}
+\end{itemize}
+
+\subsection{Gewährleistung}
+Zur Gewährleistung können geregelt werden:
+
+\begin{itemize}
+  \item{Unverzügliche Fehlerermittlung}
+  \item{Genaue Fehlerbeschreibung}
+  \item{Zurverfügungstellen von Testdaten}
+  \item{Konsequenzen verspäteter Rüge}
+\end{itemize}
+
+\subsection{Haftung}
+Gesetzliche Haftung gilt nur für für Vorsatz und Fahrlässigkeit. Gemäß \bgb[Nr. 7]{309} kann die Haftung \textbf{für grobe Fahrlässigkeit nicht beschränkt werden}.\par
+Die Kardinalpflichten (wesentlichen Pflichten) des Vertrags können gemäß \bgb[Abs. 2 Nr. 2]{307} ebenfalls nicht erheblich beschränkt werden.
+
+\subsection{Quellcodevereinbarung}
+Vereinbarungen zum Quellcode sind ebenfalls notwendig:
+
+\begin{itemize}
+  \item{z.B. historische Versionen des Quellcodes}
+  \item{Enwicklungsumgebungen und Werkzeuge}
+  \item{Daten und Datenbanken}
+\end{itemize}
+
+\section{Projektmanagement}
+\subsection{Wasserfallmodell}
+Das Wasserfallmodell läuft sequentiell in den folgenden Stufen ab:
+
+\begin{enumerate}
+  \item{Leistungsbeschreibung: Lastenheft/Pflichtenheft}
+  \item{Projektablauf: Change Requests}
+  \item{Abnahme: Zwischenabnahme/Tests/Förmliche Abnahme}
+  \item{Inbetriebnahme: Nutzerakzeptanz}
+  \item{Produktivbetrieb: Fehlerbeseitigung/Weiterentwicklung}
+\end{enumerate}
+
+\subsection{Agile Verträge: SCRUM}
+\subsubsection{Stakeholder}
+
+\begin{itemize}
+  \item{\textbf{Product Owner}:
+    \begin{itemize}
+      \item{verantwortlich für den \textbf{Product Backlog}}
+      \item{definiert und priorisiert Anforderungen}
+    \end{itemize}
+  }
+  \item{\textbf{Scrum Master}:
+    \begin{itemize}
+      \item{verantwortlich für die Einhaltung der \textbf{SCRUM-Regeln}}
+      \item{unterstützt das Team und den Product Owner}
+    \end{itemize}
+  }
+  \item{\textbf{Scrum Team}:
+    \begin{itemize}
+      \item{Entwickler, verantwortlich für die \textbf{Umsetzung der Anforderungen}}
+      \item{organisieren sich selbst}
+    \end{itemize}
+  }
+\end{itemize}
+
+\subsubsection{Ablauf}
+\begin{enumerate}
+  \item{Product Owner erstellt und priorisiert den \textbf{Product Backlog}}
+  \item{Scrum Team wählt Aufgaben aus, die im nächsten Sprint umgesetzt werden}
+  \item{Das Team arbeitet an den Aufgaben}
+  \item{Sprint-Review: Feedback und Bericht}
+  \item{Prozess beginnt erneut}
+\end{enumerate}
 
 \end{document}

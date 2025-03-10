@@ -2,7 +2,7 @@
 
 ## Wintersemester 2024/2025
 
-- [Vertragsgestaltung im IT-Bereich [WIP]](./pdfs/VertragsgestaltungImITBereich.pdf)
+- [Vertragsgestaltung im IT-Bereich](./pdfs/VertragsgestaltungImITBereich.pdf)
 
 ## Sommersemester 2024
 
