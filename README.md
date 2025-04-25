@@ -1,5 +1,9 @@
 # Zusammenfassungen von Vorlesungen am KIT
 
+## Sommersemester 2025
+
+- [Software Security Engineering [WIP]](./pdfs/SoftwareSecurityEngineering.pdf)
+
 ## Wintersemester 2024/2025
 
 - [Vertragsgestaltung im IT-Bereich](./pdfs/VertragsgestaltungImITBereich.pdf)

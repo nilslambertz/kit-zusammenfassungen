@@ -1,0 +1,96 @@
+\documentclass[12pt,A4]{extarticle}	
+\usepackage[table]{xcolor}
+\usepackage{natbib}
+
+\begin{filecontents}[overwrite]{\jobname.bib}
+  @techreport{ISO22300,
+  title        = {Security and resilience — Vocabulary},
+  author       = {{International Organization for Standardization}},
+  institution  = {{ISO}},
+  number       = {ISO 22300:2021},
+  year         = {2021},
+  address      = {Geneva, Switzerland},
+  url          = {https://www.iso.org/standard/77008.html}
+  }
+  @inproceedings{ComparingAndEvaluatingCVSSBaseMetrics,
+  author = {Mussa, Awad A Younis and Malaiya, Yashwant},
+  year = {2015},
+  month = {08},
+  pages = {},
+  title = {Comparing and Evaluating CVSS Base Metrics and Microsoft Rating System},
+  doi = {10.1109/QRS.2015.44}
+  }
+  @techreport{ISOIEC27000,
+  title        = {Information technology — Security techniques — Information security management systems — Overview and vocabulary},
+  author       = {{International Organization for Standardization and International Electrotechnical Commission}},
+  institution  = {{ISO/IEC JTC 1/SC 27}},
+  number       = {ISO/IEC 27000:2018},
+  year         = {2018},
+  address      = {Geneva, Switzerland},
+  url          = {https://www.iso.org/standard/73906.html}
+  }
+  @inbook{TowardANewFrameworkForInformationSecurity,
+  author = {Parker, Donn},
+  year = {2015},
+  month = {09},
+  pages = {3.1-3.23},
+  title = {Toward a New Framework for Information Security?},
+  isbn = {9781118134108},
+  doi = {10.1002/9781118851678.ch3}
+  }
+\end{filecontents}
+
+\newcommand{\lectureTitle}{Software Security Engineering}
+\newcommand{\semester}{Sommersemester 2025}
+
+\input{../shared/summary-boilerplate.tex}
+\cfoot{\thepage\ $/$ \pageref*{LastPage}}
+
+\definecolor{highlightColor}{RGB}{66, 135, 245}
+\newcommand{\highlight}[1]{\textcolor{highlightColor}{\textbf{#1}}}
+
+\def\contentsname{\empty}
+
+\begin{document}
+\defcitealias{ISO22300}{ISO 22300:2021}
+\defcitealias{ISOIEC27000}{ISO/IEC 27000:2018}
+
+\disclaimer
+
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+\subsection{Motivation}
+Influencing factors of secure software include
+\begin{itemize}
+  \item{\textbf{Security features}: Authentication, Authorization, Access control, cryptography, etc.}
+  \item{\textbf{Technology}: Programming languages, development tools, etc.}
+  \item{\textbf{Operational environments}: Firewalls, Intrusion detection systems, etc.}
+\end{itemize}
+
+\subsection{Terminology}
+\begin{itemize}
+  \item{\textbf{Asset}: anything that has value to an organization, including human, physical, information, intangible and environmental resources \citepalias{ISO22300}}
+  \item{\textbf{Thread}: potential cause of an unwanted incident, which could result in harm to individuals, assets, a system or organization \citepalias{ISO22300}}
+  \item{\textbf{Adversary}: any person or a thing that acts (or has the power to act) to cause, carry, transmit, or support a threat \cite{ComparingAndEvaluatingCVSSBaseMetrics}}
+  \item{\textbf{Vulnerability}: weakness of an asset or control that can be exploited by one or more threats \citepalias{ISOIEC27000}}
+  \item{\textbf{Exploit}: method that identifies and takes advantage of a vulnerability in an asset \cite{ComparingAndEvaluatingCVSSBaseMetrics}}
+  \item{\textbf{Attack}: attempt to destroy, expose, alter, disable, steal or gain unauthorized access to or make unauthorized use of an asset \citepalias{ISOIEC27000}}
+\end{itemize} 
+
+\subsection{Protection Goals}
+\begin{itemize}
+  \item{\highlight{Confidentiality}: property that information is not made available or disclosed to unauthorized individuals, entities, or processes \citepalias{ISOIEC27000}}
+  \item{\highlight{Integrity}: property of accuracy and completeness \citepalias{ISOIEC27000}}
+  \item{\highlight{Availability}: property of being accessible and usable on demand by an authorized entity \citepalias{ISOIEC27000}}
+  \item{\highlight{Authenticity}: property that an entity is what it claims to be \citepalias{ISOIEC27000}}
+  \item{\highlight{Possession}: holding, controlling, and having the ability to use information \cite{TowardANewFrameworkForInformationSecurity}}
+  \item{\highlight{Utility}: usefulness of information \cite{TowardANewFrameworkForInformationSecurity}}
+\end{itemize}
+
+\newpage
+\bibliographystyle{apalike}
+\bibliography{\jobname}
+
+\end{document}
