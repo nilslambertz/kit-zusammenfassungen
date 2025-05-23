@@ -38,6 +38,16 @@
   isbn = {9781118134108},
   doi = {10.1002/9781118851678.ch3}
   }
+  @book{boehm1981software,
+  title={Software Engineering Economics},
+  author={Boehm, B.W.},
+  isbn={9780138221225},
+  lccn={81013889},
+  series={Prentice-Hall advances in computing science and technology series},
+  url={https://books.google.de/books?id=mpZQAAAAMAAJ},
+  year={1981},
+  publisher={Prentice-Hall}
+  }
 \end{filecontents}
 
 \newcommand{\lectureTitle}{Software Security Engineering [WIP]}
@@ -88,6 +98,144 @@ Influencing factors of secure software include
   \item{\highlight{Possession}: holding, controlling, and having the ability to use information \cite{TowardANewFrameworkForInformationSecurity}}
   \item{\highlight{Utility}: usefulness of information \cite{TowardANewFrameworkForInformationSecurity}}
 \end{itemize}
+
+\section{Security Requirements Engineering}
+\subsection{What makes security requirements special?}
+\begin{itemize}
+  \item{typically \textbf{quality/non-functional} requirements}
+  \item{often \textbf{negative} requirements: Describe what the system \textbf{should not} do, hard to validate}
+  \item{often \textbf{immeasurable} as there is no clear satisfaction criteria}
+  \item{often \textbf{incalculable}: Cost-benefit ratio hard to determine}
+  \item{often \textbf{uncertain}, hard to identify without knowing the whole system design upfront}
+  \item{hard to recognize vulnerabilities during productive/test operation, not ``implicitly'' tested by stakeholders/users when they use the system}
+\end{itemize}
+
+\subsection{Requirements Engineering - Core Activities}
+\begin{itemize}
+  \item{\textbf{Elicitation}: Obtain requirements from stakeholders, refine them}
+  \item{\textbf{Documentation}: Describe requirements adequately using natural language or models}
+  \item{\textbf{Validation and Negotation}: Guarantee that requirements meet quality criteria}
+  \item{\textbf{Management}: Structure requirements, maintain consistency, ensure implementation}
+\end{itemize}
+
+\subsubsection{Verification and Validation (V\&V)}
+\begin{itemize}
+  \item{\textbf{Verification}: ``Are we building the product right?'' \cite{boehm1981software}
+    \begin{itemize}
+      \item{assurance, that a product, service or system meets the \textbf{needs} of the customers and stakeholders}
+      \item{often involves acceptance and suitability}
+    \end{itemize}
+  }
+  \item{\textbf{Validation}: ``Are we building the right product?'' \cite{boehm1981software}}
+\end{itemize}
+
+\subsection{Security Requirements - Definition}
+\begin{itemize}
+  \item{\textbf{Security needs}: Design objectives concerning the protection of its stakeholders from consequences of (intentional) threats that conflict with stakeholders' goals}
+  \item{\textbf{Security requirements}: Express security needs in a form suitable to be used and make its results verifiable}
+\end{itemize}
+
+\subsection{Security Needs - Influencing Factors}
+\subsubsection{Goals}
+\highlight{Security goals} describe the desired protection of a system and its environment:
+\begin{itemize}
+  \item{Assets (e.g. documents) and their protection needs}
+  \item{Dreaded consequences (e.g. loss of reputation)}
+  \item{Organizational policies (e.g. only staff with security clearance can access classified information)}
+  \item{Legal or business requirements (e.g. data protection laws)}
+\end{itemize}
+
+\subsubsection{Threats}
+A \highlight{threat} statement describes adversaries - their goals, capabilities or expected behavior:
+\begin{itemize}
+  \item{Capabilities (e.g. adversary controls a botnet)}
+  \item{Objectives (e.g. work for profit and aim to evade apprehension)}
+  \item{Target selection behavior (e.g. opportunistic, targeted)}
+  \item{Technical attack patterns (e.g. transparent rerouting of network traffic)}
+\end{itemize} 
+
+\subsubsection{Design}
+Security needs can be described by the \highlight{design} of a system or software:
+\begin{itemize}
+  \item{Required security functions (e.g. logging)}
+  \item{Design details with security implications (e.g. long random session IDs)}
+  \item{Common volnerabilities to avoid (e.g. XSS)}
+\end{itemize}
+
+\newpage
+\subsection{Abuse vs. Misuse}
+\highlight{Abuse} described \textbf{malicious} and \textbf{deliberate} acts.\par
+\highlight{Misuse} describes \textbf{spontaneous} acts and possibly \textbf{careless} use of a system.\par
+
+\subsubsection{Misuse Cases}
+``A misuse case is the inverse of a use case, a function that the system \textbf{should not allow}.''. It causes harm to some stakeholder if the sequence is allowed to complete.
+
+\begin{itemize}
+  \item{Misuse cases can be related to regular use cases}
+  \item{\textbf{Threaten} relationship: Use case is \textbf{exploited} or \textbf{hindered} by a misuse case}
+  \item{\textbf{Mitigate} relationship (of a ``Security use case''): Use case is \textbf{countermeasure} against a misuse case, reduces the misuse case's chance of success}
+\end{itemize}
+
+\subsection{SQUARE Process Model}
+Security Quality Requirements Engineering (\highlight{SQUARE}) is a process model for categorizing and prioritizing security requirements. The focus is to build security concept into early stages of the development lifecycle.
+
+\subsubsection{SQUARE Steps}
+\begin{enumerate}
+  \item{\textbf{Agree on Definitions}:
+    \begin{itemize}
+      \item{ensure that stakeholders agree of definitions of terms}
+      \item{Participants: Stakeholders, requirements engineers}
+    \end{itemize}
+  }
+  \item{\textbf{Identify Security Goals}:
+    \begin{itemize}
+      \item{identify protection goals of stakeholders and prioritize them}
+      \item{Participants: Stakeholders, requirements engineers}
+    \end{itemize}
+  }
+  \item{\textbf{Develop Artifacts}:
+    \begin{itemize}
+      \item{develop artifacts to support security requirements definition}
+      \item{Participants: Requirements engineers}
+    \end{itemize}
+  }
+  \item{\textbf{Perform Risk Assessment}:
+    \begin{itemize}
+      \item{assess risks using a method recommended by a risk expert}
+      \item{Participants: Requirements engineers, risk experts, stakeholders}
+    \end{itemize}
+  }
+  \item{\textbf{Select Elicitation Technique}:
+    \begin{itemize}
+      \item{overcome communication issues between stakeholders by selecting a proper elicitation technique}
+      \item{Participants: Requirements engineers}
+    \end{itemize}
+  }
+  \item{\textbf{Elicit Security Requirements}:
+    \begin{itemize}
+      \item{actual elicitation process using the techniques selected in the previous step}
+      \item{Participants: Stakeholders}
+    \end{itemize}
+  }
+  \item{\textbf{Categorize Requirements}:
+    \begin{itemize}
+      \item{categorize requirements as to level (e.g. system, software) and if they are quality requirements or constraints}
+      \item{Participants: Requirements engineers, other specialists}
+    \end{itemize}
+  }
+  \item{\textbf{Prioritize Requirements}:
+    \begin{itemize}
+      \item{possible cost-benefit analysis considering consequences}
+      \item{Participants: Stakeholders}
+    \end{itemize}
+  }
+  \item{\textbf{Inspect Requirements}:
+    \begin{itemize}
+      \item{Peer-review of requirements for problems, concerns, workload etc.}
+      \item{Participants: Inspection team}
+    \end{itemize}
+  }
+\end{enumerate}
 
 \newpage
 \bibliographystyle{apalike}
